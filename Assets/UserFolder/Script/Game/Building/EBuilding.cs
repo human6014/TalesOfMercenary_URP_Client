@@ -1,0 +1,5 @@
+
+enum EbuildingList
+{
+    MagicAcademy
+}
