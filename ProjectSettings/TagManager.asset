@@ -12,18 +12,18 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - Ground
   - SnapHexGrid
   - 
   - 
+  - Player
   - 
+  - Unit
+  - Magic
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PlayerUnit
+  - EnemyUnit
+  - NeutralUnit
   - 
   - 
   - 

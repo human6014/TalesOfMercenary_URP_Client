@@ -100,7 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014ee29e0fc4fa64e95723664d439d93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 2066896392038628118, guid: a6b32a071340abd438b8852cd7d2bce3, type: 3}
+  cardPrefab: {fileID: 59360354102331270, guid: 00c0ed18660040f4b84250ca83f73ce5,
+    type: 3}
   cardCost: 15
   cardType: 0
 --- !u!1 &554489413222068918
