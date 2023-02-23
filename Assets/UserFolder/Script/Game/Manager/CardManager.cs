@@ -207,7 +207,7 @@ public class CardManager : MonoBehaviour
             else
             {
                 Vector3 cardPos = hit.point;
-                if (cardType == CardType.Unit) cardPos = hit.collider.transform.position + Vector3.up * 0.2f;
+                if (cardType == CardType.Unit) cardPos = hit.collider.transform.position + Vector3.up * 0.6f;
 
                 previewHolder.position = cardPos;
             }

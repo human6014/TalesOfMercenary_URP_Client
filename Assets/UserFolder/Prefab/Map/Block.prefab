@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2245984553796005156}
   - component: {fileID: 3071244025872893397}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 4956522103223012042}
   - component: {fileID: 512860180525501468}
   - component: {fileID: 1891267579937742741}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HexTerrain_Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 49552414078458645}
   - component: {fileID: 3709715629175733571}
   - component: {fileID: 5973108729128383761}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HexBoard_StoneVar2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 8729483798830762856}
   - component: {fileID: 6827927670358359970}
   - component: {fileID: 7633194550247697694}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_HexBoard_MetalBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 680039994710852678}
   - component: {fileID: 7117920870487902513}
   - component: {fileID: 7223727789992200763}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: HexGrass_HexBoardGrass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -429,7 +429,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7157493558932371971}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
