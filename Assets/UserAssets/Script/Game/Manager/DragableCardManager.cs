@@ -113,7 +113,6 @@ public class DragableCardManager : MonoBehaviour
         backupCardTransform.anchoredPosition = new Vector2(0, 0);
 
         Card cardScript = backupCardTransform.GetComponent<Card>();
-        Debug.Log(cardScript.CardType);
         cardScript.CardType = CardType.Unit;
         cardScript.InitializeData();
     }
@@ -127,7 +126,6 @@ public class DragableCardManager : MonoBehaviour
         backupCardTransform.anchoredPosition = new Vector2(-40 + cardId * 80, 0);
 
         Card cardScript = backupCardTransform.GetComponent<Card>();
-        Debug.Log(cardScript.CardType);
         cardScript.InitializeData();
 
         cardScript.CardId = cardId;

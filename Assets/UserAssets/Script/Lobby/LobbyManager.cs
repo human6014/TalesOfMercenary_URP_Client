@@ -41,13 +41,20 @@ public class LobbyManager : MonoBehaviour
     /// <summary>
     /// 밴픽 끝난 후 게임 시작
     /// </summary>
-    public void GameStart()
+    public void MoveGameScene()
     {
         int[] dataNum = banPickManager.GetUsingCardNum();
         usingUnitData = new UnitJsonData[dataNum.Length];
         for (int i = 0; i < dataNum.Length; i++) usingUnitData[i] = allUnitData[dataNum[i]];
         
         dataSender.SetUsingCardData(usingUnitData);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("GameScene");
+    }
+
+    public void MoveLoginScene()
+    {
+        //로그아웃 작업
+
+        SceneManager.LoadScene("LoginScene");
     }
 }
