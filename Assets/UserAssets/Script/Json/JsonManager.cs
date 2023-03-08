@@ -9,7 +9,7 @@ public class JsonManager : MonoBehaviour
 {
     private string JsonDataPath;
 
-    private void Awake() => JsonDataPath = Application.dataPath + "/UnitData";
+    private void Awake() => JsonDataPath = Application.dataPath + "/UserAssets/UnitData";
     
     private void Start()
     {
@@ -59,7 +59,7 @@ public class JsonManager : MonoBehaviour
 
     public static T LoadJsonFile<T>(string fileName)
     {
-        FileStream fileStream = new(string.Format("{0}/{1}.json", Application.dataPath + "/UnitData", fileName), FileMode.Open);
+        FileStream fileStream = new(string.Format("{0}/{1}.json", Application.dataPath + "/UserAssets/UnitData", fileName), FileMode.Open);
         byte[] data = new byte[fileStream.Length];
         fileStream.Read(data, 0, data.Length);
         fileStream.Close();

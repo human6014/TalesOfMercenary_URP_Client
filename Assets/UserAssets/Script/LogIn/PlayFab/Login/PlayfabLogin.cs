@@ -139,7 +139,7 @@ namespace FMGames.Playfab.Login {
 
             loginInProgress.SetActive(false);
 
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene("LobbyScene");
         }
 
         private readonly GetPlayerCombinedInfoRequestParams _loginInfoParams =

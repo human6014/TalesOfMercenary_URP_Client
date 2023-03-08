@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BanPickManager : MonoBehaviour
 {
     private bool isBanPick;
     private bool isMyTurn;
+    private bool isEnableOnce;
 
     [SerializeField] private CardDataManager cardDataManager;
     [SerializeField] private RectTransform cardPool;
@@ -17,24 +16,53 @@ public class BanPickManager : MonoBehaviour
     private readonly int[] selectingBanCardNum = new int[2] { 2, 3 };
 
     private BuildingCard clickedDeckCard;
-    private BuildingCard[] deckCards = new BuildingCard[2];
+    private BuildingCard[] buildingCards = new BuildingCard[4];
     private Card[] magicCards = new Card[2];
 
     private int selectingCardCount = 0;
     private int selectingBanCardCount = 0;
 
-    private const int rowMax= 4;
+    private const int rowMax = 4;
 
+    private void Awake()
+    {
+
+    }
     private void Start()
     {
-        deckCards = cardDataManager.GetBuildingCards();
-        magicCards = cardDataManager.GetMagicCards();
+        //buildingCards = cardDataManager.GetBuildingCards();
+        //magicCards = cardDataManager.GetMagicCards();
 
-        for(int i = 0; i < deckCards.Length; i++)
+    }
+
+
+    public void SetCardList()
+    {
+        foreach(var iter in mySelectingCardPool.GetComponentsInChildren<RectTransform>())
+        {
+            if (iter != mySelectingCardPool) Destroy(iter.gameObject);
+        }
+
+        foreach (var iter in opponentSelectingCardPool.GetComponentsInChildren<RectTransform>())
+        {
+            if (iter != opponentSelectingCardPool) Destroy(iter.gameObject);
+        }
+
+        foreach (var iter in banPickPool.GetComponentsInChildren<RectTransform>())
+        {
+            if (iter != banPickPool) Destroy(iter.gameObject);
+        }
+        clickedDeckCard = null;
+        selectingCardCount = 0;
+        selectingBanCardCount = 0;
+
+        if (isEnableOnce) return;
+        isEnableOnce = true;
+        for (int i = 0; i < buildingCards.Length; i++)
         {
             LoadDeckCards(i);
         }
-        for(int i = 0; i < magicCards.Length; i++)
+        for (int i = 0; i < magicCards.Length; i++)
         {
             LoadMagicCard(i);
         }
@@ -42,25 +70,26 @@ public class BanPickManager : MonoBehaviour
 
     private void LoadDeckCards(int cardId)
     {
-        RectTransform deckCardTransform = Instantiate(deckCards[cardId]).GetComponent<RectTransform>();
+        RectTransform deckCardTransform = Instantiate(cardDataManager.GetBuildingCardObj(cardId)).GetComponent<RectTransform>();
 
         int rowPos = (-150 + (cardId % rowMax) * 100);
         int colPos = 80 + (cardId / rowMax * -80);
 
         deckCardTransform.SetParent(cardPool, true);
         deckCardTransform.anchoredPosition = new Vector2(rowPos, colPos);
-        deckCardTransform.TryGetComponent(out BuildingCard deckCard);
+        deckCardTransform.SetAsLastSibling();
+        BuildingCard deckCard = deckCardTransform.GetComponent<BuildingCard>();
 
         deckCard.CardId = cardId;
         deckCard.CardLevel = 1;
         deckCard.CardMaxLevel = 3;
         deckCard.OnPointerDownAction += OnClicked;
-        deckCards[cardId] = deckCard;
+        buildingCards[cardId] = deckCard;
     }
 
     private void OnClicked(int cardId)
     {
-        clickedDeckCard = deckCards[cardId];
+        clickedDeckCard = buildingCards[cardId];
     }
 
     private void LoadMagicCard(int cardId)
@@ -68,8 +97,9 @@ public class BanPickManager : MonoBehaviour
 
     }
 
-    public void PickDeckCard()
+    public void PickBuildingCard()
     {
+        if (clickedDeckCard == null) return;
         if (isBanPick)
         {
             if (selectingBanCardCount >= selectingBanCardNum.Length) return;
@@ -78,7 +108,7 @@ public class BanPickManager : MonoBehaviour
 
             RectTransform deckCardTransform = Instantiate(clickedDeckCard).GetComponent<RectTransform>();
 
-            deckCardTransform.SetParent(banPickPool,true);
+            deckCardTransform.SetParent(banPickPool, true);
             deckCardTransform.anchoredPosition = new Vector2(-150 + selectingCardCount * 80, 0);
 
             selectingBanCardCount++;
