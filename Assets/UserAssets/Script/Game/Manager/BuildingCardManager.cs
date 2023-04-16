@@ -107,12 +107,12 @@ public class BuildingCardManager : MonoBehaviour
 
         if (deckCards[cardId].CardLevel >= deckCards[cardId].CardMaxLevel) return;
         if (!gameManager.DoValidGold(deckCards[cardId].CardUpgradeCost)) return;
-        if (cardId == 0)
-        {
-            gameManager.UpgradeNexus(0.05f);
-            NetworkUnitManager.SendNeuxsUpgrade();
-        }
-        else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
+        //if (cardId == 0)
+        //{
+        //    gameManager.UpgradeNexus(0.05f);
+        //    NetworkUnitManager.SendNeuxsUpgrade();
+        //}
+        //else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
         deckCards[cardId].CardLevel += 1;
         Text cardText = deckCards[cardId].GetComponentInChildren<Text>();
         cardText.text = deckCards[cardId].CardName + "\n" + deckCards[cardId].CardLevel.ToString();
