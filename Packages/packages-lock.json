@@ -1,7 +1,14 @@
 {
   "dependencies": {
+    "com.nobi.roundedcorners": {
+      "version": "https://github.com/kirevdokimov/Unity-UI-Rounded-Corners.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f80f59f64d1dfce988b838593e5075207f44f1f0"
+    },
     "com.unity.burst": {
-      "version": "1.6.6",
+      "version": "1.8.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -74,7 +81,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.7",
+      "version": "12.1.9",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -84,14 +91,14 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.7",
+      "version": "12.1.9",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
-        "com.unity.burst": "1.5.0",
-        "com.unity.render-pipelines.core": "12.1.7",
-        "com.unity.shadergraph": "12.1.7"
+        "com.unity.burst": "1.8.2",
+        "com.unity.render-pipelines.core": "12.1.9",
+        "com.unity.shadergraph": "12.1.9"
       }
     },
     "com.unity.scriptablebuildpipeline": {
@@ -109,7 +116,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.services.core": {
-      "version": "1.4.2",
+      "version": "1.7.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -120,11 +127,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.7",
+      "version": "12.1.9",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.7",
+        "com.unity.render-pipelines.core": "12.1.9",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -178,13 +185,6 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "net.tomweiland.riptide": {
-      "version": "https://github.com/RiptideNetworking/Riptide.git?path=/Packages/Core#2.0.0",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "bb252ba2ea4bd1314d3f8f60bea490418635d06e"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

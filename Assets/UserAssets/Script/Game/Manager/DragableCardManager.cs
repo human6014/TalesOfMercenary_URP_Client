@@ -297,10 +297,6 @@ public class DragableCardManager : MonoBehaviour
         }
     }
 
-    private void SendPlayerDrawCard()
-    {
-        NetworkUnitManager.SendPlayerDrawCard();
-    }
     /// <summary>
     /// 현재 스크린 좌표계의 마우스 위치에서 월드 좌표계로의 레이에서 GroundLayer에 감지되는지 알아냄
     /// </summary>
