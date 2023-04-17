@@ -114,10 +114,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_0e5114afc400f08f9a5b908da248e203_Texture_1:
-        m_Texture: {fileID: 2800000, guid: a3f95a6f5c878b94ba5137ffd65da379, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_174437A2_Texture_1:
         m_Texture: {fileID: 2800000, guid: f3f0cebb419f05d40bea240cfad8f25b, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -136,10 +132,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_420CFA20_Texture_1:
         m_Texture: {fileID: 2800000, guid: 660056b72f34f024f9a89e85f35a4bb6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_5776f1d8f6fa5c8ca2305dcaf5b73d11_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 7e13607ca5bb50e47a8f61593e2c5051, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_5CEEB541_Texture_1:
@@ -190,23 +182,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 52b233b154e316c469b441f4c2749291, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_bb67141759c5868097627b3f3d55f7c9_Texture_1:
-        m_Texture: {fileID: 2800000, guid: d165cbfbd14975c47bdeb223d2d15bbd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -237,7 +213,6 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5

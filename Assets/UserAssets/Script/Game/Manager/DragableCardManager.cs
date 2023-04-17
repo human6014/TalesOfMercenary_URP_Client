@@ -282,8 +282,8 @@ public class DragableCardManager : MonoBehaviour
             //obj.GetComponent<Unit>().InitBatch(1);
             //obj.transform.SetParent(unitPool);
 
-            NetworkUnitManager.SendUnitSpawn(0, hit.point);
-            Invoke(nameof(SendPlayerDrawCard), 0.5f);
+            //NetworkUnitManager.SendUnitSpawn(0, hit.point);
+            //Invoke(nameof(SendPlayerDrawCard), 0.5f);
             StartCoroutine(ObserveCard(cardId));
             StartCoroutine(AddUnitCard());
         }
