@@ -1,4 +1,3 @@
-using Riptide;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -112,31 +111,31 @@ public class Unit : MonoBehaviour
         
         defaultStoppingDistance = navMeshAgent.stoppingDistance;
 
-        SetAffiliationUnit();
+        //SetAffiliationUnit();
         currentDestination = finalDestination;
 
         SetDestination(finalDestination);
         //Find 함수 별로 안좋음
     }
 
-    private void SetAffiliationUnit()
-    {
-        if (OwnerID == NetworkManager.NetworkManagerSingleton.Client.Id)
-        {
-            HPbar.targetGraphic.color = Color.green;
-            IsEnemy = false;
-            gameObject.layer = 16;
-        }
-        else
-        {
-            HPbar.targetGraphic.color = Color.red;
-            IsEnemy = true;
-            gameObject.layer = 17;
-        }
+    //private void SetAffiliationUnit()
+    //{
+    //    if (OwnerID == NetworkManager.NetworkManagerSingleton.Client.Id)
+    //    {
+    //        HPbar.targetGraphic.color = Color.green;
+    //        IsEnemy = false;
+    //        gameObject.layer = 16;
+    //    }
+    //    else
+    //    {
+    //        HPbar.targetGraphic.color = Color.red;
+    //        IsEnemy = true;
+    //        gameObject.layer = 17;
+    //    }
 
-        if (NetworkManager.NetworkManagerSingleton.IsReversed) finalDestination = GameManager.player1Nexus;
-        else finalDestination = GameManager.player2Nexus;
-    }
+    //    if (NetworkManager.NetworkManagerSingleton.IsReversed) finalDestination = GameManager.player1Nexus;
+    //    else finalDestination = GameManager.player2Nexus;
+    //}
 
     #region 공격 + 탐지 // 코드 개선 필요함
     private void Attack(Unit enemy)
@@ -203,7 +202,7 @@ public class Unit : MonoBehaviour
         //navMeshAgent.stoppingDistance = 0;
         //navMeshAgent.SetDestination(pos);
 
-        NetworkUnitManager.SendDestinationInput(InstanceID, pos);
+        //NetworkUnitManager.SendDestinationInput(InstanceID, pos);
     }
 
 #if UNITY_EDITOR

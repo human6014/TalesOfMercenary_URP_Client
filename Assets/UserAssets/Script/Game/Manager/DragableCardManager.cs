@@ -282,8 +282,8 @@ public class DragableCardManager : MonoBehaviour
             //obj.GetComponent<Unit>().InitBatch(1);
             //obj.transform.SetParent(unitPool);
 
-            NetworkUnitManager.SendUnitSpawn(0, hit.point);
-            Invoke(nameof(SendPlayerDrawCard), 0.5f);
+            //NetworkUnitManager.SendUnitSpawn(0, hit.point);
+            //Invoke(nameof(SendPlayerDrawCard), 0.5f);
             StartCoroutine(ObserveCard(cardId));
             StartCoroutine(AddUnitCard());
         }
@@ -297,10 +297,6 @@ public class DragableCardManager : MonoBehaviour
         }
     }
 
-    private void SendPlayerDrawCard()
-    {
-        NetworkUnitManager.SendPlayerDrawCard();
-    }
     /// <summary>
     /// 현재 스크린 좌표계의 마우스 위치에서 월드 좌표계로의 레이에서 GroundLayer에 감지되는지 알아냄
     /// </summary>

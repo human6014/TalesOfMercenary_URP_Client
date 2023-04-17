@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8292298722570507199
+--- !u!114 &-8704191765518895178
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -225,7 +225,7 @@ Material:
     - Boolean_2D024B60: 0
     - Boolean_33057D03: 1
     - Boolean_5AE17364: 0
-    - Boolean_6CAA8319: 1
+    - Boolean_6CAA8319: 0
     - Boolean_A7DA8E42: 0
     - Boolean_A9EA093A: 0
     - Boolean_B5F2A7FF: 0
