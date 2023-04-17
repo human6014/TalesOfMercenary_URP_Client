@@ -277,13 +277,13 @@ public class DragableCardManager : MonoBehaviour
         GameObject obj = null;
         if (cardType == CardType.Unit)
         {
-            //Vector3 cardPos = hit.collider.transform.position + Vector3.up * 0.2f;
-            //obj = Instantiate(usingCard.CardPrefab, cardPos, Quaternion.identity);
+            //Vector3 cardpos = hit.collider.transform.position + Vector3.up * 0.2f;
+            //obj = Instantiate(usingCard.CardPrefab, cardpos, Quaternion.identity);
             //obj.GetComponent<Unit>().InitBatch(1);
             //obj.transform.SetParent(unitPool);
 
             //NetworkUnitManager.SendUnitSpawn(0, hit.point);
-            //Invoke(nameof(SendPlayerDrawCard),0.5f);
+            //Invoke(nameof(SendPlayerDrawCard), 0.5f);
             StartCoroutine(ObserveCard(cardId));
             StartCoroutine(AddUnitCard());
         }

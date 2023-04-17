@@ -49,15 +49,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8dc926d38b6fb1b4a95eeef2ca6664cb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2DLOD_5f97e03506c6a38d9067ef1d92a27307_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 8dc926d38b6fb1b4a95eeef2ca6664cb, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SampleTexture2DLOD_64B83B7D_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 8dc926d38b6fb1b4a95eeef2ca6664cb, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2DLOD_b35d6f91ebd4f8829cf73558446aeaf7_Texture_1:
         m_Texture: {fileID: 2800000, guid: 8dc926d38b6fb1b4a95eeef2ca6664cb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -65,31 +57,11 @@ Material:
         m_Texture: {fileID: 2800000, guid: d11f7f0e43dff4d47a6fdef28751b317, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_8912dc3d48a342868cdb3f9893ab0306_Texture_1:
-        m_Texture: {fileID: 2800000, guid: d11f7f0e43dff4d47a6fdef28751b317, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_CD7A2D4C_Texture_1:
         m_Texture: {fileID: 2800000, guid: d11f7f0e43dff4d47a6fdef28751b317, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_efe0072c11d6c683a1cfb6c715fbfe61_Texture_1:
-        m_Texture: {fileID: 2800000, guid: d11f7f0e43dff4d47a6fdef28751b317, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -124,7 +96,6 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _QueueControl: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5

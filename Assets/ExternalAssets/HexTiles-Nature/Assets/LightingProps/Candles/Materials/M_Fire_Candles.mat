@@ -10,8 +10,7 @@ Material:
   m_Name: M_Fire_Candles
   m_Shader: {fileID: -6465566751694194690, guid: cda6a28fff378df4997c6bdd8f726a7f,
     type: 3}
-  m_ValidKeywords:
-  - HEATHAZE_ON
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
@@ -62,28 +61,13 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - Boolean_29CE7FE6: 1
-    - Boolean_B22D43C4: 0
     - Boolean_E01999C4: 1
-    - HEATHAZE: 1
     - Vector1_1A7F7CEC: -0.025
     - Vector1_22934399: 6.65
     - Vector1_2F8A1485: 0.526
-    - Vector1_3DA5F569: 6
     - Vector1_47F51AE6: 0.447
     - Vector1_6C8CA457: 0.25
     - Vector1_6CBB3092: 1.1
@@ -91,8 +75,6 @@ Material:
     - Vector1_8BBD14D6: 1.9
     - Vector1_92AEFECE: 0.14
     - Vector1_A813808C: 20
-    - Vector1_BA97FF69: 0
-    - Vector1_BE253F70: 0
     - Vector1_CA302326: -1.38
     - Vector1_D044D18F: 1.12
     - Vector1_EDFE50BF: -0.08694804
@@ -110,7 +92,6 @@ Material:
     - _GlossyReflections: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
-    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.5
@@ -124,7 +105,6 @@ Material:
     - Color_5F4DA8A1: {r: 1, g: 0.8905592, b: 0.5424528, a: 0}
     - Color_87845592: {r: 0.9254902, g: 0.4517861, b: 0.11764706, a: 0}
     - Color_A0164745: {r: 1, g: 0.9624628, b: 0.8726415, a: 0}
-    - Color_A2A23FED: {r: 1, g: 0.9725049, b: 0.8066038, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
