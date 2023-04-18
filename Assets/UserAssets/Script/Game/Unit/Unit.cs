@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
     #region Object info
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private Slider HPbar;
+    [SerializeField] private UnitAnimationController m_UnitAnimationController;
 
     private Animator animator;
     private Transform cachedTransfrom;
@@ -35,7 +36,7 @@ public class Unit : MonoBehaviour
     [Header("Additional stats")]
     [SerializeField] private float criticalRate;    // 크리티컬율
     [SerializeField] private float criticalDamage;  // 크리티컬 데미지
-    [SerializeField] private float attackRange = 0.5f; // 공격 사거리
+    [SerializeField] private float attackRange = 0.8f; // 공격 사거리
     [SerializeField] private float detectRange = 2.5f; // 상대 유닛 감지 거리
     [SerializeField] private float attackSpeed = 1.5f; // 공격 속도
     [SerializeField] private float attackDelay; // 공격 속도 계산용
@@ -53,7 +54,8 @@ public class Unit : MonoBehaviour
     private bool isCliked;
     private bool isAlive;
     private bool isBatch;
-    
+    private bool m_IsMoving;
+
     private Vector3 finalDestination;
     private Vector3 currentDestination;
     #endregion
@@ -70,6 +72,7 @@ public class Unit : MonoBehaviour
     private void Awake()
     {
         cachedTransfrom = transform;
+        m_UnitAnimationController = GetComponent<UnitAnimationController>();
     }
 
     public void Start()
@@ -77,12 +80,16 @@ public class Unit : MonoBehaviour
         isAlive = true;
         HPbar.maxValue = HPbar.value = currentHp = maxHP;
     }
-
+    
     private void FixedUpdate()
     {
-        
         if (!isBatch) return;
         attackDelay += Time.deltaTime;
+
+        if (navMeshAgent.remainingDistance > attackRange) m_IsMoving = true;
+        else m_IsMoving = false;
+        m_UnitAnimationController.PlayMoveAnimation(m_IsMoving);
+
         /*
         if (isPointMove) PointMove();
         else
@@ -91,6 +98,27 @@ public class Unit : MonoBehaviour
             DefaultMove();
         }
         */
+    }
+
+    public void InitBatch()
+    {
+        //Debug.Log("유닛 배치 완료");
+        navMeshAgent = GetComponent<NavMeshAgent>();
+
+        HPbar.maxValue = HPbar.value = currentHp = maxHP;
+        //실험용 적 때문에 Start함수와 중복되는 부분 있음
+
+        isBatch = true;
+        isAlive = true;
+        navMeshAgent.enabled = true;
+
+        defaultStoppingDistance = navMeshAgent.stoppingDistance;
+
+        //SetAffiliationUnit();
+        currentDestination = finalDestination;
+
+        SetDestination(finalDestination);
+        //Find 함수 별로 안좋음
     }
 
     public void InitBatch(ushort ownerID, ushort instanceID, Vector3 finalDestination)
