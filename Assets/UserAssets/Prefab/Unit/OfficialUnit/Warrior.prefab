@@ -4843,6 +4843,7 @@ GameObject:
   - component: {fileID: 7775459157921968699}
   - component: {fileID: 8958401785908088793}
   - component: {fileID: 4044892186050055126}
+  - component: {fileID: 487778920245365041}
   m_Layer: 13
   m_Name: Warrior
   m_TagString: Untagged
@@ -4876,9 +4877,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8763750450409419696}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d9b155d656a64f02adc39213c8d11c86, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2f8c2fabcba0af245900661f4e2b28cb, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -4956,6 +4957,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 393216
   HPbar: {fileID: 7870046880071455759}
+  m_UnitAnimationController: {fileID: 0}
   unitId: 0
   level: 1
   maxHP: 100
@@ -4965,11 +4967,23 @@ MonoBehaviour:
   speed: 1
   criticalRate: 0
   criticalDamage: 0
-  attackRange: 0.5
+  attackRange: 0.8
   detectRange: 2.5
   attackSpeed: 1.5
   attackDelay: 0
   element: 0
+--- !u!114 &487778920245365041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763750450409419696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01cb63875496dbf4cb2cc055a91e6859, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8779326060958255993
 GameObject:
   m_ObjectHideFlags: 0
