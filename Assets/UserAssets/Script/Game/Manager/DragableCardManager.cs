@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -253,11 +254,18 @@ public class DragableCardManager : MonoBehaviour
                 usingCard.ChangeActiveState(false);
                 return;
             }
-
-            Destroy(usingCard.gameObject);
-
-            SpawnUnit(cardId, cardType, hit, usingCard, true);
-
+            //host = 0
+            //client = 1 
+            if(PhotonNetwork.IsMasterClient)
+            {
+                Destroy(usingCard.gameObject);
+                //SendEvent.HplayerSpawnedUnit( );
+                SpawnUnit(cardId, cardType, hit, usingCard, true);
+            }
+            else
+            {
+                //SendEvent.CspawnUnit();
+            }
         }
         else usingCard.GetComponent<RectTransform>().anchoredPosition = startPos;
     }
