@@ -8,7 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-public class SendEvent
+public class SendEvent : MonoBehaviour
 {
     private static SendEvent instance = null;
     private SendEvent()
