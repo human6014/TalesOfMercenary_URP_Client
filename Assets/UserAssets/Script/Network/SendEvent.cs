@@ -8,24 +8,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-public class SendEvent
+public class SendEvent : MonoBehaviour
 {
-    private static SendEvent instance = null;
-    private SendEvent()
-    {
-    }
-    public static SendEvent Instance
-    {
-        get
-        {
-            if (null == instance)
-            {
-                instance = new SendEvent();
-            }
-            return instance;
-        }
-    }
-
     /// <summary>
     /// Clinet 메시지 EventCode는 접두사로 C 
     /// Host 메시지 EvnetCode는 접두사로 H
@@ -61,7 +45,7 @@ public class SendEvent
     /// </summary>
     #region Host Message
     
-    private static void HplayerDrawedCard(ushort cardID)
+    public static void HplayerDrawedCard(ushort cardID)
     {
         object[] content = new object[] { (ushort)cardID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
@@ -147,6 +131,7 @@ public class SendEvent
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent((byte)EEventCode.CunitDestinationInput, content, raiseEventOptions, SendOptions.SendReliable);
     }
+
     private static void CuseMagicCard(ushort magicID, Vector3 position)
     {
         object[] content = new object[] { (ushort)magicID, (Vector3)position };
