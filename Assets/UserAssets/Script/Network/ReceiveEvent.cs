@@ -111,47 +111,59 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
 
     public void HplayerDrawedCard(object[] data)
     {
-
+        ushort userID = (ushort)data[0];
     }
 
     public void HplayerBuildingUpgraded(object[] data)
     {
-
+        ushort userID = (ushort)data[0];
+        ushort buildingInfo = (ushort)data[1];
+        ushort amount_of_exp = (ushort)data[2];
+        byte buildingLevel = (byte)data[3];
     }
 
     public void HplayerSpawnedUnit(object[] data)
     {
-
+        ushort userID = (ushort)data[0];
+        ushort unitID = (ushort)data[1];
+        ushort unitInstanceID = (ushort)data[2];
+        Vector3 position = (Vector3)data[3];
+        ushort targetInstaceID = (ushort)data[4];
     }
 
     public void HplayerNexusUpgraded(object[] data)
     {
-
+        ushort userID = (ushort)data[0];
     }
 
     public void HunitAttack(object[] data)
     {
-
+        ushort attackUnitID = (ushort)data[0];
+        ushort attackedUnitID = (ushort)data[1];
+        uint damage = (uint)data[2];
     }
 
     public void HunitMovement_vector(object[] data)
     {
-
+        ushort unitID = (ushort)data[0];
+        Vector3 position = (Vector3)data[3];
     }
 
     public void HunitMovement_target(object[] data)
     {
-
+        ushort unitID = (ushort)data[0];
+        ushort targetID = (ushort)data[1];
     }
 
     public void HunitDied(object[] data)
     {
-
+        ushort unitID = (ushort)data[0];
     }
 
     public void HplayerUseMagicCard(object[] data)
     {
-
+        ushort magicID = (ushort)data[0];
+        Vector3 position = (Vector3)data[3];
     }
     #endregion
 
@@ -169,22 +181,25 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
 
     public void CunitDestinationInput(object[] data)
     {
-
+        ushort unitID = (ushort)data[0];
+        Vector3 position = (Vector3)data[1];
     }
 
     public void CuseMagicCard(object[] data)
     {
-
+        ushort magicID = (ushort)data[0];
+        Vector3 position = (Vector3)data[1];
     }
 
     public void CbuildingUpgrad(object[] data)
     {
-
+        ushort buildingID = (ushort)data[0];
     }
 
     public void CspawnUnit(object[] data)
     {
-
+        ushort unitID = (ushort)data[0];
+        Vector3 position = (Vector3)data[1];
     }
     #endregion
 }
