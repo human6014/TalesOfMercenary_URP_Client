@@ -43,21 +43,28 @@ public class Receive : MonoBehaviour, IOnEventCallback
         //Debug.Log(RoomManager.Instance.m_PhotonView.IsMine + "@@@@@@@@@@@@@@@@@@@@@@@@");
         Debug.Log("메시지 받음");
         Debug.Log("이벤트 코드" + eventCode);
-        if (eventCode == (byte)EventCode.EsPlayerBuildingUpgradedMessage)
+        object[] data = (object[])photonEvent.CustomData;
+        switch(eventCode)
         {
-            //Debug.Log("1번 받음 ");
-            object[] data = (object[])photonEvent.CustomData;
-            //Debug.Log("데이터 길이" + data.Length);
-            Vector3 targetPosition = (Vector3)data[0];
-            byte id1 = (byte)data[1];
-            byte id2 = (byte)data[2];
-            Debug.Log(id2 + "attack" + id1 + "move point -> " + targetPosition + "받았다!!!!!!!!!");
-        }
-        else if (eventCode == (byte)EventCode.EsPlayerSpawnedUnitMessage)
-        {
-            //Debug.Log("2번 받음");
-            object[] data = (object[])photonEvent.CustomData;
-            Debug.Log((byte)data[0] + " 유닛이 죽음 데이터 받았다!!!!!!!!!!!!!!!!!!!!!!!!!");
+            case (byte)EventCode.EsPlayerSpawnedUnitMessage:
+                EsPlayerSpawnedUnitMessage(data);
+                break;
+
+            case (byte)EventCode.EsPlayerNexusUpgradedMessage:
+                EsPlayerNexusUpgradedMessage(data);
+                break;
         }
     }
+    public void EsPlayerSpawnedUnitMessage(object[] data)
+    {
+        Vector3 targetPosition = (Vector3)data[0];
+        byte id1 = (byte)data[1];
+        byte id2 = (byte)data[2];
+        Debug.Log(id2 + "attack" + id1 + "move point -> " + targetPosition + "받았다!!!!!!!!!");
+    }
+    public void EsPlayerNexusUpgradedMessage(object[] data)
+    {
+        Debug.Log((byte)data[0] + " 유닛이 죽음 데이터 받았다!!!!!!!!!!!!!!!!!!!!!!!!!");
+    }
+
 }
