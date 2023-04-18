@@ -3,10 +3,12 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using static UnityEngine.UI.CanvasScaler;
 
 public class ReceiveEvent : MonoBehaviour, IOnEventCallback
 {
+    public UnityEvent asdf;
     public enum EEventCode : byte
     {
         #region Host
@@ -30,6 +32,7 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
         CspawnUnit = 14,
         #endregion
     }
+
     private void OnEnable()
     {
         PhotonNetwork.AddCallbackTarget(this);
@@ -164,7 +167,7 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
     }
     #endregion
 
-    #region Clint recei
+    #region Clint receive
 
     public void CplayerDrawedCard(object[] data)
     {
