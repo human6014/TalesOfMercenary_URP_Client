@@ -47,59 +47,59 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
     {
         byte eventCode = photonEvent.Code;
         Debug.Log("메시지 받음 ( " + "이벤트 코드" + eventCode + ") ");
-        object[] data = (object[])photonEvent.CustomData;
+        //object[] data = (object[])photonEvent.CustomData;
 
         switch(eventCode)
         {
             case (byte)EEventCode.HplayerDrawedCard:
-                HplayerDrawedCard(data);
+                HplayerDrawedCard((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.HplayerBuildingUpgraded:
-                HplayerBuildingUpgraded(data);
+                HplayerBuildingUpgraded((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.HplayerSpawnedUnit:
-                HplayerSpawnedUnit(data);
+                HplayerSpawnedUnit((object[])photonEvent.CustomData);
                 break;
 
             case (byte)EEventCode.HplayerNexusUpgraded:
-                HplayerNexusUpgraded(data);
+                HplayerNexusUpgraded((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.HunitAttack:
-                HunitAttack(data);
+                HunitAttack((object[])photonEvent.CustomData);
                 break;
 
             case (byte)EEventCode.HunitMovement_vector:
-                HunitMovement_vector(data);
+                HunitMovement_vector((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.HunitMovement_target:
-                HunitMovement_target(data);
+                HunitMovement_target((object[])photonEvent.CustomData);
                 break;
 
             case (byte)EEventCode.HunitDied:
-                HunitDied(data);
+                HunitDied((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.HplayerUseMagicCard:
-                HplayerUseMagicCard(data);
+                HplayerUseMagicCard((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.CplayerDrawedCard:
-                CplayerDrawedCard(data);
+                CplayerDrawedCard((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.CnexusUpgraded:
-                CnexusUpgraded(data);
+                CnexusUpgraded((object[])photonEvent.CustomData);
                 break;
 
             case (byte)EEventCode.CunitDestinationInput:
-                CunitDestinationInput(data);
+                CunitDestinationInput((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.CuseMagicCard:
-                CuseMagicCard(data);
+                CuseMagicCard((object[])photonEvent.CustomData);
                 break;
 
             case (byte)EEventCode.CbuildingUpgrad:
-                CbuildingUpgrad(data);
+                CbuildingUpgrad((object[])photonEvent.CustomData);
                 break;
             case (byte)EEventCode.CspawnUnit:
-                CspawnUnit(data);
+                CspawnUnit((object[])photonEvent.CustomData);
                 break;
             default:
                 //Debug.Assert(false);

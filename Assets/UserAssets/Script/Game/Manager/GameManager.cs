@@ -82,7 +82,6 @@ public class GameManager : MonoBehaviour
         IncreseGoldTime -= decreseTime;
     }
 
-
     private void Awake()
     {
         InitData();
@@ -122,6 +121,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-
 }
