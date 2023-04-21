@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Nexus : MonoBehaviour
+public class Nexus :  Damageable
 {
     public bool isPlayer { get; private set; } = false;
 
@@ -17,7 +17,7 @@ public class Nexus : MonoBehaviour
         currentHP = HP;
     }
 
-    public void Hit(int damage)
+    public override void Hit(int damage)
     {
         if (isGameEnd) return;
         HPbar.value = (currentHP -= damage);

@@ -15,7 +15,12 @@ public class SendEvent : MonoBehaviour
         {
             int userID = 0;
             int unitID = 1;
-            CspawnUnit(userID, unitID, new Vector3(0, 0, 0));
+            //CspawnUnit(userID, unitID, new Vector3(0, 0, 0));
+        }
+        else
+        {
+            //자체 처리 후
+            //HplayerSpawnedUnit()
         }
     }
 
@@ -165,7 +170,6 @@ public class SendEvent : MonoBehaviour
 
     public static void CspawnUnit(int userID, int unitID, Vector3 position)
     {
-
         object[] content = new object[] { userID, unitID, position };
         Debug.LogFormat("{0}, {1}, {2}",(int)content[0] , (int)content[1] , (Vector3)content[2]);
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };

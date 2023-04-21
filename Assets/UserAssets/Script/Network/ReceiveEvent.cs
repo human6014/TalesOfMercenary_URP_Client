@@ -9,9 +9,8 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class ReceiveEvent : MonoBehaviour, IOnEventCallback
 {
-    public UnityEvent asdf;
-    const byte Client = 0;
-    const byte Host = 1;
+    const int Client = 0;
+    const int Host = 1;
     public enum EEventCode : byte
     {
         #region Host
@@ -50,8 +49,6 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
     {
         byte eventCode = photonEvent.Code;
         Debug.Log("메시지 받음 ( " + "이벤트 코드" + eventCode + ") ");
-        //object[] data = (object[])photonEvent.CustomData;
-
         switch(eventCode)
         {
             case (byte)EEventCode.HplayerDrawedCard:
@@ -127,7 +124,6 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
         byte buildingLevel = (byte)data[3];
     }
 
-
     public void HplayerSpawnedUnit(object[] data)
     {
         //step1
@@ -137,6 +133,11 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
         Vector3 position = (Vector3)data[3];
         int targetInstaceID = (int)data[4];
 
+        Debug.Log(" userID : " + userID + 
+                "\t unitID : " + unitID +
+                "\t unitInstanceID : " + unitInstanceID + 
+                "\t position : " + position + 
+                "\t targetID : " + targetInstaceID);
         //step2
         NetworkUnitManager.SpawnUnit(userID, unitID, unitInstanceID, position, targetInstaceID);
     }
@@ -153,7 +154,6 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
         int damage = (int)data[2];
     }
 
-
     public void HunitMovement_vector(object[] data)
     {
         //step1
@@ -168,11 +168,13 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
     {
         int unitInstanceID = (int)data[0];
         int targetID = (int)data[1];
+        NetworkUnitManager.UnitMove_target(unitInstanceID, targetID);
     }
 
     public void HunitDied(object[] data)
     {
         int unitInstanceID = (int)data[0];
+        NetworkUnitManager.UnitDied(unitInstanceID);
     }
 
     public void HplayerUseMagicCard(object[] data)
@@ -201,7 +203,7 @@ public class ReceiveEvent : MonoBehaviour, IOnEventCallback
         int unitID = (int)data[0];
         Vector3 position = (Vector3)data[1];
         SendEvent.HunitMovement_vector(unitID, position);
-        NetworkUnitManager.UnitMove_Vector(unitID, position);
+        NetworkUnitManager.InputUnitMove_Vector(unitID, position);
     }
 
     public void CuseMagicCard(object[] data)

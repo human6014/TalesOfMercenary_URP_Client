@@ -241,7 +241,7 @@ public class DragableCardManager : MonoBehaviour
 
         Card usingCard = null;
         if (cardType == CardType.Unit) usingCard = unitCards[cardId];
-        else if (cardType == CardType.Magic) usingCard = magicCards[cardId];
+        else if (cardType == CardType.Magic) return;//usingCard = magicCards[cardId];
         else Debug.LogError("CardType Missing");
 
         if (IsHitToGround(out RaycastHit hit))
@@ -256,15 +256,17 @@ public class DragableCardManager : MonoBehaviour
             }
             //host = 0
             //client = 1 
+
             if(PhotonNetwork.IsMasterClient)
             {
                 Destroy(usingCard.gameObject);
-                //SendEvent.HplayerSpawnedUnit( );
+                //SendEvent.HplayerSpawnedUnit(NetworkUnitManager.Host, usingCard.CardUniqueID, NetworkUnitManager.instanceID++, hit.point, 1);
                 SpawnUnit(cardId, cardType, hit, usingCard, true);
+                
             }
             else
             {
-                //SendEvent.CspawnUnit();
+                //SendEvent.CspawnUnit(NetworkUnitManager.Client, usingCard.CardUniqueID, hit.point);
             }
         }
         else usingCard.GetComponent<RectTransform>().anchoredPosition = startPos;
@@ -287,7 +289,7 @@ public class DragableCardManager : MonoBehaviour
         {
             Vector3 cardpos = hit.collider.transform.position + Vector3.up * 0.2f;
             obj = Instantiate(usingCard.CardPrefab, cardpos, Quaternion.identity);
-            obj.GetComponent<Unit>().InitBatch();
+            obj.GetComponent<Unit>().InitBatch(NetworkUnitManager.Host, NetworkUnitManager.instanceID - 1, NetworkUnitManager.unitList[1].transform.position);
             obj.transform.SetParent(unitPool);
 
             //NetworkUnitManager.SendUnitSpawn(0, hit.point);

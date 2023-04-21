@@ -1,40 +1,42 @@
-using System;
+
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 /// <summary>
-/// Host = 1
-/// Client = 0
+/// Host = 0
+/// Client = 1
 /// </summary>
 public class NetworkUnitManager : MonoBehaviour
 {
+    public static readonly int Host = 0;
+    public static readonly int Client = 1;
 
-    private void Awake()
-    {
-        //넥서스를 유닛 리스트에 넣기
-    }
-    public static Unit[] usingUnit = new Unit[4];
+    [SerializeField] private Nexus[] damageable;
+
+    public static Damageable[] usingUnit = new Damageable[4];
     /// <summary>
     /// instanceID는 현재 필드에있는 공격 가능한 모든 유닛의 번호로 설정하고 싶다.
     /// 넥서스가 0,1을 고정으로 할당하고 시작 
     /// HOST 넥서스 = 0
     /// CLIENT 넥서스 = 1
     /// </summary>
-    static int instanceID = 2;
+    public static int instanceID = 2;
     //{ "유닛 인스턴스 아이디": "유닛" }
-    private static Dictionary<int, Unit> unitList = new();
+    public static Dictionary<int, Damageable> unitList = new();
+    public static Dictionary<int, BuildingCard> buildingList = new();
 
-    void Start()
+
+
+    void Awake()
     {
-        //usingUnit = FindObjectOfType<TempUnitData>().GetUnitData();
-    }
-    public void TakeDamage(int unitID, int amount)
-    {
-
+        usingUnit = FindObjectOfType<TempUnitData>().GetUnitData();
+        for(int i = 0; i < damageable.Length; i++) unitList.Add(i, damageable[i]);
     }
 
+    #region 클라이언트
     /// <summary>
     /// 클라이언트용 함수
     /// 타겟 인스턴스를 쫓도록 생성하면 된다. -> 공격 사거리가 되면 거기서 정지하고 공격 
@@ -51,10 +53,46 @@ public class NetworkUnitManager : MonoBehaviour
         /*todo
          * 1. 유닛을 배열에 추가
          */
-        Debug.LogFormat("UnitSpwan : , {0} , {1}, {2}, {4}, {5}", userID, unitID, unitInstanceID, position, targetInstaceID);
+
+        Debug.Log("SpawnUnit Host한테 수신받음");
+        //Debug.LogFormat("UnitSpwan : , {0} , {1}, {2}, {4}, {5}", userID, unitID, unitInstanceID, position, targetInstaceID);
+        unitList.Add( unitInstanceID, usingUnit[unitID]);
+        GameObject obj = Instantiate(usingUnit[unitID], position, Quaternion.identity).gameObject;
+
+        unitList.TryGetValue(targetInstaceID, out Damageable damageable);
+        obj.GetComponent<Unit>().InitBatch(userID, unitInstanceID,damageable.transform.position);
     }
+    
+    public static void UnitMove_Vector(int unitInstanceID, Vector3 position)
+    { 
+        /*todo
+         * 들어온 값을 배열의 유닛의 최종 목적지로 설정해준다.
+         */
+    }
+
+    public static void UnitAttack(int attackUnitInstanceID, int attackedUnitInstanceID, int damage)
+    {
+        
+    }
+
+    public static void UnitMove_target(int unitInstanceID, int targetID)
+    {
+
+    }
+
+    public static void UnitDied(int unitInstanceID)
+    {
+
+    }
+
+    public static void PlayerNexusUpgraded()
+    {
+        //배열의 넥서스 레벨을 올린다
+    }
+    #endregion
+
+    #region 호스트
     /// <summary>
-    /// 호스트용 함수
     /// 해당 위치에서 가장 가까운 적 탐색 후 해당 위치로 타겟 지정 -> 배열을 순회하며 가까운 적으로 타깃 지정
     /// 지정 후 메시지 전송 그리고 해당 유닛 생성 후 배열에 추가
     /// </summary>
@@ -63,114 +101,34 @@ public class NetworkUnitManager : MonoBehaviour
     /// <param name="position"></param
     public static void SpawnUnit(int userID, int unitID, Vector3 position)
     {
-
         /*todo
          * 1. 받은 벡터에서 가장 가까운 적 탐지
          * 2. 해당 적을 타깃으로하는 유닛 생성
          * 3. 유닛을 배열에 추가
          */
-        int targetInstaceID = 10;
+        //unitList.Add(instanceID, usingUnit[unitID]);
+
         Debug.Log("생성할 유닛 인스턴스 번호" + instanceID);
-        SendEvent.HplayerSpawnedUnit(userID, unitID, instanceID, position, targetInstaceID);
+        SendEvent.HplayerSpawnedUnit(userID, unitID, instanceID, position, 0);
+        unitList.Add(instanceID, usingUnit[unitID]);
+        GameObject obj = Instantiate(usingUnit[unitID], position, Quaternion.identity).gameObject;
+
+        unitList.TryGetValue(0, out Damageable damageable);
+        obj.GetComponent<Unit>().InitBatch(userID, 0, damageable.transform.position);
+        //여기에 유닛 배열에 추가및 초기화
         Debug.LogFormat("클라에게 유닛 생성메시지 전달 완료");
         instanceID++;
         Debug.Log(instanceID);
     }
 
-    public static void UnitMove_Vector(int unitInstanceID, Vector3 position)
-    { 
-        Debug.LogFormat("SendMovement() {0}, {1}", instanceID, position);
+    public static void InputUnitMove_Vector(int unitInstanceID, Vector3 position)
+    {
+        /*todo
+         * 1. 자신의 유닛을 움직였나 확인
+         * 2. 올바른 입력이면 유닛 움직임을 클라이언트에게 보낸다
+         * 3. 배열의 유닛의 설정값을 바꿔준다.
+         */
+        UnitMove_Vector(unitInstanceID, position);
     }
-    /*
-        #region Massage
-        [MessageHandler((ushort)ClientToServerId.spawnUnit)]
-        private static void SpawnUnit(ushort ownerID, Message message)
-        {
-            byte unitDataNum = message.GetByte();
-            Vector3 spawnPosition = message.GetVector3();
-            Vector3 finalDestination;
-            if (ownerID != 1) finalDestination = GameManager.player1Nexus;
-            else finalDestination = GameManager.player2Nexus;
-
-            Debug.LogFormat("getSpawnUnit(), {0}, {1}", unitDataNum, spawnPosition);
-            //모든 클라이언트에게 생성하라고 메시지 
-            Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.playerSpawnedUnit);
-            newMessage.AddUShort(ownerID);//유닛을 소유한 클라이언트 ID
-            newMessage.AddByte(unitDataNum);//데이터베이스 ID
-            newMessage.AddUShort(instanceID);//인스턴스 아이디
-            newMessage.AddVector3(spawnPosition); //유닛 소환 위치
-            newMessage.AddVector3(finalDestination); //최종 이동 위치
-
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(newMessage);
-            Debug.LogFormat("sendSpawnUnit(), {0}, {1}, {2}, {3}, {4}", ownerID, unitDataNum, instanceID, spawnPosition, finalDestination);
-            //유닛풀에 유닛 생성 
-
-            Unit unit = Instantiate(usingUnit[unitDataNum], spawnPosition, Quaternion.identity);
-            unit.InitBatch(ownerID, instanceID, finalDestination);
-
-
-            unitList.Add(instanceID, unit);
-
-            foreach (KeyValuePair<ushort, Unit> units in unitList)
-            {
-                Debug.LogFormat("UnitList : , {0} , {1}", units.Key, units.Value);
-            }
-            instanceID++;
-        }
-
-        [MessageHandler((ushort)ClientToServerId.unitDestinationInput)]
-        private static void ReceiveSendMovement(ushort ownerID, Message message)
-        {
-            ushort instanceID = message.GetUShort();
-            Vector3 destination = message.GetVector3();
-
-            Debug.LogFormat("get unitDestinationInput() {0}, {1}", instanceID, destination);
-
-            Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.unitMovement);
-            newMessage.AddUShort(instanceID);//인스턴스 아이디
-            newMessage.AddVector3(destination);//목적지
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(newMessage);
-
-            unitList[instanceID].SetDestination(destination);
-
-            Debug.LogFormat("SendMovement() {0}, {1}", instanceID, destination);
-        }
-
-
-        public static void SendUnitTrackMovement(ushort trackingInstanceID, ushort trackedInstanceID)
-        {
-            Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.unitMovement);
-            newMessage.AddUShort(trackingInstanceID);// 내 유닛 인스턴스 아이디
-            newMessage.AddUShort(trackedInstanceID);// 상대방 유닛 인스턴스 아이디
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(newMessage);
-        }
-
-        public static void SendUnitMovement(ushort instanceID, Vector3 destination)
-        {
-            Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.unitMovement);
-            newMessage.AddUShort(instanceID);//인스턴스 아이디
-            newMessage.AddVector3(destination);//목적지
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(newMessage);
-        }
-
-        public static void SendUnitAttack(ushort attackingInstanceID, ushort attackedInstanceID, int calcDamage)
-        {
-            Message newMessage = Message.Create(MessageSendMode.Reliable, ServerToClientId.unitAttack);
-            newMessage.AddUShort(attackingInstanceID);// 공격하는 유닛
-            newMessage.AddUShort(attackedInstanceID);// 공격당하는 유닛
-            newMessage.AddInt(calcDamage);
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(newMessage);
-            Debug.LogFormat("SendUnitAttack() {0}, {1}", attackingInstanceID, attackedInstanceID, calcDamage);
-        }
-
-        public static void SendUnitDied(ushort unitInstanceID)
-        {
-            Message message = Message.Create(MessageSendMode.Reliable, ServerToClientId.unitDied);
-            message.AddUShort(unitInstanceID); //죽은 유닛 인스턴스 아이디
-            NetworkManager.NetworkManagerSingleton.Server.SendToAll(message);
-
-            Debug.LogFormat("SendUnitDied() {0}", unitInstanceID);
-        }
-
-        #endregion*/
+    #endregion
 }
