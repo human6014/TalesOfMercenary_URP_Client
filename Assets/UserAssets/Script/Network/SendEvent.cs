@@ -1,15 +1,23 @@
 using ExitGames.Client.Photon;
-using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
-using Unity.VisualScripting;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
 public class SendEvent : MonoBehaviour
 {
+
+    void Start()
+    { 
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            int userID = 0;
+            int unitID = 1;
+            CspawnUnit(userID, unitID, new Vector3(0, 0, 0));
+        }
+    }
 
     /// <summary>
     /// Clinet 메시지 EventCode는 접두사로 C 
@@ -35,7 +43,7 @@ public class SendEvent : MonoBehaviour
         CunitDestinationInput = 11,
         CuseMagicCard = 12,
         CbuildingUpgrad = 13,
-        CspawnUnit = 14,
+        CspawnUnit = 14
         #endregion
     }
     /// <summary>
@@ -46,65 +54,65 @@ public class SendEvent : MonoBehaviour
     /// </summary>
     #region Host Message
 
-    public static void HplayerDrawedCard(ushort cardID)
+    public static void HplayerDrawedCard(int cardID)
     {
-        object[] content = new object[] { (ushort)cardID };
+        object[] content = new object[] { (int)cardID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HplayerDrawedCard, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HplayerBuildingUpgraded(ushort userID, ushort buildingInfo, ushort amount_of_exp, byte buildingLevel)
+    public static void HplayerBuildingUpgraded(int userID, int buildingInfo, int amount_of_exp, byte buildingLevel)
     {
-        object[] content = new object[] { (ushort)userID , (ushort)buildingInfo, (ushort)amount_of_exp, (byte)buildingLevel };
+        object[] content = new object[] { (int)userID , (int)buildingInfo, (int)amount_of_exp, (byte)buildingLevel };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HplayerBuildingUpgraded, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HplayerSpawnedUnit(ushort userID, ushort unitID, ushort unitInstanceID, Vector3 position, ushort targetInstaceID)
+    public static void HplayerSpawnedUnit(int userID, int unitID, int unitInstanceID, Vector3 position, int targetInstaceID)
     {
-        object[] content = new object[] { (ushort)userID, (ushort)unitID, (ushort)unitInstanceID, (Vector3)position ,(ushort)targetInstaceID };
+        object[] content = new object[] { (int)userID, (int)unitID, (int)unitInstanceID, (Vector3)position ,(int)targetInstaceID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HplayerSpawnedUnit, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HplayerNexusUpgraded(ushort userID)
+    public static void HplayerNexusUpgraded(int userID)
     {
-        object[] content = new object[] { (ushort)userID };
+        object[] content = new object[] { (int)userID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HplayerNexusUpgraded, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HunitAttack(ushort attackUnitID, ushort attackedUnitID, uint damage)
+    public static void HunitAttack(int attackUnitInstanceID, int attackedUnitInstanceID, int damage)
     {
-        object[] content = new object[] { (ushort)attackUnitID, (ushort)attackedUnitID, (uint)damage };
+        object[] content = new object[] { (int)attackUnitInstanceID, (int)attackedUnitInstanceID, (int)damage };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HunitAttack, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HunitMovement_vector(ushort unitID, Vector3 position)
+    public static void HunitMovement_vector(int unitInstanceID, Vector3 position)
     {
-        object[] content = new object[] { (ushort)unitID, (Vector3)position };
+        object[] content = new object[] { (int)unitInstanceID, (Vector3)position };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HunitMovement_vector, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HunitMovement_target(ushort unitID, ushort targetID)
+    public static void HunitMovement_target(int unitInstanceID, int targetInstanceID)
     {
-        object[] content = new object[] { (ushort)unitID, (ushort)targetID };
+        object[] content = new object[] { (int)unitInstanceID, (int)targetInstanceID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HunitMovement_target, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HunitDied(ushort unitID)
+    public static void HunitDied(int unitInstanceID)
     {
-        object[] content = new object[] { (ushort)unitID };
+        object[] content = new object[] { (int)unitInstanceID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HunitDied, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void HplayerUseMagicCard(ushort magicID, Vector3 position)
+    public static void HplayerUseMagicCard(int magicID, Vector3 position)
     {
-        object[] content = new object[] { (ushort)magicID, (Vector3)position };
+        object[] content = new object[] { (int)magicID, (Vector3)position };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
         PhotonNetwork.RaiseEvent((byte)EEventCode.HplayerUseMagicCard, content, raiseEventOptions, SendOptions.SendReliable);
     }
@@ -126,32 +134,42 @@ public class SendEvent : MonoBehaviour
         PhotonNetwork.RaiseEvent((byte)EEventCode.CnexusUpgraded, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void CunitDestinationInput(ushort unitID, Vector3 position)
+    public static void CunitDestinationInput(int unitInstanceID, Vector3 position)
     {
-        object[] content = new object[] { (ushort)unitID, (Vector3)position };
+        object[] content = new object[] { (int)unitInstanceID, (Vector3)position };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent((byte)EEventCode.CunitDestinationInput, content, raiseEventOptions, SendOptions.SendReliable);
     }
-    public static void CuseMagicCard(ushort magicID, Vector3 position)
+
+
+    public static void CunitMovementInput_vector(int unitInstanceID, Vector3 position)
     {
-        object[] content = new object[] { (ushort)magicID, (Vector3)position };
+        object[] content = new object[] { (int)unitInstanceID, (Vector3)position };
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
+        PhotonNetwork.RaiseEvent((byte)EEventCode.HunitMovement_vector, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    public static void CuseMagicCard(int magicID, Vector3 position)
+    {
+        object[] content = new object[] { (int)magicID, (Vector3)position };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent((byte)EEventCode.CuseMagicCard, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void CbuildingUpgrad(ushort buildingID)
+    public static void CbuildingUpgrad(int buildingID)
     {
-        object[] content = new object[] { (ushort)buildingID };
+        object[] content = new object[] { (int)buildingID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent((byte)EEventCode.CbuildingUpgrad, content, raiseEventOptions, SendOptions.SendReliable);
     }
 
-    public static void CspawnUnit(ushort unitID, Vector3 position)
+    public static void CspawnUnit(int userID, int unitID, Vector3 position)
     {
-        object[] content = new object[] { (ushort)unitID, (Vector3)position };
+
+        object[] content = new object[] { userID, unitID, position };
+        Debug.LogFormat("{0}, {1}, {2}",(int)content[0] , (int)content[1] , (Vector3)content[2]);
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.MasterClient };
         PhotonNetwork.RaiseEvent((byte)EEventCode.CspawnUnit, content, raiseEventOptions, SendOptions.SendReliable);
     }
-
     #endregion
 }
