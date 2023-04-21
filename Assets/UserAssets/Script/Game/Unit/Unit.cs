@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Unit : MonoBehaviour
+public class Unit :  Damageable
 {
     #region Object info
     [SerializeField] private LayerMask enemyLayer;
@@ -64,10 +64,14 @@ public class Unit : MonoBehaviour
     public bool IsAlive { get => isAlive; set => isAlive = value; }
     public bool IsClicked { get => isCliked; set => isCliked = value; }
     public bool IsEnemy { get; private set; }
-    public ushort OwnerID { get; set; }
-    public ushort InstanceID { get; private set; }
-    
+    public int OwnerID { get; set; }
+    public int InstanceID { get; private set; }
+
     #endregion
+
+
+    private int m_Priority;
+
 
     private void Awake()
     {
@@ -86,46 +90,47 @@ public class Unit : MonoBehaviour
         if (!isBatch) return;
         attackDelay += Time.deltaTime;
 
-        if (navMeshAgent.remainingDistance > attackRange) m_IsMoving = true;
-        else m_IsMoving = false;
-        m_UnitAnimationController.PlayMoveAnimation(m_IsMoving);
-
-        /*
-        if (isPointMove) PointMove();
+        if (navMeshAgent.remainingDistance > attackRange)
+        {
+            navMeshAgent.isStopped = false;
+            m_IsMoving = true;
+            navMeshAgent.avoidancePriority = m_Priority;
+        }
         else
         {
-            if (isDetectEnemy = DetectEnemy()) DetectAttack();
-            DefaultMove();
+            navMeshAgent.isStopped = true;
+            m_IsMoving = false;
+            navMeshAgent.avoidancePriority = 0;
         }
-        */
+        m_UnitAnimationController.PlayMoveAnimation(m_IsMoving);
     }
 
-    public void InitBatch()
+    //public void InitBatch()
+    //{
+    //    //Debug.Log("유닛 배치 완료");
+    //    navMeshAgent = GetComponent<NavMeshAgent>();
+
+    //    HPbar.maxValue = HPbar.value = currentHp = maxHP;
+    //    //실험용 적 때문에 Start함수와 중복되는 부분 있음
+
+    //    isBatch = true;
+    //    isAlive = true;
+    //    navMeshAgent.enabled = true;
+
+    //    defaultStoppingDistance = navMeshAgent.stoppingDistance;
+
+    //    //SetAffiliationUnit();
+    //    currentDestination = finalDestination;
+
+    //    SetDestination(finalDestination);
+    //    //Find 함수 별로 안좋음
+    //}
+
+    public void InitBatch(int ownerID, int instanceID, Vector3 finalDestination)
     {
         //Debug.Log("유닛 배치 완료");
         navMeshAgent = GetComponent<NavMeshAgent>();
-
-        HPbar.maxValue = HPbar.value = currentHp = maxHP;
-        //실험용 적 때문에 Start함수와 중복되는 부분 있음
-
-        isBatch = true;
-        isAlive = true;
-        navMeshAgent.enabled = true;
-
-        defaultStoppingDistance = navMeshAgent.stoppingDistance;
-
-        //SetAffiliationUnit();
-        currentDestination = finalDestination;
-
-        SetDestination(finalDestination);
-        //Find 함수 별로 안좋음
-    }
-
-    public void InitBatch(ushort ownerID, ushort instanceID, Vector3 finalDestination)
-    {
-        //Debug.Log("유닛 배치 완료");
-        navMeshAgent = GetComponent<NavMeshAgent>();
-
+        m_Priority = navMeshAgent.avoidancePriority;
         HPbar.maxValue = HPbar.value = currentHp = maxHP;
         //실험용 적 때문에 Start함수와 중복되는 부분 있음
 
@@ -133,7 +138,7 @@ public class Unit : MonoBehaviour
         InstanceID = instanceID;
         this.finalDestination = finalDestination;
 
-        isBatch = true;
+        
         isAlive = true;
         navMeshAgent.enabled = true;
         
@@ -143,6 +148,7 @@ public class Unit : MonoBehaviour
         currentDestination = finalDestination;
 
         SetDestination(finalDestination);
+        isBatch = true;
         //Find 함수 별로 안좋음
     }
 
@@ -171,7 +177,7 @@ public class Unit : MonoBehaviour
         //Debug.Log(transform.name + "Attack");
         attackDelay = 0;
         //animator.SetBool("attack",true);
-        enemy.GetDamage(str);
+        enemy.Hit(str);
     }
 
     private void Attack(Nexus nexus)
@@ -187,7 +193,7 @@ public class Unit : MonoBehaviour
     }
     #endregion
 
-    public void GetDamage(int damage)
+    public override void Hit(int damage)
     {
         //animator.SetBool("hit",true);
         HPbar.value = (currentHp -= damage);
