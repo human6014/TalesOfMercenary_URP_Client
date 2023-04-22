@@ -10,6 +10,7 @@ public class Card : MonoBehaviour
     protected CanvasGroup canvasGroup;
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private int cardCost;
+    [SerializeField] private int m_CardUniqueID;
     [SerializeField] public CardType cardType;
     public UnityAction<int, Vector2, CardType> OnDragAction { get; set; }
     public UnityAction<int, CardType> OnPointerDownAction { get; set; }
@@ -19,6 +20,8 @@ public class Card : MonoBehaviour
     {
         canvasGroup = GetComponent<CanvasGroup>();
     }
+
+    public int CardUniqueID { get => m_CardUniqueID; }
     public int CardCost
     {
         get => cardCost;
