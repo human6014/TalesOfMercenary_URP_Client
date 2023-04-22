@@ -48,7 +48,8 @@ GameObject:
   - component: {fileID: 2935593868963235548}
   - component: {fileID: -4490598159639082235}
   - component: {fileID: 561288872107932846}
-  - component: {fileID: -1496999722677464633}
+  - component: {fileID: -6245120312281550974}
+  - component: {fileID: 2852482964731305393}
   m_Layer: 13
   m_Name: Wizard
   m_TagString: Untagged
@@ -118,7 +119,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59360354102331270}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 1.7
@@ -138,7 +139,7 @@ NavMeshAgent:
   m_Acceleration: 5
   avoidancePriority: 50
   m_AngularSpeed: 240
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -172,10 +173,8 @@ MonoBehaviour:
   speed: 1
   criticalRate: 0
   criticalDamage: 0
-  attackRange: 2
-  detectRange: 2.5
+  attackRange: 2.5
   attackSpeed: 1.5
-  attackDelay: 0
   element: 1
 --- !u!114 &-4490598159639082235
 MonoBehaviour:
@@ -207,11 +206,12 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: -6245120312281550974}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-1496999722677464633
+--- !u!114 &-6245120312281550974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,13 +220,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 59360354102331270}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
-  m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
-  m_UseLocal: 1
+  m_PositionModel:
+    SynchronizeEnabled: 1
+    TeleportEnabled: 1
+    TeleportIfDistanceGreaterThan: 3
+    InterpolateOption: 4
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 10
+    ExtrapolateOption: 0
+    ExtrapolateSpeed: 1
+    ExtrapolateIncludingRoundTripTime: 1
+    ExtrapolateNumberOfStoredPositions: 1
+  m_RotationModel:
+    SynchronizeEnabled: 1
+    InterpolateOption: 1
+    InterpolateRotateTowardsSpeed: 180
+    InterpolateLerpSpeed: 5
+  m_ScaleModel:
+    SynchronizeEnabled: 0
+    InterpolateOption: 0
+    InterpolateMoveTowardsSpeed: 1
+    InterpolateLerpSpeed: 0
+--- !u!114 &2852482964731305393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59360354102331270}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50bc83addadff944ca498df24c832245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  HPbar: {fileID: 0}
+  m_UnitAnimationController: {fileID: 0}
+  unitId: 0
+  level: 0
+  maxHP: 0
+  def: 0
+  mp: 0
+  str: 0
+  speed: 0
+  criticalRate: 0
+  criticalDamage: 0
+  attackRange: 0.8
+  attackSpeed: 1.5
+  element: 0
 --- !u!1 &256247767864271962
 GameObject:
   m_ObjectHideFlags: 0

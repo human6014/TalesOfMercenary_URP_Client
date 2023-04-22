@@ -17,9 +17,9 @@ public class FireBall : Magic
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
     }
-    public override void Init(Vector3 destinationPos, bool isPlayer)
+    public override void Init(Vector3 destinationPos)
     {
-        base.Init(destinationPos, isPlayer);
+        base.Init(destinationPos);
 
         isBatch = true;
         dir = destinationPos - transform.position;
