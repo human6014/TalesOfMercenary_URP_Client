@@ -5,9 +5,8 @@ using UnityEngine;
 public class Magic : MonoBehaviour
 {
     protected bool isBatch;
-    protected bool isPlayer;
-    public virtual void Init(Vector3 destinationPos, bool isPlayer)
+
+    public virtual void Init(Vector3 destinationPo)
     {
-        this.isPlayer = isPlayer;
     }
 }

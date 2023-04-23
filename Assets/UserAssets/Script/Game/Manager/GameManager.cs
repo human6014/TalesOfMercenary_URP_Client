@@ -69,14 +69,14 @@ public class GameManager : MonoBehaviour
     /// <returns>return CurrentGold >= gold</returns>
     public bool DoValidGold(int gold)
     {
-        if(CurrentGold >= gold)
+        if (CurrentGold >= gold)
         {
             CurrentGold -= gold;
             return true;
         }
         return false;
     }
-    
+
     public void UpgradeNexus(float decreseTime = 0.05f)
     {
         IncreseGoldTime -= decreseTime;

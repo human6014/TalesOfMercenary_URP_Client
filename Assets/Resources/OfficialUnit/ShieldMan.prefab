@@ -20479,6 +20479,7 @@ GameObject:
   - component: {fileID: 894936344700678231}
   - component: {fileID: 5416857694990783789}
   - component: {fileID: -6756909976619491169}
+  - component: {fileID: 4445742359295463969}
   m_Layer: 13
   m_Name: ShieldMan
   m_TagString: Untagged
@@ -20548,7 +20549,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6530795506631069588}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 1.7
@@ -20568,7 +20569,7 @@ NavMeshAgent:
   m_Acceleration: 5
   avoidancePriority: 50
   m_AngularSpeed: 240
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 0
   m_AutoRepath: 1
@@ -20603,9 +20604,7 @@ MonoBehaviour:
   criticalRate: 0
   criticalDamage: 0
   attackRange: 0.5
-  detectRange: 2.5
   attackSpeed: 1.5
-  attackDelay: 0
   element: 1
 --- !u!114 &-6756909976619491169
 MonoBehaviour:
@@ -20619,6 +20618,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cb63875496dbf4cb2cc055a91e6859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4445742359295463969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6530795506631069588}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1837a9a7352b254b8b6702324edc927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  HPbar: {fileID: 0}
+  m_UnitAnimationController: {fileID: 0}
+  unitId: 0
+  level: 0
+  maxHP: 0
+  def: 0
+  mp: 0
+  str: 0
+  speed: 0
+  criticalRate: 0
+  criticalDamage: 0
+  attackRange: 0.8
+  attackSpeed: 1.5
+  element: 0
 --- !u!1 &6551468599110530909
 GameObject:
   m_ObjectHideFlags: 0
