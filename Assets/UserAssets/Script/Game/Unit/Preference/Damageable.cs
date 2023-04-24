@@ -16,13 +16,19 @@ public abstract class Damageable : MonoBehaviour
     [SerializeField] protected int mCriticalDamage;  // 크리티컬 데미지
     [SerializeField] protected float mAttackRange = 0.8f; // 공격 사거리
     [SerializeField] protected float mAttackSpeed = 1.5f; // 공격 속도
-    [SerializeField] protected EElement mEelement;  //      
+    [SerializeField] protected EElement mEelement;  
+    private bool mIsAlive { get; set; }
     #endregion
     public string mName;
 
     public int getCriticalRate()
     {
         return mCriticalRate;
+    }
+
+    public bool isAlive()
+    {
+        return mIsAlive;
     }
 
     public int getDef()
