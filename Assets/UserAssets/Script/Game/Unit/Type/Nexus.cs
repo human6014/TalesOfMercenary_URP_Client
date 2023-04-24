@@ -9,23 +9,23 @@ public class Nexus :  Damageable
 
     [SerializeField] private Slider HPbar;
     [SerializeField] private int HP = 1000;
-    private int currentHP;
     private bool isGameEnd = false;
 
     private void Awake()
     {
-        currentHP = HP;
-    }
-
-    public override void Hit(int damage)
-    {
-        if (isGameEnd) return;
-        HPbar.value = (currentHP -= damage);
-        if (currentHP <= 0) GameEnd();
+        mName = "³Ø¼­½º";
+        mHp = HP;
     }
 
     private void GameEnd()
     {
         isGameEnd = true;
+    }
+
+    public override void getDamage(int damage)
+    {
+        if (isGameEnd) return;
+        HPbar.value = (mHp -= damage);
+        if (mHp <= 0) GameEnd();
     }
 }

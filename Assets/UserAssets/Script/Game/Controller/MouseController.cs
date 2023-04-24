@@ -9,19 +9,13 @@ public class MouseController : MonoBehaviour
     [SerializeField] private LayerMask player2Layer;
     
     private Unit clickedUnit;
-    private LayerMask controlLayer;
-
-    public void SetPlayerMouseLayer(bool isReversed)
-    {
-        controlLayer = !isReversed ? player1Layer : player2Layer;
-    }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, controlLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, player1Layer))
             {
                 if (hit.collider.TryGetComponent(out Unit currentUnit))
                 {
