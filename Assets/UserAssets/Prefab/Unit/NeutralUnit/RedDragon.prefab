@@ -1297,6 +1297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e851c5b91ce9e344b85df04f07109ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: 8e0e53b79fa6cb643a82170a9066f8da, type: 2}
+  mName: RedDragon
   HPbar: {fileID: 4127455347022094919}
   maxHP: 1000
 --- !u!136 &7915121075783300575
