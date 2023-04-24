@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: -4490598159639082235}
   - component: {fileID: 561288872107932846}
   - component: {fileID: -6245120312281550974}
-  - component: {fileID: 2852482964731305393}
+  - component: {fileID: 3226459645812919107}
   m_Layer: 13
   m_Name: Wizard
   m_TagString: Untagged
@@ -159,6 +159,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mMaxHP: 100
+  mDef: 0
+  mMp: 0
+  mStr: 0
+  mSpeed: 0
+  mCriticalRate: 0
+  mCriticalDamage: 0
+  mAttackRange: 2
+  mAttackSpeed: 1.5
+  mEelement: 0
+  mName: 
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
@@ -166,16 +177,6 @@ MonoBehaviour:
   m_UnitAnimationController: {fileID: 0}
   unitId: 1
   level: 1
-  maxHP: 80
-  def: 5
-  mp: 50
-  str: 35
-  speed: 1
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 2.5
-  attackSpeed: 1.5
-  element: 1
 --- !u!114 &-4490598159639082235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,35 +245,18 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &2852482964731305393
+--- !u!114 &3226459645812919107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59360354102331270}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50bc83addadff944ca498df24c832245, type: 3}
+  m_Script: {fileID: 11500000, guid: d2ef00216b91f13438deb7c64225137a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
-  unitId: 0
-  level: 0
-  maxHP: 0
-  def: 0
-  mp: 0
-  str: 0
-  speed: 0
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.8
-  attackSpeed: 1.5
-  element: 0
 --- !u!1 &256247767864271962
 GameObject:
   m_ObjectHideFlags: 0
