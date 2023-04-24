@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
-public class NeutralUnit : MonoBehaviour
+/// <summary>
+/// 공격 로직
+/// 
+/// </summary>
+public class NeutralUnit : Damageable
 {
     private Animator animator;
     private NavMeshAgent navMeshAgent;
 
     [SerializeField] private Slider HPbar;
     [SerializeField] private int maxHP = 1000;
-
     private float currentHP;
     private float def;
-
     private float initTime = 3.0f;
     private bool isBatch;
+    private Vector3 destPos;
+
     public bool isAlive { get; private set; }
 
-    private Vector3 destPos;
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -46,20 +49,19 @@ public class NeutralUnit : MonoBehaviour
         }
     }
 
-    public void Hit(float _str)
+    private void Die()
+    {
+        isAlive = false;
+    }
+
+    public override void getDamage(int damage)
     {
         if (!isAlive) return;
-        currentHP -= (_str - def);
         if (currentHP <= 0)
         {
             Die();
             return;
         }
         HPbar.value = currentHP;
-    }
-
-    private void Die()
-    {
-        isAlive = false;
     }
 }
