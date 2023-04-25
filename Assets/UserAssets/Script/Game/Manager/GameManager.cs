@@ -1,5 +1,8 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //통신
@@ -12,7 +15,7 @@ public class GameManager : MonoBehaviour
     private const int initEventUnitSize = 2;
 
     [SerializeField] private bool managerMode; //테스트용 모드 (돈 무한 등등...)
-
+    [SerializeField] private float DragonEventTime; 
     public static Vector3 player1Nexus;
     public static Vector3 player2Nexus;
 
@@ -111,6 +114,7 @@ public class GameManager : MonoBehaviour
         CurrentTime += Time.deltaTime;
         CurrentTimeSecond = (int)CurrentTime;
 
+        #region Gold
         if (managerMode) CurrentGold = MaxGold;
         if (CurrentGold < MaxGold)
         {
@@ -120,5 +124,24 @@ public class GameManager : MonoBehaviour
                 CoolTime = 0;
             }
         }
+        #endregion
+        #region Event
+        if(CurrentTime == DragonEventTime)
+        {
+            if(PhotonNetwork.IsMasterClient)
+            {
+                DragonSpawnEvent();
+            }
+        }
+        #endregion
     }
+
+    private void DragonSpawnEvent()
+    {
+        GameObject obj = null;
+        Vector3 spwanPostion = new Vector3(0f,0f,0f);
+        obj = PhotonNetwork.Instantiate("OfficialUnit/" + "RedDragon", spwanPostion, Quaternion.identity);
+        obj.GetComponent<NeutralUnit>().Init();
+    }
+
 }

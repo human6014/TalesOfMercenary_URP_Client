@@ -53,7 +53,6 @@ public class Unit : Damageable
         m_UnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
-        //InitBatch(photonView.IsMine);
     }
 
     public void Start()

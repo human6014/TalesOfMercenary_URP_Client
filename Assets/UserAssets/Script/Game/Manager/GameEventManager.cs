@@ -12,6 +12,6 @@ public class GameEventManager : MonoBehaviour
     [ContextMenu("SpawnUnit")]
     public void Spawn()
     {
-        Instantiate(neutralUnit, neutralUnitSpawnPos.position, Quaternion.LookRotation(Vector3.back)).Init(neutralUnitInitPos.position);
+        //Instantiate(neutralUnit, neutralUnitSpawnPos.position, Quaternion.LookRotation(Vector3.back)).Init(neutralUnitInitPos.position);
     }
 }
