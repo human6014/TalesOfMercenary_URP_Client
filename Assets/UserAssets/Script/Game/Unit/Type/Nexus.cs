@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Nexus :  Damageable
+public class Nexus : Damageable
 {
     public bool isPlayer { get; private set; } = false;
 
     private bool isGameEnd = false;
+
+    private void Awake()
+    {
+        IsAlive = true;
+    }
 
     private void GameEnd()
     {
         isGameEnd = true;
     }
 
-    public override void GetDamage(int damage)
+    public override void GetDamage(int damage, Damageable attackUnit)
     {
         if (isGameEnd) return;
         HPbar.value = (Hp -= damage);
