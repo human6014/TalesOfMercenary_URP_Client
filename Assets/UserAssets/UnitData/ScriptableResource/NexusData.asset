@@ -24,3 +24,4 @@ MonoBehaviour:
   criticalDamage: 0
   attackRange: 0
   attackSpeed: 0
+  movementRange: 0.2

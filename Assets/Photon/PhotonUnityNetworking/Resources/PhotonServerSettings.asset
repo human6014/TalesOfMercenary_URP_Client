@@ -38,6 +38,7 @@ MonoBehaviour:
   - DestroyRpc
   - InitBatch
   - SyncInitBatch
+  - Sync
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
