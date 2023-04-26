@@ -20514,7 +20514,7 @@ Animator:
   m_GameObject: {fileID: 6530795506631069588}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d9b155d656a64f02adc39213c8d11c86, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 345dc18c74136b6469f8737d0add5621, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -20588,24 +20588,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
+  HPbar: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
   unitId: 2
-  level: 1
-  maxHP: 80
-  def: 5
-  mp: 50
-  str: 35
-  speed: 1
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.5
-  attackSpeed: 1.5
-  AttackType: 0
-  element: 1
 --- !u!114 &-6756909976619491169
 MonoBehaviour:
   m_ObjectHideFlags: 0

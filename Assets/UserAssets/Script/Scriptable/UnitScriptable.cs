@@ -4,12 +4,14 @@ using UnityEngine;
 
 namespace Scriptable
 {
-    [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable/UnitData", order = 0)]
+    [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable/UnitData", order = int.MaxValue)]
     public class UnitScriptable : ScriptableObject
     {
         [Header("Info")]
         [Tooltip("현재 레벨")]
         public int level;         //현재 레벨
+        [Tooltip("이름")]
+        public string unitName;
 
         [Header("Stats")]
         [Tooltip("최대체력")]
@@ -28,9 +30,9 @@ namespace Scriptable
 
         [Header("Additional Stats")]
         [Tooltip("크리티컬율")] 
-        public float criticalRate = 0;    // 크리티컬율
+        public int criticalRate = 0;    // 크리티컬율
         [Tooltip("크리티컬 데미지")]
-        public float criticalDamage = 0;  // 크리티컬 데미지
+        public int criticalDamage = 0;  // 크리티컬 데미지
         [Tooltip("공격 사거리")]
         public float attackRange = 0.8f; // 공격 사거리
         [Tooltip("공격 속도")]

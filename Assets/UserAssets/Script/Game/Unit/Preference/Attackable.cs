@@ -9,5 +9,4 @@ public abstract class Attackable : MonoBehaviour
     public abstract void NormalAttack(Damageable attackUnit, Damageable attackedUnit);
 
     public abstract void CriticalAttack(Damageable attackUnit, Damageable attackedUnit);
-
 }

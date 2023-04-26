@@ -4956,24 +4956,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mMaxHP: 100
-  mDef: 0
-  mMp: 0
-  mStr: 0
-  mSpeed: 0
-  mCriticalRate: 0
-  mCriticalDamage: 0
-  mAttackRange: 1
-  mAttackSpeed: 1.5
-  mEelement: 0
-  mName: 
+  mUnitScriptable: {fileID: 11400000, guid: 2033a4f0902358a40a55df14574cb4c8, type: 2}
+  HPbar: {fileID: 7870046880071455759}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  HPbar: {fileID: 7870046880071455759}
-  m_UnitAnimationController: {fileID: 0}
   unitId: 0
-  level: 1
 --- !u!114 &487778920245365041
 MonoBehaviour:
   m_ObjectHideFlags: 0

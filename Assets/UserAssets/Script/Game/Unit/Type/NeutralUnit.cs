@@ -13,7 +13,6 @@ public class NeutralUnit : Damageable
     private Animator animator;
     private NavMeshAgent navMeshAgent;
 
-    [SerializeField] private Slider HPbar;
     [SerializeField] private int maxHP = 1000;
     private float initTime = 3.0f;
     private bool isBatch;
@@ -60,7 +59,7 @@ public class NeutralUnit : Damageable
         isAlive = false;
     }
 
-    public override void getDamage(int damage)
+    public override void GetDamage(int damage)
     {
         if (!isAlive) return;
         if (mHp <= 0)

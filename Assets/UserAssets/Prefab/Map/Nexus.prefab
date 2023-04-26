@@ -128,5 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60003b52ccbf2147a887fe3f5a91cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: c9648cc8b6235094394d2eb25d517f3c, type: 2}
+  mName: 
   HPbar: {fileID: 0}
   HP: 1000

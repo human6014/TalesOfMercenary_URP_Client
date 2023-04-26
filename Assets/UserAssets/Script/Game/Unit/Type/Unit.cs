@@ -8,123 +8,50 @@ public class Unit : Damageable
 {
     #region Object info
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private Slider HPbar;
-    [SerializeField] private UnitAnimationController m_UnitAnimationController;
+    [SerializeField] private int unitId;        //식별번호
 
-    private Animator mAnimator;
-    private Transform mCachedTransfrom;
+    private UnitAnimationController m_UnitAnimationController;
     private Damageable mTarget;
     private NavMeshAgent mNavMeshAgent;
     #endregion
 
-    #region Stat Info
-    [SerializeField] private int unitId;        //식별번호
-    [Header("Stats")]
-    [SerializeField] private int level;         //현재 
-    private float attackDelay; // 공격 속도 계산용
-    #endregion
-
     #region logic Info
-    private float defaultStoppingDistance;
-    private bool mIsPointMove;
-    private bool mIsCliked;
     private bool mIsAlive;
     private bool mIsBatch;
-    private bool mIsMoving;
+    private bool mIsMoving = true;
 
-    private float mPointMoveDist = 0.3f;
-    private bool mIsmoving;
+    private float attackDelay; // 공격 속도 계산용
     private int mPriority;
+
     private Vector3 mVectorDestination;
     private PhotonView mPhotonView;
     private Attackable mAttack;
     #endregion
 
     #region Property
-    public bool IsAlive { get => mIsAlive; set => mIsAlive = value; }
-    public bool IsClicked { get => mIsCliked; set => mIsCliked = value; }
+    public bool IsClicked { get; set; }
     public bool IsEnemy { get; private set; }
 
     #endregion
 
     protected virtual void Awake()
     {
-        mCachedTransfrom = transform;
         m_UnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
-    }
-
-    public void Start()
-    {
-        mName = "유닛";
-        mIsAlive = true;
-        HPbar.maxValue = HPbar.value = mHp = mMaxHP;
-        Debug.Log("사거리는 : " + mAttackRange);
-    }
-
-    private void FixedUpdate()
-    {
-        if (!mIsBatch) return;
-        if (!mPhotonView.IsMine) return;
-
-        attackDelay += Time.deltaTime;
-
-        if (mTarget != null) // 타깃이 있을 때
-        {
-            if(!mTarget.isAlive()) // 타깃 사망 확인 
-            {
-                FindenemyOrNull(transform.position);
-                return;
-            }
-            Debug.Log("타깃 타입 : " + mTarget.mName + "남은 거리: " + Vector3.Distance(mTarget.transform.position, transform.position));
-            if (Vector3.Distance(mTarget.transform.position, transform.position) <= mAttackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
-            {
-                mNavMeshAgent.avoidancePriority = mPriority;
-                mNavMeshAgent.SetDestination(transform.position);
-                if (attackDelay >= mAttackSpeed) 
-                {
-                    Debug.Log("공격");
-                    mAttack.Attack(this, mTarget);
-                    attackDelay = 0;
-                }
-            }
-            else//타깃이 공격 범위보다 멀때
-            {
-                Debug.Log("적 타깃으로 이동 중");
-                mIsmoving = true;
-                mNavMeshAgent.SetDestination(mTarget.transform.position);
-            }
-        }
-        else // 타깃이 없을 때 -> 백터로 이동 중
-        {
-            Debug.Log("남은 거리: " + Vector3.Distance(mVectorDestination, transform.position));
-            if (Vector3.Distance(mVectorDestination, transform.position) <= mAttackRange) // 목적지가 공격 사거리 안 일때
-            {
-                FindenemyOrNull(transform.position);// 새로운 타깃 탐색 -> 실패시 계속 백터 포지션으로 이동
-                mNavMeshAgent.SetDestination(mVectorDestination);
-            }
-            else
-            {
-                Debug.Log("백터로 이동 중");
-                mNavMeshAgent.SetDestination(mVectorDestination);
-            }
-            m_UnitAnimationController.PlayMoveAnimation(mIsMoving);
-        }
     }
 
     public void InitBatch()
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
         mPriority = mNavMeshAgent.avoidancePriority;
-        HPbar.maxValue = HPbar.value = mHp = mMaxHP;
+        HPbar.maxValue = HPbar.value = Hp = mUnitScriptable.maxHP;
 
         mIsAlive = true;
         mNavMeshAgent.enabled = true;
 
-        defaultStoppingDistance = mNavMeshAgent.stoppingDistance;
         mIsBatch = true;
-        FindenemyOrNull(transform.position);
+        FindenemyOrNull();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
 
         NetworkUnitManager.myUnitList.Add(this);
@@ -137,7 +64,74 @@ public class Unit : Damageable
         NetworkUnitManager.enemyUnitList.Add(this);
     }
 
-    private void FindenemyOrNull(Vector3 destination) // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
+    private void FixedUpdate()
+    {
+        if (!mIsBatch) return;
+        if (!mPhotonView.IsMine) return;
+
+        attackDelay += Time.deltaTime;
+        
+        if (mTarget != null) // 타깃이 있을 때
+        {
+            if(!mTarget.IsAlive) // 타깃 사망 확인 
+            {
+                FindenemyOrNull();
+                return;
+            }
+            TargetMove();
+        }
+        else NonTargetMove();
+        m_UnitAnimationController.PlayMoveAnimation(mIsMoving);
+    }
+
+    /// <summary>
+    /// 타깃이 있고 살아있을 때
+    /// </summary>
+    private void TargetMove()
+    {
+        float dist = Vector3.Distance(mTarget.transform.position, transform.position);
+        Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
+        if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
+        {
+            mIsMoving = false;
+            mNavMeshAgent.avoidancePriority = mPriority;
+            mNavMeshAgent.SetDestination(transform.position);
+            if (attackDelay >= mUnitScriptable.attackSpeed)
+            {
+                Debug.Log("공격");
+                mAttack.Attack(this, mTarget);
+                attackDelay = 0;
+            }
+        }
+        else//타깃이 공격 범위보다 멀때
+        {
+            Debug.Log("적 타깃으로 이동 중");
+            mIsMoving = true;
+            mNavMeshAgent.SetDestination(mTarget.transform.position);
+        }
+    }
+
+    /// <summary>
+    /// 타깃이 없을 때 -> 백터로 이동 중
+    /// </summary>
+    private void NonTargetMove()
+    {
+        float dist = Vector3.Distance(mVectorDestination, transform.position);
+        Debug.Log("남은 거리: " + dist);
+        mIsMoving = true;
+        if (dist <= mUnitScriptable.attackRange) // 목적지가 공격 사거리 안 일때
+        {
+            FindenemyOrNull();// 새로운 타깃 탐색 -> 실패시 계속 백터 포지션으로 이동
+            mNavMeshAgent.SetDestination(mVectorDestination);
+        }
+        else
+        {
+            Debug.Log("백터로 이동 중");
+            mNavMeshAgent.SetDestination(mVectorDestination);
+        }
+    }
+
+    private void FindenemyOrNull() // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
     {
         Debug.Log("새로운 공격대상 발견(조건부)");
         float minDis = float.MaxValue;
@@ -145,35 +139,26 @@ public class Unit : Damageable
         float tem;
         foreach (var key in NetworkUnitManager.enemyUnitList)
         {
-            tem = (destination - key.transform.position).sqrMagnitude;
+            tem = (transform.position - key.transform.position).sqrMagnitude;
             if (minDis > tem)
             {
                 minDis = tem;
                 target = key;
             }
         }
-        if (minDis <= mAttackRange) // 공격대상 존재
+        mTarget = target;
+        if (minDis <= mUnitScriptable.attackRange) // 공격대상 존재
         {
             Debug.Log("새로운 공격대상 발견");
             mTarget = target;
         }
     }
 
-    public override void getDamage(int damage)
+    public override void GetDamage(int damage)
     {
-        if (damage <= 0)
-        {
-            return;
-        }
-
-        if (mHp <= damage)//사망
-        {
-            Die();
-        }
-        else
-        {
-            HPbar.value = (mHp -= damage);
-        }
+        if (damage <= 0) return;
+        if (Hp <= damage) Die();
+        else HPbar.value = (Hp -= damage);
     }
 
     public void Die()
@@ -187,15 +172,6 @@ public class Unit : Damageable
         //navMeshAgent.enabled = false;
     }
 
-    public void PointMove()
-    {
-        if (mNavMeshAgent.remainingDistance <= mNavMeshAgent.stoppingDistance)
-        {
-            mIsPointMove = false;
-            mNavMeshAgent.stoppingDistance = defaultStoppingDistance;
-        }
-    }
-
     public void PointMove(Vector3 pos)
     {
         mTarget = null;
@@ -203,5 +179,4 @@ public class Unit : Damageable
         mNavMeshAgent.stoppingDistance = 0.1f;
         mNavMeshAgent.SetDestination(mVectorDestination);
     }
-
 }
