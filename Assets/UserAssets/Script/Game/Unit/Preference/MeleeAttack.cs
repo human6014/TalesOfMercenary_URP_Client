@@ -15,21 +15,18 @@ public class MeleeAttack : Attackable
     private System.Random mRand = new System.Random();
 
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
-    {
-        if (attackUnit.getCriticalRate() >= mRand.Next(101))//크리티컬 발생 시
-        {
+    {   
+        //크리티컬 발생 시
+        if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
             CriticalAttack(attackUnit, attackedUnit);
-        }
+
         NormalAttack(attackUnit, attackedUnit);
     }
 
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-    {
-        attackedUnit.getDamage(attackUnit.getStr() - attackedUnit.getDef());
-    }
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def);
+    
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-    {
-        attackedUnit.getDamage(attackUnit.getStr() * attackedUnit.getCriticalDamage() - attackedUnit.getDef());
-    }
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def);
 }

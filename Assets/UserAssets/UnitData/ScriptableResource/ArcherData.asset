@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
   m_Name: ArcherData
   m_EditorClassIdentifier: 
-  level: 0
-  maxHP: 0
+  level: 1
+  unitName: Archer
+  maxHP: 100
   def: 0
   mp: 0
   str: 0

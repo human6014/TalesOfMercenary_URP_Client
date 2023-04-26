@@ -16,10 +16,10 @@ public class NetworkUnitManager : MonoBehaviour
     /// </summary>
     [SerializeField] private Nexus[] damageable;
     public static Damageable[] usingUnit = new Damageable[4];
-    public static List<Damageable> enemyUnitList = new();
-    public static List<Damageable> myUnitList = new();
-    public static List<BuildingCard> mybuildingList = new();
-    public static List<BuildingCard> enemyBuildingList = new();
+    public static List<Damageable> enemyUnitList { get; } = new();
+    public static List<Damageable> myUnitList { get; } = new();
+    public static List<BuildingCard> mybuildingList { get; } = new();
+    public static List<BuildingCard> enemyBuildingList { get; } = new();
 
     void Awake()
     {

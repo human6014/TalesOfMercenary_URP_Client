@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
-  m_Name: WizardData
+  m_Name: NexusData
   m_EditorClassIdentifier: 
   level: 1
-  unitName: Wizard
-  maxHP: 100
+  unitName: Nexus
+  maxHP: 5000
   def: 0
   mp: 0
   str: 0
   speed: 0
-  element: 0
+  element: 5
   criticalRate: 0
   criticalDamage: 0
-  attackRange: 2
-  attackSpeed: 1.5
+  attackRange: 0
+  attackSpeed: 0
