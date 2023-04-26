@@ -15,7 +15,7 @@ public class MeleeAttack : Attackable
     private System.Random mRand = new System.Random();
 
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
-    {   
+    {
         //크리티컬 발생 시
         if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
             CriticalAttack(attackUnit, attackedUnit);
@@ -24,9 +24,9 @@ public class MeleeAttack : Attackable
     }
 
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def);
-    
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit);
+
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit);
 }
