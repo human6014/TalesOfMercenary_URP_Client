@@ -2,7 +2,12 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-
+using System;
+using Scriptable;
+using UnityEditor;
+/// <summary>
+/// target이 바뀔때마다 settarget()함수를 호출해서 모든 유저에게 타깃 변수를 동기화해줘야 한다.
+/// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : Damageable
 {
@@ -53,15 +58,19 @@ public class Unit : Damageable
         mIsBatch = true;
         Findenemy();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
+        mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
 
-        NetworkUnitManager.myUnitList.Add(this);
-        mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others);
+        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
+
     }
 
     [PunRPC]
-    public void SyncInitBatch() //적이 소환한 유닛 초기화
+    public void SyncInitBatch(string uuid) //적이 소환한 유닛 초기화
     {
-        NetworkUnitManager.enemyUnitList.Add(this);
+        NetworkUnitManager.enemyUnitList.Add(uuid, this);
+        HPbar.maxValue = HPbar.value = Hp = mUnitScriptable.maxHP;
+        mUnitScriptable.UUID = uuid;
         IsAlive = true;
     }
 
@@ -92,9 +101,10 @@ public class Unit : Damageable
     private void TargetMove()
     {
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
-        Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
+
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
+            Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + " 정지 후 공격");
             mIsMoving = false;
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
@@ -107,7 +117,7 @@ public class Unit : Damageable
         }
         else//타깃이 공격 범위보다 멀때
         {
-            Debug.Log("적 타깃으로 이동 중");
+            Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
             mIsMoving = true;
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -136,35 +146,44 @@ public class Unit : Damageable
         }
     }
 
-    private void Findenemy() // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
+    private void Findenemy()
     {
-        Debug.Log("새로운 공격대상 발견(조건부)");
+        Debug.Log("새로운 공격대상 발견");
         Debug.Log(NetworkUnitManager.enemyUnitList.Count);
         float minDis = float.MaxValue;
         Damageable target = null;
         float tem;
+        string temUUID = null;
         foreach (var key in NetworkUnitManager.enemyUnitList)
         {
-            tem = (transform.position - key.transform.position).sqrMagnitude;
+            tem = (transform.position - key.Value.transform.position).sqrMagnitude;
             if (minDis > tem)
             {
                 minDis = tem;
-                target = key;
+                target = key.Value;
+                temUUID = key.Key;
             }
         }
         mTarget = target;
+        Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
     }
 
-    public override void GetDamage(int damage, Damageable attackUnit)
+    public override void GetDamage(int damage, string attackUnitUUID)
+    {
+        mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
+    }
+
+    [PunRPC]
+    public void GetDamageRPC(int damage, string attackUnit)
     {
         if (damage <= 0) return;
         if (Hp <= damage) Die();
         else HPbar.value = (Hp -= damage);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
-            if (attackUnit.IsAlive)
+            if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
             {
-                mTarget = attackUnit;
+                mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
             }
         }
     }
@@ -187,4 +206,6 @@ public class Unit : Damageable
         mNavMeshAgent.stoppingDistance = 0.15f;
         mNavMeshAgent.SetDestination(mVectorDestination);
     }
+
+
 }

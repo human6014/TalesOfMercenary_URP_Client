@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,15 +19,26 @@ public class MeleeAttack : Attackable
     {
         //크리티컬 발생 시
         if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
+        {
+            Debug.Log("크리티컬공격");
             CriticalAttack(attackUnit, attackedUnit);
+        }
+        else
+        {
+            Debug.Log("일반공격");
+            NormalAttack(attackUnit, attackedUnit);
+        }
 
-        NormalAttack(attackUnit, attackedUnit);
+
     }
 
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit);
+    {
+        attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    }
+
 
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
 }

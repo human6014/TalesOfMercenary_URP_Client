@@ -17,8 +17,8 @@ public class NetworkUnitManager : MonoBehaviour
     private GameManager mGameManger;
 
     public static Damageable[] usingUnit = new Damageable[4];
-    public static List<Damageable> enemyUnitList { get; } = new();
-    public static List<Damageable> myUnitList { get; } = new();
+    public static Dictionary<string, Damageable> enemyUnitList { get; } = new();
+    public static Dictionary<string, Damageable> myUnitList { get; } = new();
     public static List<BuildingCard> mybuildingList { get; } = new();
     public static List<BuildingCard> enemyBuildingList { get; } = new();
 
@@ -40,13 +40,13 @@ public class NetworkUnitManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            enemyUnitList.Add(mGameManger.GetNexus(1));
-            myUnitList.Add(mGameManger.GetNexus(0));
+            enemyUnitList.Add("1",mGameManger.GetNexus(1));
+            myUnitList.Add("1",mGameManger.GetNexus(0));
         }
         else
         {
-            enemyUnitList.Add(mGameManger.GetNexus(0));
-            myUnitList.Add(mGameManger.GetNexus(1));
+            enemyUnitList.Add("1",mGameManger.GetNexus(0));
+            myUnitList.Add("1", mGameManger.GetNexus(1));
         }
     }
 }

@@ -47,5 +47,6 @@ namespace Scriptable
         public float movementRange = 0.2f;
         [Tooltip("¿Ø¥÷ ≈∏¿‘")]
         public UnitType unitType;
+        public string UUID;
     }
 }

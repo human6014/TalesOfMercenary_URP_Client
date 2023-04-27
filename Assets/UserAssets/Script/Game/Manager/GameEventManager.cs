@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class GameEventManager : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class GameEventManager : MonoBehaviour
         neutralUnitInitPos = new Vector3[spawnNum];
         nexusPos = new Vector3[spawnNum];
 
-        nexusPos[mIsHost] = NetworkUnitManager.enemyUnitList[0].transform.position;
+        nexusPos[mIsHost] = NetworkUnitManager.enemyUnitList["1"].transform.position;
 
         if (Physics.Raycast(neutralUnitSpawnPos[mIsHost].position, Vector3.down, out RaycastHit hit, 100, mGroundLayer))
             neutralUnitInitPos[mIsHost] = hit.point;
@@ -58,6 +59,12 @@ public class GameEventManager : MonoBehaviour
 
         neutralUnit.GetComponent<NeutralUnit>().Init(neutralUnitInitPos[mIsHost]);
 
+    }
+
+    public void SpawnNexus()
+    {
+        PhotonNetwork.Instantiate("OfficialUnit/Nexus/" + "Nexus",
+           neutralUnitSpawnPos[mIsHost].position, Quaternion.identity);
     }
 
 }
