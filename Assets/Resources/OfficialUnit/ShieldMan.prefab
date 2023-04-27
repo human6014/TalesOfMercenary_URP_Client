@@ -20479,7 +20479,6 @@ GameObject:
   - component: {fileID: 894936344700678231}
   - component: {fileID: 5416857694990783789}
   - component: {fileID: -6756909976619491169}
-  - component: {fileID: 4445742359295463969}
   m_Layer: 13
   m_Name: ShieldMan
   m_TagString: Untagged
@@ -20496,7 +20495,7 @@ Transform:
   m_GameObject: {fileID: 6530795506631069588}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1838062024300333744}
@@ -20515,7 +20514,7 @@ Animator:
   m_GameObject: {fileID: 6530795506631069588}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d9b155d656a64f02adc39213c8d11c86, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 345dc18c74136b6469f8737d0add5621, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -20589,23 +20588,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
+  HPbar: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
   unitId: 2
-  level: 1
-  maxHP: 80
-  def: 5
-  mp: 50
-  str: 35
-  speed: 1
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.5
-  attackSpeed: 1.5
-  element: 1
 --- !u!114 &-6756909976619491169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20618,35 +20606,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cb63875496dbf4cb2cc055a91e6859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4445742359295463969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6530795506631069588}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1837a9a7352b254b8b6702324edc927, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
-  unitId: 0
-  level: 0
-  maxHP: 0
-  def: 0
-  mp: 0
-  str: 0
-  speed: 0
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.8
-  attackSpeed: 1.5
-  element: 0
 --- !u!1 &6551468599110530909
 GameObject:
   m_ObjectHideFlags: 0

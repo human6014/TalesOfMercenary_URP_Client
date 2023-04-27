@@ -14,26 +14,39 @@ public class NetworkUnitManager : MonoBehaviour
     /// 1: Àû
     /// 0: ³ª
     /// </summary>
-    [SerializeField] private Nexus[] damageable;
-    public static Damageable[] usingUnit = new Damageable[4];
-    public static List<Damageable> enemyUnitList = new();
-    public static List<Damageable> myUnitList = new();
-    public static List<BuildingCard> mybuildingList = new();
-    public static List<BuildingCard> enemyBuildingList = new();
+    private GameManager mGameManger;
 
-    void Awake()
+    public static Damageable[] usingUnit = new Damageable[4];
+    public static Dictionary<string, Damageable> enemyUnitList { get; } = new();
+    public static Dictionary<string, Damageable> myUnitList { get; } = new();
+    public static List<BuildingCard> mybuildingList { get; } = new();
+    public static List<BuildingCard> enemyBuildingList { get; } = new();
+
+    private void Init()
     {
+        usingUnit = new Damageable[4];
+        enemyUnitList.Clear();
+        myUnitList.Clear();
+        mybuildingList.Clear();
+        enemyBuildingList.Clear();
+    }
+
+    private void Awake()
+    {
+        Init();
+
+        mGameManger = GetComponent<GameManager>();
         usingUnit = FindObjectOfType<TempUnitData>().GetUnitData();
 
         if (PhotonNetwork.IsMasterClient)
         {
-            enemyUnitList.Add(damageable[1]);
-            myUnitList.Add(damageable[0]);
+            enemyUnitList.Add("1",mGameManger.GetNexus(1));
+            myUnitList.Add("1",mGameManger.GetNexus(0));
         }
         else
         {
-            enemyUnitList.Add(damageable[0]);
-            myUnitList.Add(damageable[1]);
+            enemyUnitList.Add("1",mGameManger.GetNexus(0));
+            myUnitList.Add("1", mGameManger.GetNexus(1));
         }
     }
 }

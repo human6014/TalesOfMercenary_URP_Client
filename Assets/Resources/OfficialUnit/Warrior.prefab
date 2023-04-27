@@ -4845,8 +4845,7 @@ GameObject:
   - component: {fileID: 4044892186050055126}
   - component: {fileID: 487778920245365041}
   - component: {fileID: 2453869414827332899}
-  - component: {fileID: 6783709610780803366}
-  - component: {fileID: -6001096424661116075}
+  - component: {fileID: 3193775692371121369}
   m_Layer: 13
   m_Name: Warrior
   m_TagString: Untagged
@@ -4863,7 +4862,7 @@ Transform:
   m_GameObject: {fileID: 8763750450409419696}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2973874451648862325}
@@ -4956,23 +4955,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: 2033a4f0902358a40a55df14574cb4c8, type: 2}
+  HPbar: {fileID: 7870046880071455759}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  HPbar: {fileID: 7870046880071455759}
-  m_UnitAnimationController: {fileID: 0}
   unitId: 0
-  level: 1
-  maxHP: 100
-  def: 10
-  mp: 0
-  str: 30
-  speed: 1
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 1.5
-  attackSpeed: 1.5
-  element: 0
 --- !u!114 &487778920245365041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5003,12 +4991,11 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents:
-  - {fileID: 6783709610780803366}
+  ObservedComponents: []
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6783709610780803366
+--- !u!114 &3193775692371121369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5017,59 +5004,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8763750450409419696}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8efc6b1d64977384eb3405357896c656, type: 3}
+  m_Script: {fileID: 11500000, guid: a73f8b0c62b73fa45b1440c045413bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PositionModel:
-    SynchronizeEnabled: 1
-    TeleportEnabled: 1
-    TeleportIfDistanceGreaterThan: 3
-    InterpolateOption: 4
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 10
-    ExtrapolateOption: 0
-    ExtrapolateSpeed: 1
-    ExtrapolateIncludingRoundTripTime: 1
-    ExtrapolateNumberOfStoredPositions: 1
-  m_RotationModel:
-    SynchronizeEnabled: 1
-    InterpolateOption: 1
-    InterpolateRotateTowardsSpeed: 180
-    InterpolateLerpSpeed: 5
-  m_ScaleModel:
-    SynchronizeEnabled: 0
-    InterpolateOption: 0
-    InterpolateMoveTowardsSpeed: 1
-    InterpolateLerpSpeed: 0
---- !u!114 &-6001096424661116075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8763750450409419696}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 249da3d0e902dd94da0f8c3f9e5aa765, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
-  unitId: 0
-  level: 0
-  maxHP: 0
-  def: 0
-  mp: 0
-  str: 0
-  speed: 0
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.8
-  attackSpeed: 1.5
-  element: 0
 --- !u!1 &8779326060958255993
 GameObject:
   m_ObjectHideFlags: 0

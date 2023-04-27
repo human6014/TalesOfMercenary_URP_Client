@@ -20065,7 +20065,6 @@ GameObject:
   - component: {fileID: 6914631084787057168}
   - component: {fileID: 5678293011501054451}
   - component: {fileID: 1107380634960877903}
-  - component: {fileID: 8729472539253363089}
   m_Layer: 13
   m_Name: Archer
   m_TagString: Untagged
@@ -20082,7 +20081,7 @@ Transform:
   m_GameObject: {fileID: 5689700144625623747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 111731641658480031}
@@ -20101,7 +20100,7 @@ Animator:
   m_GameObject: {fileID: 5689700144625623747}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: d9b155d656a64f02adc39213c8d11c86, type: 3}
-  m_Controller: {fileID: 9100000, guid: 3f8b80c02d3315a4ba2f83d0d3019f98, type: 2}
+  m_Controller: {fileID: 22100000, guid: 396144c2460e3034eab12ca98e540a3b, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -20175,23 +20174,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mUnitScriptable: {fileID: 11400000, guid: e2532403440a32742929e5d036755619, type: 2}
+  HPbar: {fileID: 4159939238943495646}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  HPbar: {fileID: 4159939238943495646}
-  m_UnitAnimationController: {fileID: 0}
   unitId: 3
-  level: 1
-  maxHP: 80
-  def: 5
-  mp: 50
-  str: 35
-  speed: 1
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 2
-  attackSpeed: 1.5
-  element: 1
 --- !u!114 &1107380634960877903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20204,35 +20192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cb63875496dbf4cb2cc055a91e6859, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8729472539253363089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5689700144625623747}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41caf23d9c9195f439658d33a2a93168, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  HPbar: {fileID: 0}
-  m_UnitAnimationController: {fileID: 0}
-  unitId: 0
-  level: 0
-  maxHP: 0
-  def: 0
-  mp: 0
-  str: 0
-  speed: 0
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.8
-  attackSpeed: 1.5
-  element: 0
 --- !u!1 &5702852650280576362
 GameObject:
   m_ObjectHideFlags: 0
