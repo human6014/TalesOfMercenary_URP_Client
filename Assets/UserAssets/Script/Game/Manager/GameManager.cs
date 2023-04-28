@@ -74,9 +74,6 @@ public class GameManager : MonoBehaviour
         IncreseGoldTime = 0.25f;
     }
 
-
-
-
     private void InitData()
     {
         dataSender = FindObjectOfType<DataSender>();

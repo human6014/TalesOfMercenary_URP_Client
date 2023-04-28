@@ -4845,8 +4845,8 @@ GameObject:
   - component: {fileID: 4044892186050055126}
   - component: {fileID: 487778920245365041}
   - component: {fileID: 2453869414827332899}
-  - component: {fileID: 6783709610780803366}
   - component: {fileID: 3193775692371121369}
+  - component: {fileID: -375720391268109262}
   m_Layer: 13
   m_Name: Warrior
   m_TagString: Untagged
@@ -4993,11 +4993,23 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 6783709610780803366}
+  - {fileID: -375720391268109262}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &6783709610780803366
+--- !u!114 &3193775692371121369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8763750450409419696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73f8b0c62b73fa45b1440c045413bcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-375720391268109262
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5030,18 +5042,6 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
---- !u!114 &3193775692371121369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8763750450409419696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a73f8b0c62b73fa45b1440c045413bcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8779326060958255993
 GameObject:
   m_ObjectHideFlags: 0
