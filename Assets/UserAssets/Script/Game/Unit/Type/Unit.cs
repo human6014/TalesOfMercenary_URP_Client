@@ -54,6 +54,7 @@ public class Unit : Damageable
 
         IsAlive = true;
         mNavMeshAgent.enabled = true;
+        gameObject.layer = GameManager.MyUnitLayer;
 
         mIsBatch = true;
         Findenemy();
@@ -62,7 +63,6 @@ public class Unit : Damageable
 
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
-
     }
 
     [PunRPC]
@@ -70,6 +70,7 @@ public class Unit : Damageable
     {
         NetworkUnitManager.enemyUnitList.Add(uuid, this);
         HPbar.maxValue = HPbar.value = Hp = mUnitScriptable.maxHP;
+        gameObject.layer = GameManager.EnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
         IsAlive = true;
     }
@@ -117,7 +118,7 @@ public class Unit : Damageable
         }
         else//타깃이 공격 범위보다 멀때
         {
-            Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
+            //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
             mIsMoving = true;
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -130,7 +131,7 @@ public class Unit : Damageable
     private void NonTargetMove()
     {
         float dist = Vector3.Distance(mVectorDestination, transform.position);
-        Debug.Log("남은 거리: " + dist);
+        //Debug.Log("남은 거리: " + dist);
         mIsMoving = true;
         if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
         {
