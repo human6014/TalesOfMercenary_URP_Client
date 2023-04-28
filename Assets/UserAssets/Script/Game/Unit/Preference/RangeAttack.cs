@@ -17,16 +17,21 @@ public class RangeAttack : Attackable
 
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
     {
-        //크리티컬 발생 시
         if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
+        {
+            Debug.Log("크리티컬공격");
             CriticalAttack(attackUnit, attackedUnit);
-
-        NormalAttack(attackUnit, attackedUnit);
+        }
+        else
+        {
+            Debug.Log("일반공격");
+            NormalAttack(attackUnit, attackedUnit);
+        }
     }
     //속성 추가피해는 빠진 로직
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
 }
