@@ -9,17 +9,14 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool managerMode; //테스트용 모드 (돈 무한 등등...)
     [SerializeField] private Nexus[] damageable;
+    [SerializeField] private GameObject[] mCamera;
+    [SerializeField] private LayerMask mHostLayer;
+    [SerializeField] private LayerMask mClientLayer;
 
-    private const int maxHandSize = 10;
-    private const int maxDeckSize = 5;
-    private const int initUnitListSize = 15;
-    private const int initEventUnitSize = 2;
-
+    public static int MyUnitLayer;
+    public static int EnemyUnitLayer;
     public static readonly int HOST_NUMBER = 0;
     public static readonly int CLIENT_NUMBER = 1;
-
-    private DataSender dataSender;
-    private UnitJsonData[] unitData;// = new UnitJsonData[6];
 
     public Nexus GetNexus(int i) => damageable[i];
 
@@ -69,22 +66,30 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        InitData();
+        InitCamera();
+        InitLayer();
+
         MaxGold = 100;
         IncreseGoldTime = 0.25f;
     }
 
-    private void InitData()
+    private void InitCamera()
     {
-        dataSender = FindObjectOfType<DataSender>();
-        if (dataSender == null) return;
-
-        unitData = dataSender.GetUnitData();
-
-        Destroy(dataSender.gameObject);
+        mCamera[0].SetActive(PhotonNetwork.IsMasterClient);
+        mCamera[1].SetActive(!PhotonNetwork.IsMasterClient);
     }
 
-    public UnitJsonData[] GetDeckInfo() => unitData;
+    private void InitLayer()
+    {
+        //MyUnitLayer = PhotonNetwork.IsMasterClient ? mHostLayer : mClientLayer;
+        //EnemyUnitLayer = PhotonNetwork.IsMasterClient ? mClientLayer : mHostLayer;
+
+        MyUnitLayer =  16;
+        EnemyUnitLayer = 17;
+
+        Debug.Log(MyUnitLayer);
+        Debug.Log(EnemyUnitLayer);
+    }
 
     private void FixedUpdate()
     {

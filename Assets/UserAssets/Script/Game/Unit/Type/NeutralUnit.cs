@@ -44,6 +44,7 @@ public class NeutralUnit : Damageable
         mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
         mIsBatch = true;
         Hp = mUnitScriptable.maxHP;
+        gameObject.layer = GameManager.MyUnitLayer;
         mAttack = GetComponent<Attackable>();
         destPos = spawnPos;
     }
@@ -140,6 +141,7 @@ public class NeutralUnit : Damageable
     public void SyncInitBatch(string UUID) //적이 소환한 유닛 초기화
     {
         NetworkUnitManager.enemyUnitList.Add(UUID, this);
+        gameObject.layer = GameManager.EnemyUnitLayer;
         mUnitScriptable.UUID = UUID;
         IsAlive = true;
     }
