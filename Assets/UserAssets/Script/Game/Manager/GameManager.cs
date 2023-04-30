@@ -1,42 +1,24 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
-//통신
-//게임 진행
 public class GameManager : MonoBehaviour
 {
-    private const int maxHandSize = 10;
-    private const int maxDeckSize = 5;
-    private const int initUnitListSize = 15;
-    private const int initEventUnitSize = 2;
-
     [SerializeField] private bool managerMode; //테스트용 모드 (돈 무한 등등...)
+    [SerializeField] private Nexus[] damageable;
+    [SerializeField] private GameObject[] mCamera;
+    [SerializeField] private LayerMask mHostLayer;
+    [SerializeField] private LayerMask mClientLayer;
 
-    public static Vector3 player1Nexus;
-    public static Vector3 player2Nexus;
+    public static int MyUnitLayer;
+    public static int EnemyUnitLayer;
+    public static readonly int HOST_NUMBER = 0;
+    public static readonly int CLIENT_NUMBER = 1;
 
-    private DataSender dataSender;
-    private UnitJsonData[] unitData;// = new UnitJsonData[6];
-
-    //0: 나 1: 상대
-
-
-    #region 손패
-    private List<Unit> myHand_Unit;
-    private List<Magic> myHand_Magic;
-    //무조건 핸드는 2개가 같이 연산되어야 한다.
-    #endregion
-
-    #region 덱
-
-    #endregion
-
-    #region 필드 위 유닛
-    private List<Unit> spawndedMyUnit;
-    private List<Unit> spawndedEnemyUnit;
-    private List<Unit> spawndedEventUnit;
-    #endregion
+    public Nexus GetNexus(int i) => damageable[i];
 
     #region 시간
     //float 현재 시간
@@ -69,42 +51,45 @@ public class GameManager : MonoBehaviour
     /// <returns>return CurrentGold >= gold</returns>
     public bool DoValidGold(int gold)
     {
-        if(CurrentGold >= gold)
+        if (CurrentGold >= gold)
         {
             CurrentGold -= gold;
             return true;
         }
         return false;
     }
-    
+
     public void UpgradeNexus(float decreseTime = 0.05f)
     {
         IncreseGoldTime -= decreseTime;
     }
 
-
     private void Awake()
     {
-        InitData();
-
-        player1Nexus = GameObject.Find("MyNexus").transform.position;
-        player2Nexus = GameObject.Find("EnemyNexus").transform.position;
+        InitCamera();
+        InitLayer();
 
         MaxGold = 100;
         IncreseGoldTime = 0.25f;
     }
 
-    private void InitData()
+    private void InitCamera()
     {
-        dataSender = FindObjectOfType<DataSender>();
-        if (dataSender == null) return;
-
-        unitData = dataSender.GetUnitData();
-
-        Destroy(dataSender.gameObject);
+        mCamera[0].SetActive(PhotonNetwork.IsMasterClient);
+        mCamera[1].SetActive(!PhotonNetwork.IsMasterClient);
     }
 
-    public UnitJsonData[] GetDeckInfo() => unitData;
+    private void InitLayer()
+    {
+        //MyUnitLayer = PhotonNetwork.IsMasterClient ? mHostLayer : mClientLayer;
+        //EnemyUnitLayer = PhotonNetwork.IsMasterClient ? mClientLayer : mHostLayer;
+
+        MyUnitLayer =  16;
+        EnemyUnitLayer = 17;
+
+        Debug.Log(MyUnitLayer);
+        Debug.Log(EnemyUnitLayer);
+    }
 
     private void FixedUpdate()
     {
@@ -112,6 +97,7 @@ public class GameManager : MonoBehaviour
         CurrentTime += Time.deltaTime;
         CurrentTimeSecond = (int)CurrentTime;
 
+        #region Gold
         if (managerMode) CurrentGold = MaxGold;
         if (CurrentGold < MaxGold)
         {
@@ -121,7 +107,24 @@ public class GameManager : MonoBehaviour
                 CoolTime = 0;
             }
         }
+        #endregion
+        #region Event
+        //if(CurrentTime == DragonEventTime)
+        //{
+        //    if(PhotonNetwork.IsMasterClient)
+        //    {
+        //        DragonSpawnEvent();
+        //    }
+        //}
+        #endregion
     }
 
+    private void DragonSpawnEvent()
+    {
+        GameObject obj = null;
+        Vector3 spwanPostion = new Vector3(0f, 0f, 0f);
+        obj = PhotonNetwork.Instantiate("OfficialUnit/NeutralUnit/" + "RedDragon", spwanPostion, Quaternion.identity);
+        //obj.GetComponent<NeutralUnit>().Init();
+    }
 
 }

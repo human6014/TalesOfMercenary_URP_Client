@@ -103,6 +103,7 @@ MonoBehaviour:
   cardPrefab: {fileID: 5689700144625623747, guid: 0e1370eba0532554b8d86a2a3db6507f,
     type: 3}
   cardCost: 15
+  m_CardUniqueID: 3
   cardType: 0
 --- !u!1 &554489413222068918
 GameObject:

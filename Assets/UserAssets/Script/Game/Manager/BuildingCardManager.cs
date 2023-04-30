@@ -26,7 +26,6 @@ public class BuildingCardManager : MonoBehaviour
     [SerializeField] private RectTransform nexusCardPool;
 
     #endregion
-    private UnitJsonData[] unitJsonDatas;
     private GameManager gameManager;
     private BuildingCard nexusCard;
     private BuildingCard[] deckCards;
@@ -60,17 +59,12 @@ public class BuildingCardManager : MonoBehaviour
 
     private void Start()
     {
-        LoadDeckInfo();
         for (int i = 0; i < maxDeckCardNum + 1; i++) LoadDeck(i);
 
         nexusCard = deckCards[0];
     }
 
     #region 덱 관련
-    private void LoadDeckInfo()
-    {
-        unitJsonDatas = gameManager.GetDeckInfo();
-    }
 
     /// <summary>
     /// 최초 한번 덱을 로드

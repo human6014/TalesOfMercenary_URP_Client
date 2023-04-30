@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -136,7 +137,7 @@ public class DragableCardManager : MonoBehaviour
         cardScript.OnDragAction += CardDragged;
         cardScript.OnPointerUpAction += CardReleased;
     }
-     
+
     /// <summary>
     /// AddCard에서 준비된 카드를 패로 가져옴
     /// </summary>
@@ -177,7 +178,7 @@ public class DragableCardManager : MonoBehaviour
 
         RectTransform card = null;
         if (cardType == CardType.Unit) card = unitCards[cardId].GetComponent<RectTransform>();
-        else if(cardType == CardType.Magic) card = magicCards[cardId].GetComponent<RectTransform>();
+        else if (cardType == CardType.Magic) card = magicCards[cardId].GetComponent<RectTransform>();
         else Debug.LogError("CardType Missing");
 
         card.SetAsLastSibling(); //UI순서에서 젤 위로 오게 하는겁니당
@@ -236,11 +237,10 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="cardId">0 ~ maxCardNum - 1를 가지는 식별번호</param>
     private void CardReleased(int cardId, CardType cardType)
     {
-        //Debug.Log("CardReleased");
 
         Card usingCard = null;
         if (cardType == CardType.Unit) usingCard = unitCards[cardId];
-        else if (cardType == CardType.Magic) usingCard = magicCards[cardId];
+        else if (cardType == CardType.Magic) return;//usingCard = magicCards[cardId];
         else Debug.LogError("CardType Missing");
 
         if (IsHitToGround(out RaycastHit hit))
@@ -255,14 +255,10 @@ public class DragableCardManager : MonoBehaviour
             }
 
             Destroy(usingCard.gameObject);
-
-            SpawnUnit(cardId, cardType, hit, usingCard, true);
-
+            SpawnUnit(cardId, cardType, hit, usingCard);
         }
         else usingCard.GetComponent<RectTransform>().anchoredPosition = startPos;
     }
-
-
 
     /// <summary>
     /// 카드로부터 유닛 소환함
@@ -272,25 +268,24 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="hit">지상 Ray정보</param>
     /// <param name="usingCard">현재 소환하고자 하는 카드의 Card객체</param>
     /// <param name="isPlayer">네트워크상 본인의 카드인지</param>
-    public void SpawnUnit(int cardId, CardType cardType, RaycastHit hit, Card usingCard, bool isPlayer)
+    public void SpawnUnit(int cardId, CardType cardType, RaycastHit hit, Card usingCard)
     {
         GameObject obj = null;
         if (cardType == CardType.Unit)
         {
-            //Vector3 cardpos = hit.collider.transform.position + Vector3.up * 0.2f;
-            //obj = Instantiate(usingCard.CardPrefab, cardpos, Quaternion.identity);
-            //obj.GetComponent<Unit>().InitBatch(1);
-            //obj.transform.SetParent(unitPool);
+            Vector3 cardpos = hit.collider.transform.position + Vector3.up * 0.2f;
+            obj = PhotonNetwork.Instantiate("OfficialUnit/" + usingCard.CardPrefab.name, cardpos, Quaternion.identity);
 
-            //NetworkUnitManager.SendUnitSpawn(0, hit.point);
-            //Invoke(nameof(SendPlayerDrawCard), 0.5f);
+            obj.GetComponent<Unit>().InitBatch();
+            obj.transform.SetParent(unitPool);
+
             StartCoroutine(ObserveCard(cardId));
             StartCoroutine(AddUnitCard());
         }
         else if (cardType == CardType.Magic)
         {
             obj = Instantiate(usingCard.CardPrefab, magicStartPos.position, Quaternion.identity);
-            obj.GetComponent<Magic>().Init(hit.point, isPlayer);
+            obj.GetComponent<Magic>().Init(hit.point);
             obj.transform.SetParent(magicPool);
 
             StartCoroutine(AddMagicCard(cardId));
@@ -316,6 +311,5 @@ public class DragableCardManager : MonoBehaviour
         for (int i = 0; i < previewHolder.childCount; i++)
             Destroy(previewHolder.GetChild(i).gameObject);
     }
-
-    #endregion
+    #endregion    
 }
