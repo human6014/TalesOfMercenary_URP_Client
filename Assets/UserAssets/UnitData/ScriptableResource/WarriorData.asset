@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   unitName: Warrior
-  maxHP: 100
+  maxHP: 10
   def: 0
   mp: 0
-  str: 0
+  str: 1
   speed: 0
   element: 0
-  criticalRate: 0
-  criticalDamage: 0
+  criticalRate: 50
+  criticalDamage: 2
   attackRange: 1
   attackSpeed: 1.5
   movementRange: 0.2
   unitType: 1
+  UUID: 57b41b31-6b2a-4125-9b4a-daa69f4095ee

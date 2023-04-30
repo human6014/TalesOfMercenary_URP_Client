@@ -29,6 +29,11 @@ public class Nexus : Damageable
         if(IsMine) Debug.Log(transform.name + " Mine ");
     }
 
+    public override string getUUID()
+    {
+        return "1";
+    }
+
     private void GameEnd()
     {
         isGameEnd = true;
@@ -42,8 +47,8 @@ public class Nexus : Damageable
     public void GetDamageRPC(int damage, Damageable attackUnit)
     {
         if (isGameEnd) return;
-        HPbar.value = (Hp -= damage);
-        if (Hp <= 0) GameEnd();
+        HPbar.value = (mCurrentHp -= damage);
+        if (mCurrentHp <= 0) GameEnd();
     }
 
     private void DisplayMoveable(bool isClicked)

@@ -1,5 +1,6 @@
 
 using Photon.Pun;
+using Scriptable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ public class NetworkUnitManager : MonoBehaviour
     public static Dictionary<string, Damageable> myUnitList { get; } = new();
     public static List<BuildingCard> mybuildingList { get; } = new();
     public static List<BuildingCard> enemyBuildingList { get; } = new();
+
+
 
     private void Init()
     {

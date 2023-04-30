@@ -10,7 +10,7 @@ public class GameEventManager : MonoBehaviour
     [SerializeField] private Transform[] neutralUnitSpawnPos;
     [SerializeField] private NeutralUnit neutralUnit;
     [SerializeField] private float mDragonEventTime;
-
+    [SerializeField] private bool mIsSpawnDragon;
     private Vector3[] neutralUnitInitPos;
     private Vector3[] nexusPos;
     private float mCurrentTime;
@@ -38,7 +38,7 @@ public class GameEventManager : MonoBehaviour
     private void FixedUpdate()
     {
         mCurrentTime += Time.deltaTime;
-        if (!mIsSpawnNeutralUnit && mCurrentTime >= mDragonEventTime)
+        if (mIsSpawnDragon && !mIsSpawnNeutralUnit && mCurrentTime >= mDragonEventTime)
         {
             mIsSpawnNeutralUnit = true;
             SpawnNeutralUnit();
