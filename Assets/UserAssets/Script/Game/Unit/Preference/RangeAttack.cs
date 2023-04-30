@@ -17,7 +17,7 @@ public class RangeAttack : Attackable
 
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
     {
-        if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
+        if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
         {
             Debug.Log("크리티컬공격");
             CriticalAttack(attackUnit, attackedUnit);
