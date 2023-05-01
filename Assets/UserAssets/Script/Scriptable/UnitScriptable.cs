@@ -35,7 +35,7 @@ namespace Scriptable
         public EElement element;  // 속성
 
         [Header("Additional Stats")]
-        [Tooltip("크리티컬율")] 
+        [Tooltip("크리티컬율")]
         public int criticalRate = 0;    // 크리티컬율
         [Tooltip("크리티컬 데미지")]
         public int criticalDamage = 0;  // 크리티컬 데미지

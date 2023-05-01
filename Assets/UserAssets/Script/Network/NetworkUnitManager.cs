@@ -1,4 +1,3 @@
-
 using Photon.Pun;
 using Scriptable;
 using System;
@@ -43,12 +42,12 @@ public class NetworkUnitManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            enemyUnitList.Add("1",mGameManger.GetNexus(1));
-            myUnitList.Add("1",mGameManger.GetNexus(0));
+            enemyUnitList.Add("1", mGameManger.GetNexus(1));
+            myUnitList.Add("1", mGameManger.GetNexus(0));
         }
         else
         {
-            enemyUnitList.Add("1",mGameManger.GetNexus(0));
+            enemyUnitList.Add("1", mGameManger.GetNexus(0));
             myUnitList.Add("1", mGameManger.GetNexus(1));
         }
     }
