@@ -50,7 +50,7 @@ public class Unit : Damageable
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
         mPriority = mNavMeshAgent.avoidancePriority;
-        HPbar.maxValue = HPbar.value = Hp = mUnitScriptable.maxHP;
+        Hp = mUnitScriptable.maxHP;
 
         IsAlive = true;
         mNavMeshAgent.enabled = true;
@@ -69,7 +69,7 @@ public class Unit : Damageable
     public void SyncInitBatch(string uuid) //적이 소환한 유닛 초기화
     {
         NetworkUnitManager.enemyUnitList.Add(uuid, this);
-        HPbar.maxValue = HPbar.value = Hp = mUnitScriptable.maxHP;
+        Hp = mUnitScriptable.maxHP;
         gameObject.layer = GameManager.EnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
         IsAlive = true;
@@ -179,7 +179,8 @@ public class Unit : Damageable
     {
         if (damage <= 0) return;
         if (Hp <= damage) Die();
-        else HPbar.value = (Hp -= damage);
+        else Hp -= damage;
+        //else HPbar.value = (Hp -= damage);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
@@ -191,7 +192,7 @@ public class Unit : Damageable
 
     public void Die()
     {
-        HPbar.value = 0;
+        //HPbar.value = 0;
         IsAlive = false;
         mIsBatch = false;
 
