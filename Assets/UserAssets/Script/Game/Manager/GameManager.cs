@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LayerMask mHostLayer;
     [SerializeField] private LayerMask mClientLayer;
 
+    public static Transform MyCameraTransform;
     public static int MyUnitLayer;
     public static int EnemyUnitLayer;
     public static readonly int HOST_NUMBER = 0;
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
     {
         mCamera[0].SetActive(PhotonNetwork.IsMasterClient);
         mCamera[1].SetActive(!PhotonNetwork.IsMasterClient);
+        MyCameraTransform = (PhotonNetwork.IsMasterClient ? mCamera[0] : mCamera[1]).GetComponent<Transform>();
     }
 
     private void InitLayer()
