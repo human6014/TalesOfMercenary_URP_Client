@@ -8,14 +8,15 @@ using static UnityEngine.GraphicsBuffer;
 public class Nexus : Damageable
 {
     [SerializeField] private int HasPlayerNumber;
-    public bool IsMine { get; set; }
+    [SerializeField] private GameObject[] mFocusArea;
+    private float mMaximum;
+    
     private bool isGameEnd = false;
 
     //private PhotonView mPhotonView;
     private Damageable mTarget;
     public string UUID;
-
-    [SerializeField] private GameObject[] mFocusArea;
+    public bool IsMine { get; set; }
 
     private void Awake()
     {
@@ -23,8 +24,8 @@ public class Nexus : Damageable
         if (PhotonNetwork.IsMasterClient && HasPlayerNumber == 0) IsMine = true;
         if (!PhotonNetwork.IsMasterClient && HasPlayerNumber == 1) IsMine = true;
 
+        FindMaximumArea();
         IsAlive = true;
-        if (IsMine) MouseController.ClickAction += DisplayMoveable;
 
         if (IsMine) Debug.Log(transform.name + " Mine ");
     }
@@ -47,13 +48,23 @@ public class Nexus : Damageable
     public void GetDamageRPC(int damage, Damageable attackUnit)
     {
         if (isGameEnd) return;
-        HPbar.value = (mCurrentHp -= damage);
+        mCurrentHp -= damage;
         if (mCurrentHp <= 0) GameEnd();
     }
 
-    private void DisplayMoveable(bool isClicked)
+    private void FindMaximumArea()
     {
-
-        Debug.Log("Display : " + isClicked);
+        foreach(GameObject g in mFocusArea)
+            mMaximum = Mathf.Max(mMaximum,Vector3.Distance(transform.position, g.transform.position));
+        mMaximum += 0.25f;
     }
+
+    public void DisplaySpawnAbleArea(bool isActive)
+    {
+        foreach(GameObject g in mFocusArea) g.transform.GetChild(0).gameObject.SetActive(isActive);
+    }
+
+    public bool IsInArea(Vector3 hitPos) 
+        => Vector3.Distance(transform.position, hitPos) <= mMaximum;
+    
 }

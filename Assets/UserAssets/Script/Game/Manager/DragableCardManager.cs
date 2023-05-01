@@ -52,6 +52,7 @@ public class DragableCardManager : MonoBehaviour
     private Vector2 startPos;
 
     private bool isActiveCard;
+    private bool mIsClickedCard;
 
     private void Awake()
     {
@@ -66,7 +67,6 @@ public class DragableCardManager : MonoBehaviour
     {
         LoadHandCard();
     }
-
 
     private void LoadHandCard()
     {
@@ -174,8 +174,7 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="cardId">0 ~ maxCardNum - 1를 가지는 식별번호</param>
     private void CardTapped(int cardId, CardType cardType)
     {
-        //Debug.Log("CardTapped");
-
+        GameManager.mMyNexus.DisplaySpawnAbleArea(true);
         RectTransform card = null;
         if (cardType == CardType.Unit) card = unitCards[cardId].GetComponent<RectTransform>();
         else if (cardType == CardType.Magic) card = magicCards[cardId].GetComponent<RectTransform>();
@@ -192,8 +191,6 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="dragAmount">eventData.delta값</param>
     private void CardDragged(int cardId, Vector2 dragAmount, CardType cardType)
     {
-        //Debug.Log("CardDragged");
-
         Card usingCard = null;
         if (cardType == CardType.Unit) usingCard = unitCards[cardId];
         else if (cardType == CardType.Magic) usingCard = magicCards[cardId];
@@ -237,7 +234,7 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="cardId">0 ~ maxCardNum - 1를 가지는 식별번호</param>
     private void CardReleased(int cardId, CardType cardType)
     {
-
+        GameManager.mMyNexus.DisplaySpawnAbleArea(false);
         Card usingCard = null;
         if (cardType == CardType.Unit) usingCard = unitCards[cardId];
         else if (cardType == CardType.Magic) return;//usingCard = magicCards[cardId];
@@ -247,13 +244,13 @@ public class DragableCardManager : MonoBehaviour
         {
             ClearPreviewObject();
 
-            if (!gameManager.DoValidGold(usingCard.CardCost))
+            if (!gameManager.DoValidGold(usingCard.CardCost) || 
+                !GameManager.mMyNexus.IsInArea(hit.collider.transform.position))
             {
                 usingCard.GetComponent<RectTransform>().anchoredPosition = startPos;
                 usingCard.ChangeActiveState(false);
                 return;
             }
-
             Destroy(usingCard.gameObject);
             SpawnUnit(cardId, cardType, hit, usingCard);
         }
@@ -273,8 +270,8 @@ public class DragableCardManager : MonoBehaviour
         GameObject obj = null;
         if (cardType == CardType.Unit)
         {
-            Vector3 cardpos = hit.collider.transform.position + Vector3.up * 0.2f;
-            obj = PhotonNetwork.Instantiate("OfficialUnit/" + usingCard.CardPrefab.name, cardpos, Quaternion.identity);
+            Vector3 cardPos = hit.collider.transform.position + Vector3.up * 0.2f;
+            obj = PhotonNetwork.Instantiate("OfficialUnit/" + usingCard.CardPrefab.name, cardPos, Quaternion.identity);
 
             obj.GetComponent<Unit>().InitBatch();
             obj.transform.SetParent(unitPool);

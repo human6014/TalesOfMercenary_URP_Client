@@ -9,12 +9,12 @@ public class UnitUIController : MonoBehaviour
 
     private void Awake() => mStatCanvas = GetComponent<Transform>();
 
-    private void Start() => mStatCanvas.rotation = Quaternion.LookRotation(GameManager.MyCameraTransform.position);
+    private void Start() => mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
 
     private void Update()
     {
         if (!mOnUpdate) return;
-        mStatCanvas.rotation = Quaternion.LookRotation(GameManager.MyCameraTransform.position);
+        mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
     }
     
 }
