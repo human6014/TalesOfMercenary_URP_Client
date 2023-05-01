@@ -13,24 +13,54 @@ using System;
 /// </summary>
 public class RangeAttack : Attackable
 {
-    private static System.Random mRand = new System.Random();
+    private System.Random mRand = new System.Random();
+
+    private float SkillProbability = 20;
 
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
     {
-        if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
+        if (attackedUnit.mUnitScriptable.level == 3)
         {
-            Debug.Log("크리티컬공격");
-            CriticalAttack(attackUnit, attackedUnit);
+            if (SkillProbability > UnityEngine.Random.Range(0, 100))
+            {
+                Debug.Log("스킬 발동");
+                CriticalAttack(attackUnit, attackedUnit);
+            }
+            else
+            {
+                if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
+                {
+                    Debug.Log("크리티컬공격");
+                    CriticalAttack(attackUnit, attackedUnit);
+                }
+                else
+                {
+                    Debug.Log("일반공격");
+                    NormalAttack(attackUnit, attackedUnit);
+                }
+            }
         }
         else
         {
-            Debug.Log("일반공격");
-            NormalAttack(attackUnit, attackedUnit);
+            if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
+            {
+                Debug.Log("크리티컬공격");
+                CriticalAttack(attackUnit, attackedUnit);
+            }
+            else
+            {
+                Debug.Log("일반공격");
+                NormalAttack(attackUnit, attackedUnit);
+            }
         }
     }
-    //속성 추가피해는 빠진 로직
+
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    {
+        attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    }
+
+
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
         => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);

@@ -20,7 +20,7 @@ MonoBehaviour:
   str: 1
   speed: 0
   element: 0
-  criticalRate: 50
+  criticalRate: 20
   criticalDamage: 2
   attackRange: 1
   attackSpeed: 1.5

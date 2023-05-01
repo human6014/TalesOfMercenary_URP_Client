@@ -24,9 +24,9 @@ public class Nexus : Damageable
         if (!PhotonNetwork.IsMasterClient && HasPlayerNumber == 1) IsMine = true;
 
         IsAlive = true;
-        if(IsMine) MouseController.ClickAction += DisplayMoveable;
+        if (IsMine) MouseController.ClickAction += DisplayMoveable;
 
-        if(IsMine) Debug.Log(transform.name + " Mine ");
+        if (IsMine) Debug.Log(transform.name + " Mine ");
     }
 
     public override string getUUID()
@@ -53,7 +53,7 @@ public class Nexus : Damageable
 
     private void DisplayMoveable(bool isClicked)
     {
-        
+
         Debug.Log("Display : " + isClicked);
     }
 }
