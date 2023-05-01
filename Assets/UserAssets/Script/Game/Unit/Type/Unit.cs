@@ -53,11 +53,11 @@ public class Unit : Damageable
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
         mPriority = mNavMeshAgent.avoidancePriority;
-        HPbar.maxValue = HPbar.value = mCurrentHp = mUnitScriptable.maxHP;
+        mCurrentHp = mUnitScriptable.maxHP;
 
         IsAlive = true;
         mNavMeshAgent.enabled = true;
-        gameObject.layer = GameManager.MyUnitLayer;
+        gameObject.layer = GameManager.mMyUnitLayer;
 
         mIsBatch = true;
         Findenemy();
@@ -72,8 +72,8 @@ public class Unit : Damageable
     public void SyncInitBatch(string uuid) //적이 소환한 유닛 초기화
     {
         NetworkUnitManager.enemyUnitList.Add(uuid, this);
-        HPbar.maxValue = HPbar.value = mCurrentHp = mUnitScriptable.maxHP;
-        gameObject.layer = GameManager.EnemyUnitLayer;
+        mCurrentHp = mUnitScriptable.maxHP;
+        gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
         IsAlive = true;
     }
@@ -223,7 +223,8 @@ public class Unit : Damageable
             Die();
             return;
         }
-        else HPbar.value = (mCurrentHp -= damage);
+        else mCurrentHp -= damage;
+        //else HPbar.value = (mCurrentHp -= damage);
 
         Debug.Log("받은 피해 : " + damage + ",  현재 체력 : " + mCurrentHp);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
@@ -272,7 +273,6 @@ public class Unit : Damageable
         }
         Debug.Log("유닛 삭제 -> (삭제 전 myUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.myUnitList.Count + ")");
         transform.position = new Vector3(transform.position.x, 10, transform.position.z);
-        HPbar.value = 0;
         IsAlive = false;
         mIsBatch = false;
         Destroy(gameObject);
@@ -284,7 +284,6 @@ public class Unit : Damageable
         int i;
         i = NetworkUnitManager.enemyUnitList.Count;
         transform.position = new Vector3(transform.position.x, 10, transform.position.z);
-        HPbar.value = 0;
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);

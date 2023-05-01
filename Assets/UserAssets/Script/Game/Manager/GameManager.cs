@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LayerMask mHostLayer;
     [SerializeField] private LayerMask mClientLayer;
 
-    public static Transform MyCameraTransform;
-    public static int MyUnitLayer;
-    public static int EnemyUnitLayer;
-    public static readonly int HOST_NUMBER = 0;
-    public static readonly int CLIENT_NUMBER = 1;
+    public static Transform mMyCameraTransform;
+    public static Nexus mMyNexus;
+    public static int mMyUnitLayer;
+    public static int mEnemyUnitLayer;
+
+    public readonly int HOST_NUMBER  = 0;
+    public readonly int CLIENT_NUMBER = 1;
 
     public Nexus GetNexus(int i) => damageable[i];
 
@@ -67,6 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        InitNexus();
         InitCamera();
         InitLayer();
 
@@ -74,23 +77,22 @@ public class GameManager : MonoBehaviour
         IncreseGoldTime = 0.25f;
     }
 
+    private void InitNexus()
+    {
+        mMyNexus = PhotonNetwork.IsMasterClient ? damageable[0] : damageable[1];
+    }
+
     private void InitCamera()
     {
         mCamera[0].SetActive(PhotonNetwork.IsMasterClient);
         mCamera[1].SetActive(!PhotonNetwork.IsMasterClient);
-        MyCameraTransform = (PhotonNetwork.IsMasterClient ? mCamera[0] : mCamera[1]).GetComponent<Transform>();
+        mMyCameraTransform = (PhotonNetwork.IsMasterClient ? mCamera[0] : mCamera[1]).GetComponent<Transform>();
     }
 
     private void InitLayer()
     {
-        //MyUnitLayer = PhotonNetwork.IsMasterClient ? mHostLayer : mClientLayer;
-        //EnemyUnitLayer = PhotonNetwork.IsMasterClient ? mClientLayer : mHostLayer;
-
-        MyUnitLayer = 16;
-        EnemyUnitLayer = 17;
-
-        Debug.Log(MyUnitLayer);
-        Debug.Log(EnemyUnitLayer);
+        mMyUnitLayer = 16;
+        mEnemyUnitLayer = 17;
     }
 
     private void FixedUpdate()

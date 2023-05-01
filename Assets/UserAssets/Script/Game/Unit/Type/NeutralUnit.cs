@@ -47,7 +47,7 @@ public class NeutralUnit : Damageable
         mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
         mIsBatch = true;
         mCurrentHp = mUnitScriptable.maxHP;
-        gameObject.layer = GameManager.MyUnitLayer;
+        gameObject.layer = GameManager.mMyUnitLayer;
         mAttack = GetComponent<Attackable>();
         destPos = spawnPos;
     }
@@ -55,7 +55,7 @@ public class NeutralUnit : Damageable
     public void SyncInit(string UUID) //적이 소환한 유닛 초기화
     {
         NetworkUnitManager.enemyUnitList.Add(UUID, this);
-        gameObject.layer = GameManager.EnemyUnitLayer;
+        gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = UUID;
         IsAlive = true;
     }
@@ -130,7 +130,7 @@ public class NeutralUnit : Damageable
             Die();
             return;
         }
-        else HPbar.value = (mCurrentHp -= damage);
+        else mCurrentHp -= damage;
 
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {

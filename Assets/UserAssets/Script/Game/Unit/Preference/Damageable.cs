@@ -7,7 +7,6 @@ public abstract class Damageable : MonoBehaviour
 {
 
     [SerializeField] public Scriptable.UnitScriptable mUnitScriptable;
-    [SerializeField] protected Slider HPbar;
     public int mCurrentHp { get; protected set; } //현재 체력
 
     public bool IsAlive { get; protected set; }
