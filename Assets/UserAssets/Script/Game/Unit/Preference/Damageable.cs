@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// 
-/// 반드시 시리얼라이즈 등록 해야함 모든 클래스는
-/// </summary>
 public abstract class Damageable : MonoBehaviour
 {
 

@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
         //MyUnitLayer = PhotonNetwork.IsMasterClient ? mHostLayer : mClientLayer;
         //EnemyUnitLayer = PhotonNetwork.IsMasterClient ? mClientLayer : mHostLayer;
 
-        MyUnitLayer =  16;
+        MyUnitLayer = 16;
         EnemyUnitLayer = 17;
 
         Debug.Log(MyUnitLayer);

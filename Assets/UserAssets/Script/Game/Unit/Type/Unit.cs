@@ -6,6 +6,7 @@ using System;
 using Scriptable;
 using UnityEditor;
 using System.Collections.Generic;
+using static UnityEngine.GraphicsBuffer;
 /// <summary>
 /// target이 바뀔때마다 settarget()함수를 호출해서 모든 유저에게 타깃 변수를 동기화해줘야 한다.
 /// </summary>
@@ -33,12 +34,12 @@ public class Unit : Damageable
     private PhotonView mPhotonView;
     private Attackable mAttack;
     private string mTargetUUID;
+    private List<string> mRemoveList = new List<string>();
     #endregion
 
     #region Property
     public bool IsClicked { get; set; }
     public bool IsEnemy { get; private set; }
-
     #endregion
 
     protected virtual void Awake()
@@ -79,14 +80,19 @@ public class Unit : Damageable
 
     public override string getUUID()
     {
-        return mUnitScriptable.UUID; 
+        return mUnitScriptable.UUID;
     }
 
     private void FixedUpdate()
     {
         if (!mIsBatch) return;
         if (!mPhotonView.IsMine) return;
-
+        if (IsAlive == false)
+        {
+            Die();
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
+            return;
+        }
         mAttackDelay += Time.deltaTime;
 
         if (mTarget != null) // 타깃이 있을 때
@@ -103,10 +109,7 @@ public class Unit : Damageable
         mUnitAnimationController.PlayMoveAnimation(mIsMoving);
     }
 
-
-    /// <summary>
-    /// 타깃이 있고 살아있을 때
-    /// </summary>
+    #region move
     private void TargetMove()
     {
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
@@ -119,7 +122,6 @@ public class Unit : Damageable
             mNavMeshAgent.SetDestination(transform.position);
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                Debug.Log("공격");
                 mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
             }
@@ -133,14 +135,12 @@ public class Unit : Damageable
         }
     }
 
-    /// <summary>
-    /// 타깃이 없을 때 -> 백터로 이동 중
-    /// </summary>
     private void NonTargetMove()
     {
         if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // 타깃이 죽었을때
         {
             mTarget = null;
+            Findenemy();
             return;
         }
         float dist = Vector3.Distance(mVectorDestination, transform.position);
@@ -148,7 +148,7 @@ public class Unit : Damageable
         mIsMoving = true;
         if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
         {
-            Findenemy();// 새로운 타깃 탐색 -> 실패시 계속 백터 포지션으로 이동
+            Findenemy();
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
         }
@@ -160,17 +160,28 @@ public class Unit : Damageable
         }
     }
 
+    public void PointMove(Vector3 pos)
+    {
+        mTarget = null;
+        mVectorDestination = pos;
+        mNavMeshAgent.stoppingDistance = 0.15f;
+        mNavMeshAgent.SetDestination(mVectorDestination);
+    }
+    #endregion
+
     private void Findenemy()
     {
-        Debug.Log("새로운 공격대상 발견");
-        Debug.Log(NetworkUnitManager.enemyUnitList.Count);
+        Debug.Log("적 탐색...");
+        Debug.Log("적 유닛 갯수 : " + NetworkUnitManager.enemyUnitList.Count);
         float minDis = float.MaxValue;
         Damageable target = null;
         float tem;
         string temUUID = null;
+        mRemoveList.Clear();
+
         foreach (var key in NetworkUnitManager.enemyUnitList)
         {
-            if(key.Value.IsAlive)
+            if (key.Value.IsAlive)
             {
                 tem = (transform.position - key.Value.transform.position).sqrMagnitude;
                 if (minDis > tem)
@@ -182,14 +193,20 @@ public class Unit : Damageable
             }
             else
             {
-                NetworkUnitManager.enemyUnitList.Remove(key.Key);
+                mRemoveList.Add(key.Key);
+                //NetworkUnitManager.enemyUnitList.Remove(key.Key);
             }
+        }
+        for (int i = 0; i < mRemoveList.Count; i++)
+        {
+            NetworkUnitManager.enemyUnitList.Remove(mRemoveList[i]);
         }
         mTarget = target;
         mTargetUUID = temUUID;
         Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
     }
 
+    #region Damage
     public override void GetDamage(int damage, string attackUnitUUID)
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
@@ -199,50 +216,80 @@ public class Unit : Damageable
     public void GetDamageRPC(int damage, string attackUnit)
     {
         if (damage <= 0) return;
+
         if (mCurrentHp <= damage)
         {
             mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
             Die();
+            return;
         }
         else HPbar.value = (mCurrentHp -= damage);
-        Debug.Log("받은 피해 : " + damage +",  현재 체력 : " + mCurrentHp);
+
+        Debug.Log("받은 피해 : " + damage + ",  현재 체력 : " + mCurrentHp);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
-            if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
+            if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
             {
-                mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
+                if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
+                {
+                    mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
+                }
             }
+
         }
     }
+    #endregion
 
+    #region DIE
     public void Die()
     {
-        Debug.Log("유닛 사망");
+        int i;
+        i = NetworkUnitManager.myUnitList.Count;
+        Debug.Log("삭제 전");
+        foreach (var key in NetworkUnitManager.enemyUnitList)
+        {
+            if (key.Value.IsAlive)
+            {
+                Debug.Log("삭제 전 살아있는 유닛: " + key.Value.mUnitScriptable.unitType);
+            }
+            else
+            {
+                Debug.Log("삭제 전 죽은 유닛: " + key.Value.mUnitScriptable.unitType);
+            }
+        }
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
+        Debug.Log("삭제 후");
+        foreach (var key in NetworkUnitManager.enemyUnitList)
+        {
+            if (key.Value.IsAlive)
+            {
+                Debug.Log("삭제 후 살아있는 유닛: " + key.Value.mUnitScriptable.unitType);
+            }
+            else
+            {
+                Debug.Log("삭제 후 죽은 유닛: " + key.Value.mUnitScriptable.unitType);
+            }
+        }
+        Debug.Log("유닛 삭제 -> (삭제 전 myUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.myUnitList.Count + ")");
+        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         HPbar.value = 0;
         IsAlive = false;
         mIsBatch = false;
         Destroy(gameObject);
     }
 
-
     [PunRPC]
     public void DieRPC()
     {
-        Debug.Log("유닛 사망");
+        int i;
+        i = NetworkUnitManager.enemyUnitList.Count;
+        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
+        HPbar.value = 0;
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
+        Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
         Destroy(gameObject);
     }
-
-    public void PointMove(Vector3 pos)
-    {
-        mTarget = null;
-        mVectorDestination = pos;
-        mNavMeshAgent.stoppingDistance = 0.15f;
-        mNavMeshAgent.SetDestination(mVectorDestination);
-    }
-
-
+    #endregion
 }
