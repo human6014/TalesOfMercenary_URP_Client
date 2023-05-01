@@ -16,6 +16,7 @@ public class NeutralUnit : Damageable
     private Damageable mTarget;
     private PhotonView mPhotonView;
     private Attackable mAttack;
+    private string mTargetUUID;
 
     #region logic Info
     private Vector3 destPos;
@@ -43,7 +44,7 @@ public class NeutralUnit : Damageable
     {
         mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
         mIsBatch = true;
-        Hp = mUnitScriptable.maxHP;
+        mCurrentHp = mUnitScriptable.maxHP;
         gameObject.layer = GameManager.MyUnitLayer;
         mAttack = GetComponent<Attackable>();
         destPos = spawnPos;
@@ -81,7 +82,7 @@ public class NeutralUnit : Damageable
                 Debug.Log("¿ë Å¸±ê À¯Çü : " + mTarget.mUnitScriptable.unitType);
             }
 
-            if (mTarget == null || !mTarget.IsAlive) // Å¸±ê »ç¸Á È®ÀÎ 
+            if (mTarget == null || !mTarget.IsAlive || !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // Å¸±ê »ç¸Á È®ÀÎ 
             {
                 Debug.Log("Å¸±ê »ç¸Á¹× Å¸±ê Àç Å½»ö");
                 Findenemy();
@@ -90,10 +91,28 @@ public class NeutralUnit : Damageable
             TargetMove();
         }
     }
+    public override string getUUID()
+    {
+        return mUnitScriptable.UUID;
+    }
+
 
     private void Die()
     {
         IsAlive = false;
+        Debug.Log("µå·¡°ï »ç¸Á");
+        NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
+        Destroy(gameObject);
+    }
+
+    [PunRPC]
+    public void DieRPC()
+    {
+        Debug.Log("µå·¡°ï »ç¸Á");
+        mIsBatch = false;
+        IsAlive = false;
+        NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
+        Destroy(gameObject);
     }
 
     private void TargetMove()
@@ -125,9 +144,13 @@ public class NeutralUnit : Damageable
     public void GetDamageRPC(int damage, string attackUnit)
     {
         Debug.Log("µå·¡°ï °ø°Ý´çÇÔ °ø°Ý À¯´Ö id: " + attackUnit);
-        //if (damage <= 0) return;
-        if (Hp <= damage) Die();
-        else HPbar.value = (Hp -= damage);
+        if (damage <= 0) return;
+        if (mCurrentHp <= damage)
+        {
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
+            Die();
+        }
+        else HPbar.value = (mCurrentHp -= damage);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
@@ -158,15 +181,25 @@ public class NeutralUnit : Damageable
         float minDis = float.MaxValue;
         Damageable target = null;
         float tem;
+        string temUUID = null;
         foreach (var key in NetworkUnitManager.enemyUnitList)
         {
-            tem = (transform.position - key.Value.transform.position).sqrMagnitude;
-            if (minDis > tem)
+            if (key.Value.IsAlive)
             {
-                minDis = tem;
-                target = key.Value;
+                tem = (transform.position - key.Value.transform.position).sqrMagnitude;
+                if (minDis > tem)
+                {
+                    minDis = tem;
+                    target = key.Value;
+                    temUUID = key.Key;
+                }
+            }
+            else
+            {
+                NetworkUnitManager.enemyUnitList.Remove(key.Key);
             }
         }
         mTarget = target;
+        mTargetUUID = temUUID;
     }
 }

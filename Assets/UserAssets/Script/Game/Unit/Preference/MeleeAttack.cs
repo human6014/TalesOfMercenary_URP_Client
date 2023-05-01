@@ -18,7 +18,7 @@ public class MeleeAttack : Attackable
     public override void Attack(Damageable attackUnit, Damageable attackedUnit)
     {
         //크리티컬 발생 시
-        if (attackUnit.mUnitScriptable.criticalRate >= mRand.Next(101))
+        if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100)) 
         {
             Debug.Log("크리티컬공격");
             CriticalAttack(attackUnit, attackedUnit);

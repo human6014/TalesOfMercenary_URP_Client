@@ -41,6 +41,7 @@ MonoBehaviour:
   - Sync
   - GetDamageRPC
   - SetTarget
+  - DieRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

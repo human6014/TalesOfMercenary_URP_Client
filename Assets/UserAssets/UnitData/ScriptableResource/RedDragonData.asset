@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   unitName: RedDragon
-  maxHP: 1000
+  maxHP: 10
   def: 0
   mp: 0
-  str: 0
+  str: 2
   speed: 0
   element: 0
-  criticalRate: 0
-  criticalDamage: 0
+  criticalRate: 50
+  criticalDamage: 2
   attackRange: 2
   attackSpeed: 1.5
   movementRange: 0.2
   unitType: 2
+  UUID: b75b50b5-aa40-4b0d-9fe4-7de4b9ef99ac
