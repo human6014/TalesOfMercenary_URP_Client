@@ -48,7 +48,7 @@ public class FireBall : Magic
         Debug.Log("Explosion");
         isBatch = false;
         meshRenderer.enabled = false;
-
+        Destroy(gameObject);
     }
     /*
     public void Explosion()

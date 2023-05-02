@@ -76,11 +76,11 @@ public class DragableCardManager : MonoBehaviour
             StartCoroutine(ObserveCard(i));
             StartCoroutine(AddUnitCard());
         }
+    }
 
-        for (int i = 0; i < maxMagicCardNum; i++)
-        {
-            StartCoroutine(AddMagicCard(i));
-        }
+    public void LoadMagicCard(MagicCard magicCard)
+    {
+        StartCoroutine(AddMagicCards(0,magicCard));
     }
 
     #region 패 보충
@@ -117,12 +117,11 @@ public class DragableCardManager : MonoBehaviour
         cardScript.CardType = CardType.Unit;
         cardScript.InitializeData();
     }
-
-    private IEnumerator AddMagicCard(int cardId, float delay = 0f)
+    private IEnumerator AddMagicCards(int cardId, MagicCard magicCard,float delay = 0f)
     {
         yield return new WaitForSeconds(delay);
 
-        RectTransform backupCardTransform = Instantiate(deckManager.GetRandromMagicCard()).GetComponent<RectTransform>();
+        RectTransform backupCardTransform = Instantiate(magicCard).GetComponent<RectTransform>();
         backupCardTransform.SetParent(magicCardPool, true);
         backupCardTransform.anchoredPosition = new Vector2(-40 + cardId * 80, 0);
 
@@ -133,7 +132,7 @@ public class DragableCardManager : MonoBehaviour
         magicCards[cardId] = cardScript;
         cardScript.CardType = CardType.Magic;
 
-        cardScript.OnPointerDownAction += CardTapped;
+        cardScript.OnPointerDownBatchAction += CardTapped;
         cardScript.OnDragAction += CardDragged;
         cardScript.OnPointerUpAction += CardReleased;
     }
@@ -146,8 +145,6 @@ public class DragableCardManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ObserveCard(int cardId, float delay = 0f)
     {
-        //Debug.Log("CardObserve");
-
         yield return new WaitForSeconds(delay);
 
         backupCardTransform.SetParent(activeCardPool, true);
@@ -160,7 +157,7 @@ public class DragableCardManager : MonoBehaviour
         cardScript.CardId = cardId;
         unitCards[cardId] = cardScript;
 
-        cardScript.OnPointerDownAction += CardTapped;
+        cardScript.OnPointerDownBatchAction += CardTapped;
         cardScript.OnDragAction += CardDragged;
         cardScript.OnPointerUpAction += CardReleased;
     }
@@ -168,17 +165,25 @@ public class DragableCardManager : MonoBehaviour
 
     #region 마우스 처리 담당
 
+    private void DefineCardType(int cardId, CardType cardType, out Card usingCard)
+    {
+        if (cardType == CardType.Unit) usingCard = unitCards[cardId];
+        else usingCard = magicCards[cardId];
+    }
+
     /// <summary>
     /// 카드를 마우스로 클릭 시 발동함
     /// </summary>
     /// <param name="cardId">0 ~ maxCardNum - 1를 가지는 식별번호</param>
     private void CardTapped(int cardId, CardType cardType)
     {
-        GameManager.mMyNexus.DisplaySpawnAbleArea(true);
         RectTransform card = null;
-        if (cardType == CardType.Unit) card = unitCards[cardId].GetComponent<RectTransform>();
+        if (cardType == CardType.Unit)
+        {
+            card = unitCards[cardId].GetComponent<RectTransform>();
+            GameManager.mMyNexus.DisplaySpawnAbleArea(true);
+        }
         else if (cardType == CardType.Magic) card = magicCards[cardId].GetComponent<RectTransform>();
-        else Debug.LogError("CardType Missing");
 
         card.SetAsLastSibling(); //UI순서에서 젤 위로 오게 하는겁니당
         startPos = card.anchoredPosition;
@@ -191,10 +196,7 @@ public class DragableCardManager : MonoBehaviour
     /// <param name="dragAmount">eventData.delta값</param>
     private void CardDragged(int cardId, Vector2 dragAmount, CardType cardType)
     {
-        Card usingCard = null;
-        if (cardType == CardType.Unit) usingCard = unitCards[cardId];
-        else if (cardType == CardType.Magic) usingCard = magicCards[cardId];
-        else Debug.LogError("CardType Missing");
+        DefineCardType(cardId, cardType, out Card usingCard);
 
         usingCard.transform.Translate(dragAmount);
 
@@ -211,21 +213,19 @@ public class DragableCardManager : MonoBehaviour
             else
             {
                 Vector3 cardPos = hit.point;
-                if (cardType == CardType.Unit) cardPos = hit.collider.transform.position + Vector3.up * 0.6f;
+                if (cardType == CardType.Unit) cardPos = hit.collider.transform.position + Vector3.up * 0.8f;
 
                 previewHolder.position = cardPos;
             }
         }
-        else
+        else if (isActiveCard)
         {
-            if (isActiveCard)
-            {
-                isActiveCard = false;
-                usingCard.ChangeActiveState(false);
+            isActiveCard = false;
+            usingCard.ChangeActiveState(false);
 
-                ClearPreviewObject();
-            }
+            ClearPreviewObject();
         }
+        
     }
 
     /// <summary>
@@ -235,22 +235,20 @@ public class DragableCardManager : MonoBehaviour
     private void CardReleased(int cardId, CardType cardType)
     {
         GameManager.mMyNexus.DisplaySpawnAbleArea(false);
-        Card usingCard = null;
-        if (cardType == CardType.Unit) usingCard = unitCards[cardId];
-        else if (cardType == CardType.Magic) return;//usingCard = magicCards[cardId];
-        else Debug.LogError("CardType Missing");
+        DefineCardType(cardId, cardType, out Card usingCard);
 
         if (IsHitToGround(out RaycastHit hit))
         {
             ClearPreviewObject();
 
-            if (!gameManager.DoValidGold(usingCard.CardCost) || 
-                !GameManager.mMyNexus.IsInArea(hit.collider.transform.position))
+            if (!gameManager.DoValidGold(usingCard.CardCost) ||
+                (cardType == CardType.Unit && !GameManager.mMyNexus.IsInArea(hit.collider.transform.position)))
             {
                 usingCard.GetComponent<RectTransform>().anchoredPosition = startPos;
                 usingCard.ChangeActiveState(false);
                 return;
             }
+
             Destroy(usingCard.gameObject);
             SpawnUnit(cardId, cardType, hit, usingCard);
         }
@@ -284,8 +282,6 @@ public class DragableCardManager : MonoBehaviour
             obj = Instantiate(usingCard.CardPrefab, magicStartPos.position, Quaternion.identity);
             obj.GetComponent<Magic>().Init(hit.point);
             obj.transform.SetParent(magicPool);
-
-            StartCoroutine(AddMagicCard(cardId));
         }
     }
 
