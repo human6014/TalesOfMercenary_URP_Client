@@ -20,5 +20,5 @@ public class UnitCard : Card, IDragHandler, IPointerUpHandler, IPointerDownHandl
         OnPointerUpAction?.Invoke(CardId, CardType);
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData) =>
-        OnPointerDownAction?.Invoke(CardId, CardType);
+        OnPointerDownBatchAction?.Invoke(CardId, CardType);
 }

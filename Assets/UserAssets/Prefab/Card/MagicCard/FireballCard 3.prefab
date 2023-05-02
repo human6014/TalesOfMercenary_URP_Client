@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 554489411728631623}
   - component: {fileID: -8805197854114752372}
   m_Layer: 5
-  m_Name: FireballCard 1
+  m_Name: FireballCard 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,10 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fdb9ec3b652a1f4498df2d39e4dfc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 14407350657891720, guid: 90b1327a343c56649803e59a30ea580b,
+  cardPrefab: {fileID: 14407350657891720, guid: 0c0a6606846f9fb4da7ff65808864435,
     type: 3}
   cardCost: 50
-  m_CardUniqueID: 0
+  m_CardUniqueID: 2
   cardType: 1
 --- !u!1 &554489413222068918
 GameObject:
@@ -186,4 +186,4 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Fireball
 
-    Card 1'
+    Card 3'

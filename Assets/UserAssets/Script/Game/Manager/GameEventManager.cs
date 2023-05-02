@@ -6,65 +6,73 @@ using static UnityEngine.Rendering.DebugUI.Table;
 
 public class GameEventManager : MonoBehaviour
 {
+    [SerializeField] private MagicEventDisplayer mMagicEventDisplayer;
     [SerializeField] private LayerMask mGroundLayer;
-    [SerializeField] private Transform[] neutralUnitSpawnPos;
-    [SerializeField] private NeutralUnit neutralUnit;
+    [SerializeField] private Transform[] mNeutralUnitSpawnPos;
+
     [SerializeField] private float mDragonEventTime;
-    [SerializeField] private bool mIsSpawnDragon;
-    private Vector3[] neutralUnitInitPos;
-    private Vector3[] nexusPos;
+    [SerializeField] private float mMagicEventTime;
+
+    [SerializeField] private bool mDoDragonEvent;
+    [SerializeField] private bool mDoMagicEvent;
+    [SerializeField] private int mMaxMagicEvent;
+
+    private Vector3[] mNeutralUnitInitPos;
+    private Vector3[] mNexusPos;
     private float mCurrentTime;
     private bool mIsSpawnNeutralUnit;
-    private int spawnNum;
+    private int mLastMagicEventNum;
+    private int mSpawnNum;
     private int mIsHost;
 
     private void Awake()
     {
         mIsHost = PhotonNetwork.IsMasterClient ? 0 : 1;
+
+        mSpawnNum = mNeutralUnitSpawnPos.Length;
+        mNeutralUnitInitPos = new Vector3[mSpawnNum];
+        mNexusPos = new Vector3[mSpawnNum];
+
+        if (Physics.Raycast(mNeutralUnitSpawnPos[mIsHost].position, Vector3.down, out RaycastHit hit, 100, mGroundLayer))
+            mNeutralUnitInitPos[mIsHost] = hit.point;
     }
+
     private void Start()
     {
-        spawnNum = neutralUnitSpawnPos.Length;
-        neutralUnitInitPos = new Vector3[spawnNum];
-        nexusPos = new Vector3[spawnNum];
-
-        nexusPos[mIsHost] = NetworkUnitManager.enemyUnitList["1"].transform.position;
-
-        if (Physics.Raycast(neutralUnitSpawnPos[mIsHost].position, Vector3.down, out RaycastHit hit, 100, mGroundLayer))
-            neutralUnitInitPos[mIsHost] = hit.point;
-
+        mNexusPos[mIsHost] = NetworkUnitManager.enemyUnitList["1"].transform.position;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         mCurrentTime += Time.deltaTime;
-        if (mIsSpawnDragon && !mIsSpawnNeutralUnit && mCurrentTime >= mDragonEventTime)
+        if (mDoDragonEvent && !mIsSpawnNeutralUnit && mCurrentTime >= mDragonEventTime)
         {
             mIsSpawnNeutralUnit = true;
             SpawnNeutralUnit();
+        }
+
+        if (mDoMagicEvent && mCurrentTime >= mMagicEventTime && mLastMagicEventNum < mMaxMagicEvent)
+        {
+            mMagicEventDisplayer.DisplayMagicEvent();
+            mLastMagicEventNum++;
         }
     }
 
     //첫 생성은 호스트가 생성한다.
     public void SpawnNeutralUnit()
     {
-        GameObject neutralUnit;
-        Vector3 dir;
-        Quaternion rot;
+        Vector3 dir = (mNexusPos[mIsHost] - mNeutralUnitInitPos[mIsHost]).normalized;
+        Quaternion rot = Quaternion.LookRotation(dir);
+        GameObject neutralUnit = (PhotonNetwork.Instantiate("OfficialUnit/NeutralUnit/" + "RedDragon",
+            mNeutralUnitSpawnPos[mIsHost].position, rot));
 
-        dir = (nexusPos[mIsHost] - neutralUnitInitPos[mIsHost]).normalized;
-        rot = Quaternion.LookRotation(dir);
-        neutralUnit = PhotonNetwork.Instantiate("OfficialUnit/NeutralUnit/" + "RedDragon",
-            neutralUnitSpawnPos[mIsHost].position, rot);
-
-        neutralUnit.GetComponent<NeutralUnit>().Init(neutralUnitInitPos[mIsHost]);
-
+        neutralUnit.GetComponent<NeutralUnit>().Init(mNeutralUnitInitPos[mIsHost]);
     }
 
     public void SpawnNexus()
     {
         PhotonNetwork.Instantiate("OfficialUnit/Nexus/" + "Nexus",
-           neutralUnitSpawnPos[mIsHost].position, Quaternion.identity);
+           mNeutralUnitSpawnPos[mIsHost].position, Quaternion.identity);
     }
 
 }

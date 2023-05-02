@@ -13,8 +13,8 @@ public class Card : MonoBehaviour
     [SerializeField] private int m_CardUniqueID;
     [SerializeField] public CardType cardType;
     public UnityAction<int, Vector2, CardType> OnDragAction { get; set; }
-    public UnityAction<int, CardType> OnPointerDownAction { get; set; }
     public UnityAction<int, CardType> OnPointerUpAction { get; set; }
+    public UnityAction<int, CardType> OnPointerDownBatchAction { get; set; }
 
     protected void Awake()
     {
