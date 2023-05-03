@@ -102,11 +102,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cards:
   - {fileID: -8852248428711916043, guid: 8a62afb8646b151458c761ef6cea71a6, type: 3}
-  - {fileID: -8852248428711916043, guid: 8a62afb8646b151458c761ef6cea71a6, type: 3}
-  - {fileID: -8852248428711916043, guid: 8a62afb8646b151458c761ef6cea71a6, type: 3}
+  - {fileID: -8852248428711916043, guid: 5d3f4340fb4b39c45b16c9fbae47a34d, type: 3}
+  - {fileID: -8852248428711916043, guid: fa57ad4210b969c46b710c11e83a0add, type: 3}
   cardUpgradCost: 35
   cardUniqueNumber: 1
-  cardLevel: 0
+  cardMaxLevel: 4
 --- !u!1 &554489413222068918
 GameObject:
   m_ObjectHideFlags: 0

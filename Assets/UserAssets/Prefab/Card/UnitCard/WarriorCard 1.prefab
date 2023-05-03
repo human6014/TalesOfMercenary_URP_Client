@@ -104,6 +104,7 @@ MonoBehaviour:
     type: 3}
   cardCost: 10
   m_CardUniqueID: 0
+  mCurrentCardLevel: 1
   cardType: 0
 --- !u!1 &554489413222068918
 GameObject:

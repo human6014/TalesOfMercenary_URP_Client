@@ -147,13 +147,14 @@ public class DragableCardManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
+        Card cardScript = backupCardTransform.GetComponent<Card>();
+
         backupCardTransform.SetParent(activeCardPool, true);
         backupCardTransform.localScale = Vector3.one;
         backupCardTransform.anchoredPosition = new Vector2(-150 + cardId * 100, 0);
-        backupCardTransform.GetComponentInChildren<Text>().text = backupCardTransform.GetComponentInChildren<Text>().text + cardId;
+        backupCardTransform.GetComponentInChildren<Text>().text = backupCardTransform.GetComponentInChildren<Text>().text + cardScript.CurrentCardLevel;
         //юс╫ц
 
-        Card cardScript = backupCardTransform.GetComponent<Card>();
         cardScript.CardId = cardId;
         unitCards[cardId] = cardScript;
 

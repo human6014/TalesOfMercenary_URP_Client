@@ -3,33 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[System.Serializable]
+public class CardProbability
+{
+    [SerializeField] private float[] probability;
+
+    public float[] ProbabilityArray { get => probability; }
+    public float this[int index] { get => probability[index]; }
+}
+
 public class BuildingCardManager : MonoBehaviour
 {
-    private const int maxDeckCardNum = 2;
-
     #region Serialize Member
     [Header("Prefab or CS")]
-
     [Tooltip("게임에 가져갈 덱에 해당하는 카드")] // 일단 다 넣어~
     [SerializeField] private BuildingCard[] deckCardPrefab;
 
     [Tooltip("게임에 가져갈 마법 카드")]
     [SerializeField] private Card[] magicCard;
 
-
     [Header("Pool")]
-
     [Tooltip("덱에 위치할 카드의 RectTransform")]
     [SerializeField] private RectTransform activeDeckPool;
 
     [Tooltip("넥서스 카드가 위치할 RectTransform")]
     [SerializeField] private RectTransform nexusCardPool;
 
+    [Header("카드 확률")]
+    [SerializeField] private CardProbability[] mCardProbability;
     #endregion
+
+    private const int maxDeckCardNum = 2;
+    private const float mTotal = 100;
+
     private GameManager gameManager;
     private BuildingCard nexusCard;
     private BuildingCard[] deckCards;
+    //deckCards 0번 index = NexusCard
 
+    private int GetCardProbability(int rand, int level)
+    {
+        float randomPoint = Random.value * mTotal;
+        int length = mCardProbability[level].ProbabilityArray.Length;
+        for (int i = 0; i < length; i++)
+        {
+            if (randomPoint < mCardProbability[level][i]) return i;
+            else randomPoint -= mCardProbability[level][i];
+        }
+        return length - 1;
+    }
     /// <summary>
     /// 가지고 있는 덱에서 일정 확률로 생산 카드의 유닛 카드를 반환함
     /// </summary>
@@ -37,7 +59,21 @@ public class BuildingCardManager : MonoBehaviour
     public Card GetRandomUnitCard()
     {
         int rand = Random.Range(1, deckCards.Length);
-        return deckCards[rand].GetRandomCard();
+        int level = deckCards[rand].CardCurrentLevel - 1;
+        Debug.Log(deckCards[rand].GetCard(GetCardProbability(rand, level)));
+        return deckCards[rand].GetCard(GetCardProbability(rand, level));
+
+
+        //for (int i = 0; i < mCardProbability.Length; i++)
+        //{
+        //    for(int j = 0; j < mCardProbability[i].ProbabilityArray.Length; j++)
+        //    {
+        //        Debug.Log(mCardProbability[i][j]);
+        //    }
+        //    Debug.Log("-----------------------------------");
+        //}
+
+        //return deckCards[rand].GetRandomCard();
     }
 
     /// <summary>
@@ -82,13 +118,12 @@ public class BuildingCardManager : MonoBehaviour
         deckCardTransform.SetParent(parentTransform, true);
         deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
 
-        deckCardTransform.TryGetComponent(out BuildingCard deckCard);
+        deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
-        deckCard.CardId = cardId;
-        deckCard.CardLevel = 1;
-        deckCard.CardMaxLevel = 3;
-        deckCard.OnPointerDownAction += PromoteDeckCard;
-        deckCards[cardId] = deckCard;
+        buildingCard.CardId = cardId;
+        buildingCard.CardCurrentLevel = 1;
+        buildingCard.OnPointerDownAction += PromoteDeckCard;
+        deckCards[cardId] = buildingCard;
     }
 
     /// <summary>
@@ -99,7 +134,7 @@ public class BuildingCardManager : MonoBehaviour
     {
         //Debug.Log("PromoteDeckCard" + cardId);
 
-        if (deckCards[cardId].CardLevel >= deckCards[cardId].CardMaxLevel) return;
+        if (deckCards[cardId].CardCurrentLevel >= deckCards[cardId].CardMaxLevel) return;
         if (!gameManager.DoValidGold(deckCards[cardId].CardUpgradeCost)) return;
         //if (cardId == 0)
         //{
@@ -107,9 +142,9 @@ public class BuildingCardManager : MonoBehaviour
         //    NetworkUnitManager.SendNeuxsUpgrade();
         //}
         //else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
-        deckCards[cardId].CardLevel += 1;
+        deckCards[cardId].CardCurrentLevel += 1;
         Text cardText = deckCards[cardId].GetComponentInChildren<Text>();
-        cardText.text = deckCards[cardId].CardName + "\n" + deckCards[cardId].CardLevel.ToString();
+        cardText.text = deckCards[cardId].CardName + "\n" + deckCards[cardId].CardCurrentLevel.ToString();
     }
     #endregion
 }

@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 554489411728631624}
   - component: {fileID: 554489411728631626}
   - component: {fileID: 554489411728631623}
-  - component: {fileID: 2378170085148437549}
+  - component: {fileID: -4343207093319836870}
   m_Layer: 5
-  m_Name: ShieldManCard
+  m_Name: WarriorCard 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &2378170085148437549
+--- !u!114 &-4343207093319836870
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,10 +100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4753c7baf8e7c5e40be711239290a9de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 6530795506631069588, guid: 3bd1e03e5956c6041b2f33fb0084f765,
+  cardPrefab: {fileID: 8763750450409419696, guid: 60274425975db9c47b495a2ac017324a,
     type: 3}
-  cardCost: 20
-  m_CardUniqueID: 2
+  cardCost: 10
+  m_CardUniqueID: 0
+  mCurrentCardLevel: 2
   cardType: 0
 --- !u!1 &554489413222068918
 GameObject:
@@ -184,6 +185,6 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'ShieldMan
+  m_Text: 'Warrior
 
     Card'
