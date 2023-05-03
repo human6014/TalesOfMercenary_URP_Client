@@ -10,9 +10,9 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [SerializeField] private Card[] cards;
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
-    [SerializeField] private int cardLevel;
+    [SerializeField] private int cardMaxLevel;
+    private int cardCurrentLevel;
 
-    private UnitJsonData unitJsonData;
     public UnityAction<int> OnPointerDownAction { get; set; }
 
     public int CardUpgradeCost
@@ -20,21 +20,17 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         get => cardUpgradCost;
         private set => cardUpgradCost = value;
     }
+
     public int CardId { get; set; }
-    public int CardLevel { get => cardLevel; set => cardLevel = value; }
-    public int CardMaxLevel { get; set; }
-    public int CardUniqueNumber { get => cardUniqueNumber; private set => cardUniqueNumber = value; }
+    public int CardCurrentLevel { get => cardCurrentLevel; set => cardCurrentLevel = value; }
+    public int CardMaxLevel { get => cardMaxLevel; }
+    public int CardUniqueNumber { get => cardUniqueNumber; }
     public string CardName { get; set; }
     
 
     private void Awake()
     {
         CardName = gameObject.name;
-    }
-
-    public void SetCardData(UnitJsonData _unitJsonData)
-    {
-        unitJsonData = _unitJsonData;
     }
 
     /// <summary>
@@ -46,6 +42,8 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         int rand = Random.Range(0, cards.Length);
         return cards[rand];
     }
+
+    public Card GetCard(int index) => cards[index];
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData) =>
         OnPointerDownAction?.Invoke(CardId);

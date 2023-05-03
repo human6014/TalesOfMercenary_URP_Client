@@ -81,8 +81,7 @@ public class BanPickManager : MonoBehaviour
         BuildingCard deckCard = deckCardTransform.GetComponent<BuildingCard>();
 
         deckCard.CardId = cardId;
-        deckCard.CardLevel = 1;
-        deckCard.CardMaxLevel = 3;
+        deckCard.CardCurrentLevel = 1;
         deckCard.OnPointerDownAction += OnClicked;
         buildingCards[cardId] = deckCard;
     }

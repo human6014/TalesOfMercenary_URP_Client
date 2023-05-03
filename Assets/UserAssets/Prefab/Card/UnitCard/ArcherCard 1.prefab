@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 554489411728631623}
   - component: {fileID: -4098026037113977145}
   m_Layer: 5
-  m_Name: ArcherCard
+  m_Name: ArcherCard 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,6 +104,7 @@ MonoBehaviour:
     type: 3}
   cardCost: 15
   m_CardUniqueID: 3
+  mCurrentCardLevel: 1
   cardType: 0
 --- !u!1 &554489413222068918
 GameObject:
