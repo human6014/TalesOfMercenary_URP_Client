@@ -11,6 +11,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
     [SerializeField] private int cardMaxLevel;
+    private string mID { get; }
     private int cardCurrentLevel;
 
     public UnityAction<int> OnPointerDownAction { get; set; }
@@ -26,7 +27,12 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     public int CardMaxLevel { get => cardMaxLevel; }
     public int CardUniqueNumber { get => cardUniqueNumber; }
     public string CardName { get; set; }
-    
+   
+    public void BuildingUpgarde()
+    {
+        cardCurrentLevel++;
+    }
+
 
     private void Awake()
     {
