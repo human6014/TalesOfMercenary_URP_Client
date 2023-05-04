@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -99,7 +100,6 @@ public class BuildingCardManager : MonoBehaviour
 
         nexusCard = deckCards[0];
     }
-
     #region µ¦ °ü·Ã
 
     /// <summary>
