@@ -33,7 +33,6 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         cardCurrentLevel++;
     }
 
-
     private void Awake()
     {
         CardName = gameObject.name;

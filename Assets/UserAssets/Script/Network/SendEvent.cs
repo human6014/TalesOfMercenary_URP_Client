@@ -12,7 +12,7 @@ public class SendEvent : MonoBehaviour
         BuildingUpgrade = 0,
     }
 
-    public static void HplayerDrawedCard(int buildingID)
+    public static void enemyBuildingUpgrade(int buildingID)
     {
         object[] content = new object[] { (int)buildingID };
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.Others };
