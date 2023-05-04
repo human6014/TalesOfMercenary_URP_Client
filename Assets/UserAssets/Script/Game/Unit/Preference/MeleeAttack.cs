@@ -21,7 +21,7 @@ public class MeleeAttack : Attackable
             if (SkillProbability > UnityEngine.Random.Range(0, 100))
             {
                 Debug.Log("스킬 발동");
-                CriticalAttack(attackUnit, attackedUnit);
+                SpecialMove(attackUnit, attackedUnit);
             }
             else
             {
@@ -59,4 +59,9 @@ public class MeleeAttack : Attackable
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
         => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+
+    public override void SpecialMove(Damageable attackUnit, Damageable attackedUnit)
+    {
+        attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    }
 }
