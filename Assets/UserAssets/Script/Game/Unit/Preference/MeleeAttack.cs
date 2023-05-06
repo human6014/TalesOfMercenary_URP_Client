@@ -21,6 +21,7 @@ public class MeleeAttack : Attackable
             if (SkillProbability > UnityEngine.Random.Range(0, 100))
             {
                 Debug.Log("스킬 발동");
+                attackedUnit.SkillAttackAnimation();
                 SpecialMove(attackUnit, attackedUnit);
             }
             else
@@ -28,11 +29,13 @@ public class MeleeAttack : Attackable
                 if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
                 {
                     Debug.Log("크리티컬공격");
+                    attackUnit.CriticalAttackAnimation();
                     CriticalAttack(attackUnit, attackedUnit);
                 }
                 else
                 {
                     Debug.Log("일반공격");
+                    attackUnit.NormalAttackAnimation();
                     NormalAttack(attackUnit, attackedUnit);
                 }
             }
@@ -42,11 +45,13 @@ public class MeleeAttack : Attackable
             if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
             {
                 Debug.Log("크리티컬공격");
+                attackUnit.CriticalAttackAnimation();
                 CriticalAttack(attackUnit, attackedUnit);
             }
             else
             {
                 Debug.Log("일반공격");
+                attackUnit.NormalAttackAnimation();
                 NormalAttack(attackUnit, attackedUnit);
             }
         }
