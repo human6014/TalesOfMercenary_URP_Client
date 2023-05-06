@@ -97,11 +97,11 @@ public class NeutralUnit : Damageable
     #region DIE
     private void Die()
     {
+        DieAnimation();
         IsAlive = false;
         mIsBatch = false;
         Debug.Log("드래곤 사망");
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
-        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         Destroy(gameObject);
     }
 
@@ -112,7 +112,6 @@ public class NeutralUnit : Damageable
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
-        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         Destroy(gameObject);
     }
     #endregion
@@ -164,10 +163,12 @@ public class NeutralUnit : Damageable
                 mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
             }
+            IdleAnimation();
         }
         else//타깃이 공격 범위보다 멀때
         {
             Debug.Log("적 타깃으로 이동 중");
+            WalkAnimation();
             mIsMoving = true;
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -215,4 +216,82 @@ public class NeutralUnit : Damageable
     {
         return mUnitScriptable.UUID;
     }
+
+    #region Animation
+    public override void IdleAnimation()
+    {
+        Debug.Log("IdleAnimation");
+        mPhotonView.RPC(nameof(IdleAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void IdleAnimationRPC()
+    {
+        Debug.Log("IdleAnimation");
+    }
+
+    public override void NormalAttackAnimation()
+    {
+        Debug.Log("NormalAttackAnimation");
+        mPhotonView.RPC(nameof(NormalAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void NormalAttackAnimationRPC()
+    {
+        Debug.Log("NormalAttackAnimation");
+    }
+
+    public override void CriticalAttackAnimation()
+    {
+        Debug.Log("CriticalAttackAnimation");
+        mPhotonView.RPC(nameof(CriticalAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void CriticalAttackAnimationRPC()
+    {
+        Debug.Log("CriticalAttackAnimation");
+
+    }
+
+
+    public override void SkillAttackAnimation()
+    {
+        Debug.Log("SkillAttackAnimation");
+        mPhotonView.RPC(nameof(SkillAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void SkillAttackAnimationRPC()
+    {
+        Debug.Log("SkillAttackAnimation");
+
+    }
+
+    public void WalkAnimation()
+    {
+        Debug.Log("WalkAnimation");
+        mPhotonView.RPC(nameof(WalkAnimationRPC), RpcTarget.Others);
+    }
+
+
+    [PunRPC]
+    public void WalkAnimationRPC()
+    {
+        Debug.Log("WalkAnimation");
+    }
+
+    public override void DieAnimation()
+    {
+        Debug.Log("DieAnimation");
+        mPhotonView.RPC(nameof(DieAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void DieAnimationRPC()
+    {
+        Debug.Log("DieAnimation");
+    }
+    #endregion
 }
