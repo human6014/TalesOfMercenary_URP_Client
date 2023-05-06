@@ -11,6 +11,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
     [SerializeField] private int cardMaxLevel;
+    
     private string mID { get; }
     private int cardCurrentLevel;
 
@@ -22,10 +23,10 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         private set => cardUpgradCost = value;
     }
 
-    public int CardId { get; set; }
+    public int CardId { get; set; } // 인덱스 번호(배열)
     public int CardCurrentLevel { get => cardCurrentLevel; set => cardCurrentLevel = value; }
     public int CardMaxLevel { get => cardMaxLevel; }
-    public int CardUniqueNumber { get => cardUniqueNumber; }
+    public int CardUniqueNumber { get => cardUniqueNumber; } // 고유번호
     public string CardName { get; set; }
    
     public void BuildingUpgarde()

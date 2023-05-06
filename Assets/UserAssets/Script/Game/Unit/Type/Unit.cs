@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using System;
-using Scriptable;
-using UnityEditor;
 using System.Collections.Generic;
 using static UnityEngine.GraphicsBuffer;
+
 /// <summary>
 /// target이 바뀔때마다 settarget()함수를 호출해서 모든 유저에게 타깃 변수를 동기화해줘야 한다.
 /// </summary>
@@ -14,8 +13,10 @@ using static UnityEngine.GraphicsBuffer;
 public class Unit : Damageable
 {
     #region Object info
+    [SerializeField] private UnitUIController mUnitUIController;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int unitId;        //식별번호
+
 
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
@@ -60,12 +61,15 @@ public class Unit : Damageable
         gameObject.layer = GameManager.mMyUnitLayer;
 
         mIsBatch = true;
+        mUnitUIController.Init(mUnitScriptable.maxHP);
+
         Findenemy();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
         mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
 
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
+
     }
 
     [PunRPC]
@@ -73,6 +77,7 @@ public class Unit : Damageable
     {
         NetworkUnitManager.enemyUnitList.Add(uuid, this);
         mCurrentHp = mUnitScriptable.maxHP;
+        mUnitUIController.Init(mUnitScriptable.maxHP);
         gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
         IsAlive = true;
@@ -209,6 +214,13 @@ public class Unit : Damageable
     #region Damage
     public override void GetDamage(int damage, string attackUnitUUID)
     {
+        //Debug.Log("<데미지 입음> 현재체력 : " + mCurrentHp + " 데미지 : " + damage);
+        if (mCurrentHp <= damage)
+        {
+            mCurrentHp = 0;
+        }
+        else mCurrentHp -= damage;
+        mUnitUIController.GetDamage(mCurrentHp);
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
     }
 
@@ -224,19 +236,16 @@ public class Unit : Damageable
             return;
         }
         else mCurrentHp -= damage;
-        //else HPbar.value = (mCurrentHp -= damage);
+        mUnitUIController.GetDamage(mCurrentHp);
 
         Debug.Log("받은 피해 : " + damage + ",  현재 체력 : " + mCurrentHp);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
             {
-                if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
-                {
-                    mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
-                }
+                if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
+                mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
             }
-
         }
     }
     #endregion
