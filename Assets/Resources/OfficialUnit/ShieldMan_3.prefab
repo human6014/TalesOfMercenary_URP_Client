@@ -20399,7 +20399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
-  HPbar: {fileID: 0}
+  mUnitUIController: {fileID: 311452296354434180}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216

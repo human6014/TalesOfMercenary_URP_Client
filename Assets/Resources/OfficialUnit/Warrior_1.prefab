@@ -4768,6 +4768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mUnitScriptable: {fileID: 11400000, guid: 2033a4f0902358a40a55df14574cb4c8, type: 2}
+  mUnitUIController: {fileID: 1861592723658072582}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
