@@ -121,19 +121,22 @@ public class Unit : Damageable
 
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
-            Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + " 정지 후 공격");
+            //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + " 정지 후 공격");
             mIsMoving = false;
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
+
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
                 mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
             }
+            IdleAnimation();
         }
         else//타깃이 공격 범위보다 멀때
         {
             //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
+            WalkAnimation();
             mIsMoving = true;
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -159,6 +162,7 @@ public class Unit : Damageable
         }
         else
         {
+            WalkAnimation();
             Debug.Log("백터로 이동 중");
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mVectorDestination);
@@ -253,35 +257,8 @@ public class Unit : Damageable
     #region DIE
     public void Die()
     {
-        int i;
-        i = NetworkUnitManager.myUnitList.Count;
-        Debug.Log("삭제 전");
-        foreach (var key in NetworkUnitManager.enemyUnitList)
-        {
-            if (key.Value.IsAlive)
-            {
-                Debug.Log("삭제 전 살아있는 유닛: " + key.Value.mUnitScriptable.unitType);
-            }
-            else
-            {
-                Debug.Log("삭제 전 죽은 유닛: " + key.Value.mUnitScriptable.unitType);
-            }
-        }
+        DieAnimation();
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
-        Debug.Log("삭제 후");
-        foreach (var key in NetworkUnitManager.enemyUnitList)
-        {
-            if (key.Value.IsAlive)
-            {
-                Debug.Log("삭제 후 살아있는 유닛: " + key.Value.mUnitScriptable.unitType);
-            }
-            else
-            {
-                Debug.Log("삭제 후 죽은 유닛: " + key.Value.mUnitScriptable.unitType);
-            }
-        }
-        Debug.Log("유닛 삭제 -> (삭제 전 myUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.myUnitList.Count + ")");
-        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
         IsAlive = false;
         mIsBatch = false;
         Destroy(gameObject);
@@ -290,14 +267,89 @@ public class Unit : Damageable
     [PunRPC]
     public void DieRPC()
     {
-        int i;
-        i = NetworkUnitManager.enemyUnitList.Count;
-        transform.position = new Vector3(transform.position.x, 10, transform.position.z);
+        //int i = NetworkUnitManager.enemyUnitList.Count;
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
-        Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
+        //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
         Destroy(gameObject);
+    }
+    #endregion
+
+    #region Animation
+    public override void IdleAnimation()
+    {
+        Debug.Log("IdleAnimation");
+        mPhotonView.RPC(nameof(IdleAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void IdleAnimationRPC()
+    {
+        Debug.Log("IdleAnimation");
+    }
+
+    public override void NormalAttackAnimation()
+    {
+        Debug.Log("NormalAttackAnimation");
+        mPhotonView.RPC(nameof(NormalAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void NormalAttackAnimationRPC()
+    {
+        Debug.Log("NormalAttackAnimation");
+    }
+
+    public override void CriticalAttackAnimation()
+    {
+        Debug.Log("CriticalAttackAnimation");
+
+        mPhotonView.RPC(nameof(CriticalAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void CriticalAttackAnimationRPC()
+    {
+        Debug.Log("CriticalAttackAnimation");
+
+    }
+
+
+    public override void SkillAttackAnimation()
+    {
+        Debug.Log("SkillAttackAnimation");
+        mPhotonView.RPC(nameof(SkillAttackAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void SkillAttackAnimationRPC()
+    {
+        Debug.Log("SkillAttackAnimation");
+    }
+
+    public void WalkAnimation()
+    {
+        Debug.Log("WalkAnimation");
+        mPhotonView.RPC(nameof(WalkAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void WalkAnimationRPC()
+    {
+        Debug.Log("WalkAnimation");
+    }
+
+    public override void DieAnimation()
+    {
+        Debug.Log("DieAnimation");
+        mPhotonView.RPC(nameof(DieAnimationRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void DieAnimationRPC()
+    {
+        Debug.Log("DieAnimation");
     }
     #endregion
 }
