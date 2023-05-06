@@ -2568,9 +2568,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 1
   m_MinValue: 0
-  m_MaxValue: 1000
+  m_MaxValue: 500
   m_WholeNumbers: 1
-  m_Value: 1000
+  m_Value: 500
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -20273,6 +20273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mOnUpdate: 1
+  mSlider: {fileID: 4313874119159111194}
 --- !u!1 &6484822792184130632
 GameObject:
   m_ObjectHideFlags: 0
@@ -20526,7 +20527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
-  HPbar: {fileID: 0}
+  mUnitUIController: {fileID: 2815350109826705320}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216

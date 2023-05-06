@@ -103,7 +103,7 @@ MonoBehaviour:
   cards: []
   cardUpgradCost: 50
   cardUniqueNumber: -1
-  cardLevel: 0
+  cardMaxLevel: 0
 --- !u!1 &554489413222068918
 GameObject:
   m_ObjectHideFlags: 0
