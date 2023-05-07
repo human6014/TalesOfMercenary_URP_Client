@@ -17,7 +17,7 @@ public class Unit : Damageable
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int unitId;        //식별번호
 
-
+    private Animator mAnimator;
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
     private NavMeshAgent mNavMeshAgent;
@@ -45,6 +45,7 @@ public class Unit : Damageable
 
     protected virtual void Awake()
     {
+        mAnimator = GetComponent<Animator>();
         mUnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
@@ -69,7 +70,6 @@ public class Unit : Damageable
 
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
-
     }
 
     [PunRPC]
@@ -111,7 +111,6 @@ public class Unit : Damageable
             TargetMove();
         }
         else NonTargetMove();
-        mUnitAnimationController.PlayMoveAnimation(mIsMoving);
     }
 
     #region move
@@ -281,24 +280,28 @@ public class Unit : Damageable
     {
         Debug.Log("IdleAnimation");
         mPhotonView.RPC(nameof(IdleAnimationRPC), RpcTarget.Others);
+        mAnimator.SetBool("IsMove",false);
     }
 
     [PunRPC]
     public void IdleAnimationRPC()
     {
         Debug.Log("IdleAnimation");
+        mAnimator.SetBool("IsMove", false);
     }
 
     public override void NormalAttackAnimation()
     {
         Debug.Log("NormalAttackAnimation");
         mPhotonView.RPC(nameof(NormalAttackAnimationRPC), RpcTarget.Others);
+        mAnimator.SetTrigger("Attack");
     }
 
     [PunRPC]
     public void NormalAttackAnimationRPC()
     {
         Debug.Log("NormalAttackAnimation");
+        mAnimator.SetTrigger("Attack");
     }
 
     public override void CriticalAttackAnimation()
@@ -312,7 +315,6 @@ public class Unit : Damageable
     public void CriticalAttackAnimationRPC()
     {
         Debug.Log("CriticalAttackAnimation");
-
     }
 
 
@@ -320,36 +322,42 @@ public class Unit : Damageable
     {
         Debug.Log("SkillAttackAnimation");
         mPhotonView.RPC(nameof(SkillAttackAnimationRPC), RpcTarget.Others);
+        mAnimator.SetTrigger("SkillAttack");
     }
 
     [PunRPC]
     public void SkillAttackAnimationRPC()
     {
         Debug.Log("SkillAttackAnimation");
+        mAnimator.SetTrigger("SkillAttack");
     }
 
     public void WalkAnimation()
     {
         Debug.Log("WalkAnimation");
         mPhotonView.RPC(nameof(WalkAnimationRPC), RpcTarget.Others);
+        mAnimator.SetBool("IsMove", true);
     }
 
     [PunRPC]
     public void WalkAnimationRPC()
     {
         Debug.Log("WalkAnimation");
+        mAnimator.SetBool("IsMove", true);
     }
 
     public override void DieAnimation()
     {
         Debug.Log("DieAnimation");
         mPhotonView.RPC(nameof(DieAnimationRPC), RpcTarget.Others);
+        mAnimator.SetBool("isDie", true);
     }
 
     [PunRPC]
     public void DieAnimationRPC()
     {
         Debug.Log("DieAnimation");
+        mAnimator.SetBool("isDie", true);
     }
     #endregion
 }
