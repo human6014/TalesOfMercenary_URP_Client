@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-
+using Photon.Pun;
+using Scriptable;
 
 public class BuildingCard : MonoBehaviour, IPointerDownHandler
 {
@@ -11,7 +10,9 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
     [SerializeField] private int cardMaxLevel;
-    
+    private PhotonView mPhotonView;
+
+
     private string mID { get; }
     private int cardCurrentLevel;
 
@@ -37,7 +38,21 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         CardName = gameObject.name;
+        mPhotonView = GetComponent<PhotonView>();
     }
+
+    public void Init()
+    {
+        NetworkUnitManager.mybuildingList.Add(this);
+        mPhotonView.RPC(nameof(InitRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void InitRPC()
+    {
+        NetworkUnitManager.enemyBuildingList.Add(this);
+    }
+
 
     /// <summary>
     /// 가지고 있는 카드를 레벨별 일정 확률로 반환함

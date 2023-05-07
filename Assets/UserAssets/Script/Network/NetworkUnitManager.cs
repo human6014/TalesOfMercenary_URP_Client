@@ -23,6 +23,7 @@ public class NetworkUnitManager : MonoBehaviour
     public static List<BuildingCard> enemyBuildingList { get; } = new();
 
 
+
     private void Init()
     {
         usingUnit = new Damageable[4];
