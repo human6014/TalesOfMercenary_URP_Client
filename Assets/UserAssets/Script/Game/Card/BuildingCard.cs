@@ -12,7 +12,6 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [SerializeField] private int cardMaxLevel;
     private PhotonView mPhotonView;
 
-
     private string mID { get; }
     private int cardCurrentLevel;
 
@@ -30,15 +29,25 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     public int CardUniqueNumber { get => cardUniqueNumber; } // 고유번호
     public string CardName { get; set; }
    
-    public void BuildingUpgarde()
-    {
-        cardCurrentLevel++;
-    }
-
     private void Awake()
     {
         CardName = gameObject.name;
         mPhotonView = GetComponent<PhotonView>();
+    }
+
+    /// <summary>
+    /// 업그레이드시 미리 골드 가격을 확인하고 사용
+    /// </summary>
+    public void BuildingUpgarde()
+    {
+        cardCurrentLevel++;
+        mPhotonView.RPC(nameof(BuildingUpgardeRPC), RpcTarget.Others);
+    }
+
+    [PunRPC]
+    public void BuildingUpgardeRPC()
+    {
+        cardCurrentLevel++;
     }
 
     public void Init()
