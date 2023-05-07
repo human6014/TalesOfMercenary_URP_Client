@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   unitName: Nexus
-  maxHP: 5000
+  maxHP: 50
   def: 0
   mp: 0
   str: 0
@@ -25,3 +25,6 @@ MonoBehaviour:
   attackRange: 0
   attackSpeed: 0
   movementRange: 0.2
+  unitType: 0
+  UUID: 
+  skillDamage: 0

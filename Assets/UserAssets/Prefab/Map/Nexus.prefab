@@ -132,8 +132,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mUnitScriptable: {fileID: 11400000, guid: c9648cc8b6235094394d2eb25d517f3c, type: 2}
   HasPlayerNumber: 0
-  UUID: 
   mFocusArea: []
+  mUnitUIController: {fileID: 8425035713664461559}
+  UUID: 
 --- !u!114 &5350631731302099605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c23ae3aacd7d24d9a05c700c982c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mOnUpdate: 0
+  mOnUpdate: 1
 --- !u!1 &4492712483325382938
 GameObject:
   m_ObjectHideFlags: 0
