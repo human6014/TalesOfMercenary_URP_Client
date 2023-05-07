@@ -43,5 +43,94 @@ public class BuildingCardManager : MonoBehaviour
     private BuildingCard[] deckCards;
     //deckCards 0번 index = NexusCard
 
+    private int GetCardProbability(int rand, int level)
+    {
+        float randomPoint = Random.value * mTotal;
+        int length = mCardProbability[level].ProbabilityArray.Length;
+        for (int i = 0; i < length; i++)
+        {
+            if (randomPoint < mCardProbability[level][i]) return i;
+            else randomPoint -= mCardProbability[level][i];
+        }
+        return length - 1;
+    }
 
+    /// <summary>
+    /// 가지고 있는 덱에서 일정 확률로 생산 카드의 유닛 카드를 반환함
+    /// </summary>
+    /// <returns>Card</returns>
+    public Card GetRandomUnitCard()
+    {
+        int rand = Random.Range(1, deckCards.Length);
+        int level = deckCards[rand].CardCurrentLevel - 1;
+        return deckCards[rand].GetCard(GetCardProbability(rand, level));
+    }
+
+    /// <summary>
+    /// 가지고 있는 마법카드에서 일정 확률로 마법카드를 반환함
+    /// </summary>
+    /// <returns></returns>
+    public Card GetRandromMagicCard()
+    {
+        int rand = Random.Range(0, magicCard.Length);
+        return magicCard[rand];
+    }
+
+    private void Awake()
+    {
+        gameManager = GetComponent<GameManager>();
+        deckCards = new BuildingCard[maxDeckCardNum + 1];
+        //유닛 생산 카드 + 넥서스 카드
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < maxDeckCardNum + 1; i++) LoadDeck(i);
+
+        nexusCard = deckCards[0];
+    }
+    #region 덱 관련
+
+    /// <summary>
+    /// 최초 한번 덱을 로드
+    /// </summary>
+    /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
+    private void LoadDeck(int cardId)
+    {
+        BuildingCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[cardId % 2 + 1];
+        RectTransform deckCardTransform = Instantiate(usingDeckCard).GetComponent<RectTransform>();
+
+        deckCardTransform.SetParent(cardId == 0 ? nexusCardPool : activeDeckPool, true);
+        //deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
+
+        deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
+        
+        buildingCard.CardId = cardId;
+        buildingCard.CardCurrentLevel = 1;
+        buildingCard.OnPointerDownAction += PromoteDeckCard;
+        deckCards[cardId] = buildingCard;
+        buildingCard.Init();
+    }
+
+    /// <summary>
+    /// 덱 카드를 업그레이드 함
+    /// </summary>
+    /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
+    private void PromoteDeckCard(int cardId)
+    {
+        //Debug.Log("PromoteDeckCard" + cardId);
+
+        if (deckCards[cardId].CardCurrentLevel >= deckCards[cardId].CardMaxLevel) return;
+        if (!gameManager.DoValidGold(deckCards[cardId].CardUpgradeCost)) return;
+        //if (cardId == 0)
+        //{
+        //    gameManager.UpgradeNexus(0.05f);
+        //    NetworkUnitManager.SendNeuxsUpgrade();
+        //}
+        //else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
+        deckCards[cardId].CardCurrentLevel += 1;
+        Text cardText = deckCards[cardId].GetComponentInChildren<Text>();
+        cardText.text = deckCards[cardId].CardName + "\n" + deckCards[cardId].CardCurrentLevel.ToString();
+    }
+    #endregion
 }
