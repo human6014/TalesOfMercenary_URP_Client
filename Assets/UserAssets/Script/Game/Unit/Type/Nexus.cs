@@ -9,30 +9,33 @@ public class Nexus : Damageable
 {
     [SerializeField] private int HasPlayerNumber;
     [SerializeField] private GameObject[] mFocusArea;
+    [SerializeField] private UnitUIController mUnitUIController;
     private float mMaximum;
-    
+    private PhotonView mPhotonView;
     private bool isGameEnd = false;
 
-    //private PhotonView mPhotonView;
     private Damageable mTarget;
     public string UUID;
+
+    public override string getUUID()
+    {
+        return mUnitScriptable.UUID;
+    }
+
     public bool IsMine { get; set; }
 
     private void Awake()
     {
-        //mPhotonView = GetComponent<PhotonView>();
+        mPhotonView = GetComponent<PhotonView>();
         if (PhotonNetwork.IsMasterClient && HasPlayerNumber == 0) IsMine = true;
         if (!PhotonNetwork.IsMasterClient && HasPlayerNumber == 1) IsMine = true;
-
         FindMaximumArea();
-        IsAlive = true;
 
         if (IsMine) Debug.Log(transform.name + " Mine ");
-    }
 
-    public override string getUUID()
-    {
-        return "1";
+        IsAlive = true;
+        mCurrentHp = mUnitScriptable.maxHP;
+        mUnitUIController.Init(mUnitScriptable.maxHP);
     }
 
     private void GameEnd()
@@ -42,29 +45,39 @@ public class Nexus : Damageable
 
     public override void GetDamage(int damage, string attackUnitUUID)
     {
-        //mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage, attackUnit);
+        mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
     }
-
-    public void GetDamageRPC(int damage, Damageable attackUnit)
+    [PunRPC]
+    public void GetDamageRPC(int damage)
     {
-        if (isGameEnd) return;
-        mCurrentHp -= damage;
-        if (mCurrentHp <= 0) GameEnd();
+        //if (isGameEnd) return;
+        if (damage <= 0) 
+        {
+            Debug.Log("넥서스 데미지 안입음 ");
+            return;
+        }
+        if (mCurrentHp <= damage)
+        {
+            GameEnd();
+            return;
+        }
+        else mCurrentHp -= damage;
+        Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
+        mUnitUIController.GetDamage(mCurrentHp);
     }
 
     private void FindMaximumArea()
     {
-        foreach(GameObject g in mFocusArea)
-            mMaximum = Mathf.Max(mMaximum,Vector3.Distance(transform.position, g.transform.position));
+        foreach (GameObject g in mFocusArea)
+            mMaximum = Mathf.Max(mMaximum, Vector3.Distance(transform.position, g.transform.position));
         mMaximum += 0.25f;
     }
 
     public void DisplaySpawnAbleArea(bool isActive)
     {
-        foreach(GameObject g in mFocusArea) g.transform.GetChild(0).gameObject.SetActive(isActive);
+        foreach (GameObject g in mFocusArea) g.transform.GetChild(0).gameObject.SetActive(isActive);
     }
 
-    public bool IsInArea(Vector3 hitPos) 
+    public bool IsInArea(Vector3 hitPos)
         => Vector3.Distance(transform.position, hitPos) <= mMaximum;
-    
 }

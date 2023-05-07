@@ -28,7 +28,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     public int CardMaxLevel { get => cardMaxLevel; }
     public int CardUniqueNumber { get => cardUniqueNumber; } // 고유번호
     public string CardName { get; set; }
-   
+
     private void Awake()
     {
         CardName = gameObject.name;
@@ -40,6 +40,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     /// </summary>
     public void BuildingUpgarde()
     {
+        Debug.Log(CardName + " 업그레이드 : " + cardCurrentLevel);
         cardCurrentLevel++;
         mPhotonView.RPC(nameof(BuildingUpgardeRPC), RpcTarget.Others);
     }
@@ -47,6 +48,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [PunRPC]
     public void BuildingUpgardeRPC()
     {
+        Debug.Log("적 " + CardName + " 업그레이드 : " + cardCurrentLevel);
         cardCurrentLevel++;
     }
 
@@ -59,6 +61,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     [PunRPC]
     public void InitRPC()
     {
+        Debug.Log(CardName + "건물 사용");
         NetworkUnitManager.enemyBuildingList.Add(this);
     }
 
