@@ -11,7 +11,6 @@ using Scriptable;
 /// </summary>
 public class NeutralUnit : Damageable
 {
-    private Animator animator;
     private NavMeshAgent mNavMeshAgent;
     private Damageable mTarget;
     private PhotonView mPhotonView;
@@ -19,23 +18,22 @@ public class NeutralUnit : Damageable
     private string mTargetUUID;
 
     #region logic Info
-    private Vector3 destPos;
+    private Vector3 mDestPos;
 
     private const int mFightPriority = 5;
     private int mPriority;
 
-    private float initTime = 3.0f;
+    private float mInitTime = 3.0f;
     private float mAttackDelay;
 
     private bool mIsBatch;
-    private bool doAttackHost;
+    private bool mDoAttackHost;
     private List<string> mRemoveList = new List<string>();
 
     #endregion
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
         mNavMeshAgent = GetComponent<NavMeshAgent>();
         mPhotonView = GetComponent<PhotonView>();
     }
@@ -48,8 +46,14 @@ public class NeutralUnit : Damageable
         mCurrentHp = mUnitScriptable.maxHP;
         gameObject.layer = GameManager.mMyUnitLayer;
         mAttack = GetComponent<Attackable>();
-        destPos = spawnPos;
+        mDestPos = spawnPos;
     }
+
+    private void Start()
+    {
+        StartCoroutine(LandingCoroutine(3));
+    }
+
     [PunRPC]
     public void SyncInit(string UUID) //적이 소환한 유닛 초기화
     {
@@ -63,21 +67,21 @@ public class NeutralUnit : Damageable
     public void Update()
     {
         if (!mPhotonView.IsMine) return;
-        if (!IsAlive)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, destPos, Time.deltaTime * initTime);
-            if (transform.position == destPos)
-            {
-                IsAlive = true; // 이 시점이 땅에 도착한 시점
-                mNavMeshAgent.enabled = true;
-                animator.SetBool("isIdle", true);
-                NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-                mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
-                Findenemy();
-                mPriority = mNavMeshAgent.avoidancePriority;
-            }
-            return;
-        }
+        if (!IsAlive) return;
+        //if (!IsAlive)
+        //{
+        //    transform.position = Vector3.MoveTowards(transform.position, mDestPos, Time.deltaTime * mInitTime);
+        //    if (transform.position == mDestPos)
+        //    {
+        //        IsAlive = true; // 이 시점이 땅에 도착한 시점
+        //        mNavMeshAgent.enabled = true;
+        //        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        //        mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
+        //        Findenemy();
+        //        mPriority = mNavMeshAgent.avoidancePriority;
+        //    }
+        //    return;
+        //}
 
         mAttackDelay += Time.deltaTime;
 
@@ -93,10 +97,30 @@ public class NeutralUnit : Damageable
         }
     }
 
+    private IEnumerator LandingCoroutine(float duration)
+    {
+        Vector3 startPos = transform.position;
+        float currentTime = 0;
+        while (currentTime <= duration)
+        {
+            currentTime += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, mDestPos, currentTime / duration);
+            yield return null;
+        }
+
+        IsAlive = true; // 이 시점이 땅에 도착한 시점
+        mNavMeshAgent.enabled = true;
+        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
+        mPriority = mNavMeshAgent.avoidancePriority;
+        Findenemy();
+    }
+
     #region DIE
     private void Die()
     {
         //DieAnimation();
+
         IsAlive = false;
         mIsBatch = false;
         Debug.Log("드래곤 사망");

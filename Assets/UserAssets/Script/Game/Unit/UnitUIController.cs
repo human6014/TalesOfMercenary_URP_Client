@@ -32,5 +32,4 @@ public class UnitUIController : MonoBehaviour
         if (!mOnUpdate) return;
         mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
     }
-    
 }

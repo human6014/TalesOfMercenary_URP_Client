@@ -17,7 +17,6 @@ public class Unit : Damageable
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int unitId;        //식별번호
 
-    private Animator mAnimator;
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
     private NavMeshAgent mNavMeshAgent;
@@ -53,7 +52,6 @@ public class Unit : Damageable
     
     protected virtual void Awake()
     {
-        mAnimator = GetComponent<Animator>();
         mUnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
