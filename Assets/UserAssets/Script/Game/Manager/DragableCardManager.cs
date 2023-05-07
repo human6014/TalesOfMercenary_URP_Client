@@ -80,7 +80,7 @@ public class DragableCardManager : MonoBehaviour
 
     public void LoadMagicCard(MagicCard magicCard)
     {
-        StartCoroutine(AddMagicCards(0,magicCard));
+        StartCoroutine(AddMagicCards(0, magicCard));
     }
 
     #region ÆÐ º¸Ãæ
@@ -117,7 +117,7 @@ public class DragableCardManager : MonoBehaviour
         cardScript.CardType = CardType.Unit;
         cardScript.InitializeData();
     }
-    private IEnumerator AddMagicCards(int cardId, MagicCard magicCard,float delay = 0f)
+    private IEnumerator AddMagicCards(int cardId, MagicCard magicCard, float delay = 0f)
     {
         yield return new WaitForSeconds(delay);
 
@@ -226,7 +226,7 @@ public class DragableCardManager : MonoBehaviour
 
             ClearPreviewObject();
         }
-        
+
     }
 
     /// <summary>
