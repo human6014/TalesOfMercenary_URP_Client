@@ -25,7 +25,6 @@ public class Unit : Damageable
 
     #region logic Info
     private bool mIsBatch;
-    private bool mIsMoving = true;
 
     private float mAttackDelay; // 공격 속도 계산용
     private int mPriority;
@@ -43,6 +42,15 @@ public class Unit : Damageable
     public bool IsEnemy { get; private set; }
     #endregion
 
+    #region Animation sting
+    private const string MoveState = "IsMove";
+    private const string AttackState = "Attack";
+    private const string SkillAttackState = "SkillAttack";
+    private const string DieState = "IsDie";
+    private const string HitState = "Hit";
+    #endregion
+
+    
     protected virtual void Awake()
     {
         mAnimator = GetComponent<Animator>();
@@ -121,25 +129,42 @@ public class Unit : Damageable
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
             //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + " 정지 후 공격");
-            mIsMoving = false;
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
 
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                mAttack.Attack(this, mTarget);
+                AttackType attackType = mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
+                mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation),RpcTarget.All, TypeToString(attackType));
             }
-            IdleAnimation();
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
         }
         else//타깃이 공격 범위보다 멀때
         {
             //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
-            WalkAnimation();
-            mIsMoving = true;
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
         }
+    }
+
+    private string TypeToString(AttackType attackType)
+    {
+        string attackAnimName = "";
+        switch (attackType)
+        {
+            case AttackType.Normal:
+                attackAnimName = AttackState;
+                break;
+            case AttackType.Critical:
+                attackAnimName = AttackState;
+                break;
+            case AttackType.Skill:
+                attackAnimName = SkillAttackState;
+                break;
+        }
+        return attackAnimName;
     }
 
     private void NonTargetMove()
@@ -152,7 +177,6 @@ public class Unit : Damageable
         }
         float dist = Vector3.Distance(mVectorDestination, transform.position);
         //Debug.Log("남은 거리: " + dist);
-        mIsMoving = true;
         if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
         {
             Findenemy();
@@ -161,7 +185,8 @@ public class Unit : Damageable
         }
         else
         {
-            WalkAnimation();
+            //WalkAnimation();
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation),RpcTarget.All,MoveState, true);
             Debug.Log("백터로 이동 중");
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mVectorDestination);
@@ -218,11 +243,9 @@ public class Unit : Damageable
     public override void GetDamage(int damage, string attackUnitUUID)
     {
         //Debug.Log("<데미지 입음> 현재체력 : " + mCurrentHp + " 데미지 : " + damage);
-        if (mCurrentHp <= damage)
-        {
-            mCurrentHp = 0;
-        }
+        if (mCurrentHp <= damage) mCurrentHp = 0;
         else mCurrentHp -= damage;
+
         mUnitUIController.GetDamage(mCurrentHp);
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
     }
@@ -256,11 +279,12 @@ public class Unit : Damageable
     #region DIE
     public void Die()
     {
-        DieAnimation();
+        //DieAnimation();
+        mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation),RpcTarget.All, DieState, true);
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
         IsAlive = false;
         mIsBatch = false;
-        Destroy(gameObject);
+        Destroy(gameObject, 3f);
     }
 
     [PunRPC]
@@ -271,93 +295,7 @@ public class Unit : Damageable
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
         //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
-        Destroy(gameObject);
-    }
-    #endregion
-
-    #region Animation
-    public override void IdleAnimation()
-    {
-        Debug.Log("IdleAnimation");
-        mPhotonView.RPC(nameof(IdleAnimationRPC), RpcTarget.Others);
-        mAnimator.SetBool("IsMove",false);
-    }
-
-    [PunRPC]
-    public void IdleAnimationRPC()
-    {
-        Debug.Log("IdleAnimation");
-        mAnimator.SetBool("IsMove", false);
-    }
-
-    public override void NormalAttackAnimation()
-    {
-        Debug.Log("NormalAttackAnimation");
-        mPhotonView.RPC(nameof(NormalAttackAnimationRPC), RpcTarget.Others);
-        mAnimator.SetTrigger("Attack");
-    }
-
-    [PunRPC]
-    public void NormalAttackAnimationRPC()
-    {
-        Debug.Log("NormalAttackAnimation");
-        mAnimator.SetTrigger("Attack");
-    }
-
-    public override void CriticalAttackAnimation()
-    {
-        Debug.Log("CriticalAttackAnimation");
-
-        mPhotonView.RPC(nameof(CriticalAttackAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void CriticalAttackAnimationRPC()
-    {
-        Debug.Log("CriticalAttackAnimation");
-    }
-
-
-    public override void SkillAttackAnimation()
-    {
-        Debug.Log("SkillAttackAnimation");
-        mPhotonView.RPC(nameof(SkillAttackAnimationRPC), RpcTarget.Others);
-        mAnimator.SetTrigger("SkillAttack");
-    }
-
-    [PunRPC]
-    public void SkillAttackAnimationRPC()
-    {
-        Debug.Log("SkillAttackAnimation");
-        mAnimator.SetTrigger("SkillAttack");
-    }
-
-    public void WalkAnimation()
-    {
-        Debug.Log("WalkAnimation");
-        mPhotonView.RPC(nameof(WalkAnimationRPC), RpcTarget.Others);
-        mAnimator.SetBool("IsMove", true);
-    }
-
-    [PunRPC]
-    public void WalkAnimationRPC()
-    {
-        Debug.Log("WalkAnimation");
-        mAnimator.SetBool("IsMove", true);
-    }
-
-    public override void DieAnimation()
-    {
-        Debug.Log("DieAnimation");
-        mPhotonView.RPC(nameof(DieAnimationRPC), RpcTarget.Others);
-        mAnimator.SetBool("isDie", true);
-    }
-
-    [PunRPC]
-    public void DieAnimationRPC()
-    {
-        Debug.Log("DieAnimation");
-        mAnimator.SetBool("isDie", true);
+        Destroy(gameObject, 3f);
     }
     #endregion
 }

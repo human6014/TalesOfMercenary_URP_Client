@@ -28,7 +28,6 @@ public class NeutralUnit : Damageable
     private float mAttackDelay;
 
     private bool mIsBatch;
-    private bool mIsMoving = true;
     private bool doAttackHost;
     private List<string> mRemoveList = new List<string>();
 
@@ -97,7 +96,7 @@ public class NeutralUnit : Damageable
     #region DIE
     private void Die()
     {
-        DieAnimation();
+        //DieAnimation();
         IsAlive = false;
         mIsBatch = false;
         Debug.Log("드래곤 사망");
@@ -155,7 +154,6 @@ public class NeutralUnit : Damageable
         //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
-            mIsMoving = false;
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
@@ -163,13 +161,12 @@ public class NeutralUnit : Damageable
                 mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
             }
-            IdleAnimation();
+            //IdleAnimation();
         }
         else//타깃이 공격 범위보다 멀때
         {
             Debug.Log("적 타깃으로 이동 중");
-            WalkAnimation();
-            mIsMoving = true;
+            //WalkAnimation();
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
         }
@@ -216,82 +213,4 @@ public class NeutralUnit : Damageable
     {
         return mUnitScriptable.UUID;
     }
-
-    #region Animation
-    public override void IdleAnimation()
-    {
-        Debug.Log("IdleAnimation");
-        mPhotonView.RPC(nameof(IdleAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void IdleAnimationRPC()
-    {
-        Debug.Log("IdleAnimation");
-    }
-
-    public override void NormalAttackAnimation()
-    {
-        Debug.Log("NormalAttackAnimation");
-        mPhotonView.RPC(nameof(NormalAttackAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void NormalAttackAnimationRPC()
-    {
-        Debug.Log("NormalAttackAnimation");
-    }
-
-    public override void CriticalAttackAnimation()
-    {
-        Debug.Log("CriticalAttackAnimation");
-        mPhotonView.RPC(nameof(CriticalAttackAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void CriticalAttackAnimationRPC()
-    {
-        Debug.Log("CriticalAttackAnimation");
-
-    }
-
-
-    public override void SkillAttackAnimation()
-    {
-        Debug.Log("SkillAttackAnimation");
-        mPhotonView.RPC(nameof(SkillAttackAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void SkillAttackAnimationRPC()
-    {
-        Debug.Log("SkillAttackAnimation");
-
-    }
-
-    public void WalkAnimation()
-    {
-        Debug.Log("WalkAnimation");
-        mPhotonView.RPC(nameof(WalkAnimationRPC), RpcTarget.Others);
-    }
-
-
-    [PunRPC]
-    public void WalkAnimationRPC()
-    {
-        Debug.Log("WalkAnimation");
-    }
-
-    public override void DieAnimation()
-    {
-        Debug.Log("DieAnimation");
-        mPhotonView.RPC(nameof(DieAnimationRPC), RpcTarget.Others);
-    }
-
-    [PunRPC]
-    public void DieAnimationRPC()
-    {
-        Debug.Log("DieAnimation");
-    }
-    #endregion
 }

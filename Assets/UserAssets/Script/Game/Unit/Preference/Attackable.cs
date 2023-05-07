@@ -2,9 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AttackType
+{
+    Normal,
+    Critical,
+    Skill
+}
 public abstract class Attackable : MonoBehaviour
 {
-    public abstract void Attack(Damageable attackUnit, Damageable attackedUnit);
+    public abstract AttackType Attack(Damageable attackUnit, Damageable attackedUnit);
 
     public abstract void NormalAttack(Damageable attackUnit, Damageable attackedUnit);
 
