@@ -30,7 +30,7 @@ public class BuildingCardManager : MonoBehaviour
     [Tooltip("넥서스 카드가 위치할 RectTransform")]
     [SerializeField] private RectTransform nexusCardPool;
 
-    [Header("카드 확률")]
+    [Header("CardProbability")]
     [SerializeField] private CardProbability[] mCardProbability;
     #endregion
 
@@ -61,20 +61,7 @@ public class BuildingCardManager : MonoBehaviour
     {
         int rand = Random.Range(1, deckCards.Length);
         int level = deckCards[rand].CardCurrentLevel - 1;
-        Debug.Log(deckCards[rand].GetCard(GetCardProbability(rand, level)));
         return deckCards[rand].GetCard(GetCardProbability(rand, level));
-
-
-        //for (int i = 0; i < mCardProbability.Length; i++)
-        //{
-        //    for(int j = 0; j < mCardProbability[i].ProbabilityArray.Length; j++)
-        //    {
-        //        Debug.Log(mCardProbability[i][j]);
-        //    }
-        //    Debug.Log("-----------------------------------");
-        //}
-
-        //return deckCards[rand].GetRandomCard();
     }
 
     /// <summary>
@@ -114,9 +101,8 @@ public class BuildingCardManager : MonoBehaviour
 
         RectTransform deckCardTransform = Instantiate(usingDeckCard).GetComponent<RectTransform>();
 
-        RectTransform parentTransform = cardId == 0 ? nexusCardPool : activeDeckPool;
-        deckCardTransform.SetParent(parentTransform, true);
-        deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
+        deckCardTransform.SetParent(cardId == 0 ? nexusCardPool : activeDeckPool, true);
+        //deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
 
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
