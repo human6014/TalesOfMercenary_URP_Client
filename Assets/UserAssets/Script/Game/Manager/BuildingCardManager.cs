@@ -1,7 +1,6 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,8 +24,11 @@ public class BuildingCardManager : MonoBehaviour
     [SerializeField] private Card[] magicCard;
 
     [Header("Pool")]
-    [Tooltip("덱에 위치할 카드의 RectTransform")]
-    [SerializeField] private RectTransform activeDeckPool;
+    [Tooltip("내 건물카드가 위치할 RectTransform")]
+    [SerializeField] private RectTransform mMyBuildingCardPool;
+
+    [Tooltip("적 건물카드가 위치할 RectTransform")]
+    [SerializeField] private RectTransform mEnemyBuildingCardPool;
 
     [Tooltip("넥서스 카드가 위치할 RectTransform")]
     [SerializeField] private RectTransform nexusCardPool;
@@ -35,12 +37,13 @@ public class BuildingCardManager : MonoBehaviour
     [SerializeField] private CardProbability[] mCardProbability;
     #endregion
 
-    private const int maxDeckCardNum = 2;
+    private const int mMaxBuildingCardNum = 2;
     private const float mTotal = 100;
 
+    private PhotonView mPhotonView;
     private GameManager gameManager;
     private BuildingCard nexusCard;
-    private BuildingCard[] deckCards;
+    private BuildingCard[] mBuildingCards;
     //deckCards 0번 index = NexusCard
 
     private int GetCardProbability(int rand, int level)
@@ -61,76 +64,93 @@ public class BuildingCardManager : MonoBehaviour
     /// <returns>Card</returns>
     public Card GetRandomUnitCard()
     {
-        int rand = Random.Range(1, deckCards.Length);
-        int level = deckCards[rand].CardCurrentLevel - 1;
-        return deckCards[rand].GetCard(GetCardProbability(rand, level));
-    }
-
-    /// <summary>
-    /// 가지고 있는 마법카드에서 일정 확률로 마법카드를 반환함
-    /// </summary>
-    /// <returns></returns>
-    public Card GetRandromMagicCard()
-    {
-        int rand = Random.Range(0, magicCard.Length);
-        return magicCard[rand];
+        int rand = Random.Range(1, mBuildingCards.Length);
+        int level = mBuildingCards[rand].CardCurrentLevel - 1;
+        return mBuildingCards[rand].GetCard(GetCardProbability(rand, level));
     }
 
     private void Awake()
     {
         gameManager = GetComponent<GameManager>();
-        deckCards = new BuildingCard[maxDeckCardNum + 1];
+        mPhotonView = GetComponent<PhotonView>();
+        mBuildingCards = new BuildingCard[mMaxBuildingCardNum + 1];
         //유닛 생산 카드 + 넥서스 카드
     }
 
     private void Start()
     {
-        for (int i = 0; i < maxDeckCardNum + 1; i++) LoadDeck(i);
+        LoadNexusCard();
+        for (int i = 1; i < mMaxBuildingCardNum + 1; i++) LoadBuildingCard(i);//mPhotonView.RPC(nameof(LoadBuildingCard),RpcTarget.All, i);
 
-        nexusCard = deckCards[0];
+        nexusCard = mBuildingCards[0];
     }
     #region 덱 관련
 
-    /// <summary>
-    /// 최초 한번 덱을 로드
-    /// </summary>
-    /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
-    private void LoadDeck(int cardId)
+    private void LoadNexusCard()
     {
-        BuildingCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[cardId % 2 + 1];
-        RectTransform deckCardTransform = Instantiate(usingDeckCard).GetComponent<RectTransform>();
+        BuildingCard usingBuildingCard = deckCardPrefab[0];
 
-        deckCardTransform.SetParent(cardId == 0 ? nexusCardPool : activeDeckPool, true);
-        //deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
+        RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
 
+        deckCardTransform.SetParent(nexusCardPool, true);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
-        
-        buildingCard.CardId = cardId;
+
+        buildingCard.CardId = 0;
         buildingCard.CardCurrentLevel = 1;
-        buildingCard.OnPointerDownAction += PromoteDeckCard;
-        deckCards[cardId] = buildingCard;
-        buildingCard.Init();
+        buildingCard.OnPointerDownAction += PromoteBuildingCard;
+        mBuildingCards[0] = buildingCard;
     }
 
     /// <summary>
-    /// 덱 카드를 업그레이드 함
+    /// 최초 한번 건물을 로드
     /// </summary>
     /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
-    private void PromoteDeckCard(int cardId)
+    private void LoadBuildingCard(int cardId)
+    {
+        //Debug.Log("LoadDeck");
+        //DeckCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[unitJsonDatas[cardId - 1].unitID + 1];
+
+        BuildingCard usingBuildingCard = deckCardPrefab[cardId];
+
+        RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
+        mPhotonView.RPC(nameof(LoadEnemyBuildingCard), RpcTarget.Others, cardId);
+
+        deckCardTransform.SetParent(mMyBuildingCardPool, true);
+        deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
+
+        buildingCard.CardId = cardId;
+        buildingCard.CardCurrentLevel = 1;
+        buildingCard.OnPointerDownAction += PromoteBuildingCard;
+        mBuildingCards[cardId] = buildingCard;
+    }
+
+    [PunRPC]
+    private void LoadEnemyBuildingCard(int cardId)
+    {
+        BuildingCard usingBuildingCard = deckCardPrefab[cardId];
+        RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
+
+        deckCardTransform.SetParent(mEnemyBuildingCardPool, true);
+    }
+
+    /// <summary>
+    /// 건물을 업그레이드 함
+    /// </summary>
+    /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
+    private void PromoteBuildingCard(int cardId)
     {
         //Debug.Log("PromoteDeckCard" + cardId);
-
-        if (deckCards[cardId].CardCurrentLevel >= deckCards[cardId].CardMaxLevel) return;
-        if (!gameManager.DoValidGold(deckCards[cardId].CardUpgradeCost)) return;
+        if (mBuildingCards[cardId].CardCurrentLevel >= mBuildingCards[cardId].CardMaxLevel) return;
+        if (!gameManager.DoValidGold(mBuildingCards[cardId].CardUpgradeCost)) return;
         //if (cardId == 0)
         //{
         //    gameManager.UpgradeNexus(0.05f);
         //    NetworkUnitManager.SendNeuxsUpgrade();
         //}
         //else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
-        deckCards[cardId].CardCurrentLevel += 1;
-        Text cardText = deckCards[cardId].GetComponentInChildren<Text>();
-        cardText.text = deckCards[cardId].CardName + "\n" + deckCards[cardId].CardCurrentLevel.ToString();
+        mBuildingCards[cardId].CardCurrentLevel += 1;
+        Text cardText = mBuildingCards[cardId].GetComponentInChildren<Text>();
+        cardText.text = mBuildingCards[cardId].CardName + "\n" + mBuildingCards[cardId].CardCurrentLevel.ToString();
     }
     #endregion
 }
