@@ -14,16 +14,5 @@ public abstract class Damageable : MonoBehaviour
     public abstract void GetDamage(int damage, string attackUnitUUID);
 
     public abstract string getUUID();
-
-    public virtual void IdleAnimation() { }
-
-    public virtual void NormalAttackAnimation() { }
-
-    public virtual void SkillAttackAnimation() { }
-
-    public virtual void DieAnimation() { }
-
-    public virtual void CriticalAttackAnimation() { }
-
 }
 

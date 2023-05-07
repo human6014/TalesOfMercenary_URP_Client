@@ -51,6 +51,18 @@ MonoBehaviour:
   - WalkAnimationRPC
   - InitRPC
   - BuildingUpgardeRPC
+  - PlayMoveAnimation
+  - PlayAttackAnimation
+  - PlayDieAnimation
+  - PlayDieAnimationOff
+  - PlayDieAnimationOn
+  - PlaySkillAttackAnimation
+  - PlayBoolAnimation
+  - PlayTriggerAnimation
+  - LoadEnemyDeck
+  - LoadEnemyBuilding
+  - LoadBuildingCard
+  - LoadEnemyBuildingCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
