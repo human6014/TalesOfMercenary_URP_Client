@@ -19,7 +19,6 @@ public class NetworkUnitManager : MonoBehaviour
     public static Damageable[] usingUnit = new Damageable[4];
     public static Dictionary<string, Damageable> enemyUnitList { get; } = new();
     public static Dictionary<string, Damageable> myUnitList { get; } = new();
-    public static List<BuildingCard> mybuildingList { get; } = new();
     public static List<BuildingCard> enemyBuildingList { get; } = new();
 
 
@@ -29,7 +28,6 @@ public class NetworkUnitManager : MonoBehaviour
         usingUnit = new Damageable[4];
         enemyUnitList.Clear();
         myUnitList.Clear();
-        mybuildingList.Clear();
         enemyBuildingList.Clear();
     }
 

@@ -20273,7 +20273,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mOnUpdate: 1
-  mSlider: {fileID: 4313874119159111194}
 --- !u!1 &6484822792184130632
 GameObject:
   m_ObjectHideFlags: 0

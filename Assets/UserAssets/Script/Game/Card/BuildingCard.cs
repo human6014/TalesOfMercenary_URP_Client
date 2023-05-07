@@ -50,9 +50,9 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         cardCurrentLevel++;
     }
 
+    //ÀûÀýÇÑ À§Ä¡¿¡ ÇÔ¼ö È£­ƒ Ãß°¡¿äÇÔ
     public void Init()
     {
-        NetworkUnitManager.mybuildingList.Add(this);
         mPhotonView.RPC(nameof(InitRPC), RpcTarget.Others);
     }
 
