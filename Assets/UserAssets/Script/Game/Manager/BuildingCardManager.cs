@@ -90,29 +90,21 @@ public class BuildingCardManager : MonoBehaviour
         nexusCard = deckCards[0];
     }
     #region 덱 관련
-    //->구조 바꿔야할듯
+
     /// <summary>
     /// 최초 한번 덱을 로드
     /// </summary>
     /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
     private void LoadDeck(int cardId)
     {
-        //Debug.Log("LoadDeck");
-        //DeckCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[unitJsonDatas[cardId - 1].unitID + 1];
         BuildingCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[cardId % 2 + 1];
-
-        //TODO -> 포톤네트워크로 인스턴시에이트
-        //GameObject obj = null;
-        //obj = PhotonNetwork.Instantiate("OfficialUnit/" + usingCard.CardPrefab.name, cardPos, Quaternion.identity);
-        //obj.GetComponent<Unit>().InitBatch();
-
         RectTransform deckCardTransform = Instantiate(usingDeckCard).GetComponent<RectTransform>();
 
         deckCardTransform.SetParent(cardId == 0 ? nexusCardPool : activeDeckPool, true);
         //deckCardTransform.anchoredPosition = new Vector2(cardId == 0 ? 0 : (-50 + (cardId - 1) * 100), 0);
 
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
-
+        
         buildingCard.CardId = cardId;
         buildingCard.CardCurrentLevel = 1;
         buildingCard.OnPointerDownAction += PromoteDeckCard;

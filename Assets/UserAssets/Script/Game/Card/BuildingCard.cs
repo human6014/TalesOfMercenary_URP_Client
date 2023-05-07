@@ -78,6 +78,9 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
 
     public Card GetCard(int index) => cards[index];
 
-    void IPointerDownHandler.OnPointerDown(PointerEventData eventData) =>
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        if (!mPhotonView.IsMine) return;
         OnPointerDownAction?.Invoke(CardId);
+    }
 }

@@ -17,61 +17,50 @@ public class RangeAttack : Attackable
 
     private float SkillProbability = 20;
 
-    public override void Attack(Damageable attackUnit, Damageable attackedUnit)
+    public override AttackType Attack(Damageable attackUnit, Damageable attackedUnit)
     {
+        AttackType attackType = AttackType.Normal;
         if (attackedUnit.mUnitScriptable.level == 3)
         {
             if (SkillProbability > UnityEngine.Random.Range(0, 100))
             {
                 Debug.Log("스킬 발동");
-                attackedUnit.SkillAttackAnimation();
+                attackType = AttackType.Skill;
+                //attackedUnit.SkillAttackAnimation();
                 SpecialMove(attackUnit, attackedUnit);
             }
-            else
-            {
-                if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
-                {
-                    Debug.Log("크리티컬공격");
-                    attackUnit.CriticalAttackAnimation();
-                    CriticalAttack(attackUnit, attackedUnit);
-                }
-                else
-                { 
-                    Debug.Log("일반공격");
-                    attackUnit.NormalAttackAnimation();
-                    NormalAttack(attackUnit, attackedUnit);
-                }
-            }
+            else Attack(attackUnit, attackedUnit, ref attackType);
+        }
+        else Attack(attackUnit, attackedUnit, ref attackType);
+        
+        return attackType;
+    }
+
+    private void Attack(Damageable attackUnit, Damageable attackedUnit, ref AttackType attackType)
+    {
+        if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
+        {
+            Debug.Log("크리티컬공격");
+            attackType = AttackType.Critical;
+            //attackUnit.CriticalAttackAnimation();
+            CriticalAttack(attackUnit, attackedUnit);
         }
         else
         {
-            if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
-            {
-                Debug.Log("크리티컬공격");
-                attackUnit.CriticalAttackAnimation();
-                CriticalAttack(attackUnit, attackedUnit);
-            }
-            else
-            {
-                Debug.Log("일반공격");
-                attackUnit.NormalAttackAnimation();
-                NormalAttack(attackUnit, attackedUnit);
-            }
+            Debug.Log("일반공격");
+            attackType = AttackType.Normal;
+            //attackUnit.NormalAttackAnimation();
+            NormalAttack(attackUnit, attackedUnit);
         }
     }
 
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-    {
-        attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
-    }
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-    {
-        attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
-    }
-    public override void SpecialMove(Damageable attackUnit, Damageable attackedUnit)
-    {
-        attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
-    }
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
 
+    public override void SpecialMove(Damageable attackUnit, Damageable attackedUnit)
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
 }
