@@ -14,7 +14,7 @@ public class UnitUIController : MonoBehaviour
         mSlider = transform.GetChild(0).GetComponent<Slider>();
     }
 
-    private void Start() => mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
+    //private void Start() => mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
 
     public void Init(int maxValue)
     {
@@ -30,7 +30,7 @@ public class UnitUIController : MonoBehaviour
     private void Update()
     {
         if (!mOnUpdate) return;
-        mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
+        //mStatCanvas.rotation = Quaternion.LookRotation(GameManager.mMyCameraTransform.position);
     }
     
 }
