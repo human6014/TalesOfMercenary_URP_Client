@@ -53,6 +53,7 @@ public class BuildingCardManager : MonoBehaviour
         }
         return length - 1;
     }
+
     /// <summary>
     /// 가지고 있는 덱에서 일정 확률로 생산 카드의 유닛 카드를 반환함
     /// </summary>
