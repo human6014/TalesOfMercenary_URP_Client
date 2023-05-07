@@ -11,10 +11,12 @@ public class Card : MonoBehaviour
     [SerializeField] private GameObject cardPrefab;
     [SerializeField] private int cardCost;
     [SerializeField] private int m_CardUniqueID;
+    [SerializeField] private int mCurrentCardLevel;
     [SerializeField] public CardType cardType;
+    
     public UnityAction<int, Vector2, CardType> OnDragAction { get; set; }
-    public UnityAction<int, CardType> OnPointerDownAction { get; set; }
     public UnityAction<int, CardType> OnPointerUpAction { get; set; }
+    public UnityAction<int, CardType> OnPointerDownBatchAction { get; set; }
 
     protected void Awake()
     {
@@ -38,7 +40,7 @@ public class Card : MonoBehaviour
         get => cardType;
         set => cardType = value;
     }
-
+    public int CurrentCardLevel { get => mCurrentCardLevel; }
     public int CardId { get; set; }
 
     public virtual void InitializeData()

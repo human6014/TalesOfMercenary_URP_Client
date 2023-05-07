@@ -1,5 +1,5 @@
-
 using Photon.Pun;
+using Scriptable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +22,8 @@ public class NetworkUnitManager : MonoBehaviour
     public static List<BuildingCard> mybuildingList { get; } = new();
     public static List<BuildingCard> enemyBuildingList { get; } = new();
 
+
+
     private void Init()
     {
         usingUnit = new Damageable[4];
@@ -40,12 +42,12 @@ public class NetworkUnitManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            enemyUnitList.Add("1",mGameManger.GetNexus(1));
-            myUnitList.Add("1",mGameManger.GetNexus(0));
+            enemyUnitList.Add("1", mGameManger.GetNexus(1));
+            myUnitList.Add("1", mGameManger.GetNexus(0));
         }
         else
         {
-            enemyUnitList.Add("1",mGameManger.GetNexus(0));
+            enemyUnitList.Add("1", mGameManger.GetNexus(0));
             myUnitList.Add("1", mGameManger.GetNexus(1));
         }
     }

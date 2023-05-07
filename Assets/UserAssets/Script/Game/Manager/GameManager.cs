@@ -9,17 +9,17 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private bool managerMode; //테스트용 모드 (돈 무한 등등...)
     [SerializeField] private Nexus[] damageable;
+    [SerializeField] private GameObject[] mCamera;
+    [SerializeField] private LayerMask mHostLayer;
+    [SerializeField] private LayerMask mClientLayer;
 
-    private const int maxHandSize = 10;
-    private const int maxDeckSize = 5;
-    private const int initUnitListSize = 15;
-    private const int initEventUnitSize = 2;
+    public static Transform mMyCameraTransform;
+    public static Nexus mMyNexus;
+    public static int mMyUnitLayer;
+    public static int mEnemyUnitLayer;
 
-    public static readonly int HOST_NUMBER = 0;
-    public static readonly int CLIENT_NUMBER = 1;
-
-    private DataSender dataSender;
-    private UnitJsonData[] unitData;// = new UnitJsonData[6];
+    public readonly int HOST_NUMBER  = 0;
+    public readonly int CLIENT_NUMBER = 1;
 
     public Nexus GetNexus(int i) => damageable[i];
 
@@ -69,22 +69,31 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        InitData();
+        InitNexus();
+        InitCamera();
+        InitLayer();
+
         MaxGold = 100;
         IncreseGoldTime = 0.25f;
     }
 
-    private void InitData()
+    private void InitNexus()
     {
-        dataSender = FindObjectOfType<DataSender>();
-        if (dataSender == null) return;
-
-        unitData = dataSender.GetUnitData();
-
-        Destroy(dataSender.gameObject);
+        mMyNexus = PhotonNetwork.IsMasterClient ? damageable[0] : damageable[1];
     }
 
-    public UnitJsonData[] GetDeckInfo() => unitData;
+    private void InitCamera()
+    {
+        mCamera[0].SetActive(PhotonNetwork.IsMasterClient);
+        mCamera[1].SetActive(!PhotonNetwork.IsMasterClient);
+        mMyCameraTransform = (PhotonNetwork.IsMasterClient ? mCamera[0] : mCamera[1]).GetComponent<Transform>();
+    }
+
+    private void InitLayer()
+    {
+        mMyUnitLayer = 16;
+        mEnemyUnitLayer = 17;
+    }
 
     private void FixedUpdate()
     {

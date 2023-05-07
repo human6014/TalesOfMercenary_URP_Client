@@ -41,6 +41,15 @@ MonoBehaviour:
   - Sync
   - GetDamageRPC
   - SetTarget
+  - DieRPC
+  - SyncInit
+  - CriticalAttackAnimationRPC
+  - DieAnimationRPC
+  - IdleAnimationRPC
+  - NormalAttackAnimationRPC
+  - SkillAttackAnimationRPC
+  - WalkAnimationRPC
+  - InitRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

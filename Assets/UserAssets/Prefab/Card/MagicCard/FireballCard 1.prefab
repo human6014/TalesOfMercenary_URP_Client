@@ -103,6 +103,8 @@ MonoBehaviour:
   cardPrefab: {fileID: 14407350657891720, guid: 90b1327a343c56649803e59a30ea580b,
     type: 3}
   cardCost: 50
+  m_CardUniqueID: 0
+  mCurrentCardLevel: 1
   cardType: 1
 --- !u!1 &554489413222068918
 GameObject:
@@ -185,4 +187,4 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Fireball
 
-    Card'
+    Card 1'
