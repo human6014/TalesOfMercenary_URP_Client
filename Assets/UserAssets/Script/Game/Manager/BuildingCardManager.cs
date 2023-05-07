@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,7 +90,7 @@ public class BuildingCardManager : MonoBehaviour
         nexusCard = deckCards[0];
     }
     #region 덱 관련
-
+    //->구조 바꿔야할듯
     /// <summary>
     /// 최초 한번 덱을 로드
     /// </summary>
@@ -99,6 +100,11 @@ public class BuildingCardManager : MonoBehaviour
         //Debug.Log("LoadDeck");
         //DeckCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[unitJsonDatas[cardId - 1].unitID + 1];
         BuildingCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[cardId % 2 + 1];
+
+        //TODO -> 포톤네트워크로 인스턴시에이트
+        //GameObject obj = null;
+        //obj = PhotonNetwork.Instantiate("OfficialUnit/" + usingCard.CardPrefab.name, cardPos, Quaternion.identity);
+        //obj.GetComponent<Unit>().InitBatch();
 
         RectTransform deckCardTransform = Instantiate(usingDeckCard).GetComponent<RectTransform>();
 
@@ -111,6 +117,7 @@ public class BuildingCardManager : MonoBehaviour
         buildingCard.CardCurrentLevel = 1;
         buildingCard.OnPointerDownAction += PromoteDeckCard;
         deckCards[cardId] = buildingCard;
+        buildingCard.Init();
     }
 
     /// <summary>
