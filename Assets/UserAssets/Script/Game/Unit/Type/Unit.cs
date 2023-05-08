@@ -19,7 +19,11 @@ public class Unit : Damageable
 
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
-    private NavMeshAgent mNavMeshAgent;
+    private NavMeshAgent mNavMeshAgent; 
+    private PhotonView mPhotonView;
+    private Attackable mAttack;
+    private List<string> mRemoveList = new List<string>();
+
     #endregion
 
     #region logic Info
@@ -30,10 +34,9 @@ public class Unit : Damageable
     private const int mFightPriority = 5;
 
     private Vector3 mVectorDestination;
-    private PhotonView mPhotonView;
-    private Attackable mAttack;
+
     private string mTargetUUID;
-    private List<string> mRemoveList = new List<string>();
+    
     #endregion
 
     #region Property
