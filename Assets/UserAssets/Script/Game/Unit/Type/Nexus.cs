@@ -30,11 +30,16 @@ public class Nexus : Damageable
         if (PhotonNetwork.IsMasterClient && HasPlayerNumber == 0) IsMine = true;
         if (!PhotonNetwork.IsMasterClient && HasPlayerNumber == 1) IsMine = true;
         FindMaximumArea();
-
         if (IsMine) Debug.Log(transform.name + " Mine ");
-
         IsAlive = true;
         mCurrentHp = mUnitScriptable.maxHP;
+        //mUnitUIController.Init(mCurrentHp);
+        mPhotonView.RPC(nameof(Init), RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void Init()
+    {
         mUnitUIController.Init(mCurrentHp);
     }
 
@@ -51,16 +56,8 @@ public class Nexus : Damageable
     [PunRPC]
     public void GetDamageRPC(int damage)
     {
-        if(IsMine)
-        {
-
-        }
-        else
-        {
-
-        }
         //if (isGameEnd) return;
-        if (damage <= 0) 
+        if (damage <= 0)
         {
             Debug.Log("넥서스 데미지 안입음 ");
         }
