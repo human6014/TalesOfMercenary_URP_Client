@@ -59,7 +59,10 @@ public class NeutralUnit : Damageable
 
     private void Start()
     {
-        StartCoroutine(LandingCoroutine(3));
+        if (mPhotonView.IsMine)
+        {
+            StartCoroutine(LandingCoroutine(3));
+        }
     }
 
     [PunRPC]
