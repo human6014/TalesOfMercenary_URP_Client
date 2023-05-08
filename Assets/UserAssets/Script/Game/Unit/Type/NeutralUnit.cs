@@ -107,10 +107,10 @@ public class NeutralUnit : Damageable
         yield return new WaitForSeconds(0.3f);
 
         IsAlive = true; // 이 시점이 땅에 도착한 시점
-        
+
         mNavMeshAgent.enabled = true;
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-        
+
         mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
         mPriority = mNavMeshAgent.avoidancePriority;
         Findenemy();
