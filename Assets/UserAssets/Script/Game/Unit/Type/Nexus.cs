@@ -35,7 +35,7 @@ public class Nexus : Damageable
 
         IsAlive = true;
         mCurrentHp = mUnitScriptable.maxHP;
-        mUnitUIController.Init(mUnitScriptable.maxHP);
+        mUnitUIController.Init(mCurrentHp);
     }
 
     private void GameEnd()
@@ -47,21 +47,31 @@ public class Nexus : Damageable
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
     }
+
     [PunRPC]
     public void GetDamageRPC(int damage)
     {
+        if(IsMine)
+        {
+
+        }
+        else
+        {
+
+        }
         //if (isGameEnd) return;
         if (damage <= 0) 
         {
             Debug.Log("넥서스 데미지 안입음 ");
-            return;
         }
+
         if (mCurrentHp <= damage)
         {
             GameEnd();
             return;
         }
         else mCurrentHp -= damage;
+
         Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
         mUnitUIController.GetDamage(mCurrentHp);
     }

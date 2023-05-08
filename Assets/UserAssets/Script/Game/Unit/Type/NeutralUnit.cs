@@ -51,7 +51,10 @@ public class NeutralUnit : Damageable
 
     private void Start()
     {
-        StartCoroutine(LandingCoroutine(3));
+        if (mPhotonView.IsMine)
+        {
+            StartCoroutine(LandingCoroutine(3));
+        }
     }
 
     [PunRPC]
@@ -108,7 +111,7 @@ public class NeutralUnit : Damageable
             yield return null;
         }
 
-        IsAlive = true; // 이 시점이 땅에 도착한 시점
+        IsAlive = true;
         mNavMeshAgent.enabled = true;
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
