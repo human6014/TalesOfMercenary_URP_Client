@@ -46,7 +46,7 @@ public class Unit : Damageable
 
     #region Animation sting
     private const string MoveState = "IsMove";
-    private const string AttackState = "Attack";
+    private const string NormalAttackState = "NormalAttack";
     private const string SkillAttackState = "SkillAttack";
     private const string DieState = "IsDie";
     private const string HitState = "Hit";
@@ -156,10 +156,10 @@ public class Unit : Damageable
         switch (attackType)
         {
             case AttackType.Normal:
-                attackAnimName = AttackState;
+                attackAnimName = NormalAttackState;
                 break;
             case AttackType.Critical:
-                attackAnimName = AttackState;
+                attackAnimName = NormalAttackState;
                 break;
             case AttackType.Skill:
                 attackAnimName = SkillAttackState;

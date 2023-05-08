@@ -36,7 +36,7 @@ public class NeutralUnit : Damageable
     #region Animation sting
     private const string IdleState = "IsIdle";
     private const string MoveState = "IsMove";
-    private const string AttackState = "NormalAttack";
+    private const string NormalAttackState = "NormalAttack";
     private const string SkillAttackState = "SkillAttack";
     private const string DieState = "Die";
     #endregion
@@ -79,20 +79,6 @@ public class NeutralUnit : Damageable
     {
         if (!mPhotonView.IsMine) return;
         if (!IsAlive) return;
-        //if (!IsAlive)
-        //{
-        //    transform.position = Vector3.MoveTowards(transform.position, mDestPos, Time.deltaTime * mInitTime);
-        //    if (transform.position == mDestPos)
-        //    {
-        //        IsAlive = true; // 이 시점이 땅에 도착한 시점
-        //        mNavMeshAgent.enabled = true;
-        //        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-        //        mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
-        //        Findenemy();
-        //        mPriority = mNavMeshAgent.avoidancePriority;
-        //    }
-        //    return;
-        //}
 
         mAttackDelay += Time.deltaTime;
 
@@ -133,13 +119,12 @@ public class NeutralUnit : Damageable
     #region DIE
     private void Die()
     {
-        //DieAnimation();
-
+        mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, DieState);
         IsAlive = false;
         mIsBatch = false;
         Debug.Log("드래곤 사망");
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
-        Destroy(gameObject);
+        Destroy(gameObject,3);
     }
 
     [PunRPC]
@@ -149,7 +134,7 @@ public class NeutralUnit : Damageable
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
-        Destroy(gameObject);
+        Destroy(gameObject,3);
     }
     #endregion
 
@@ -194,8 +179,9 @@ public class NeutralUnit : Damageable
             mNavMeshAgent.SetDestination(transform.position);
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                mAttack.Attack(this, mTarget);
+                AttackType attackType = mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
+                mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
             }
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
             //IdleAnimation();
@@ -208,6 +194,23 @@ public class NeutralUnit : Damageable
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
         }
+    }
+    private string TypeToString(AttackType attackType)
+    {
+        string attackAnimName = "";
+        switch (attackType)
+        {
+            case AttackType.Normal:
+                attackAnimName = NormalAttackState;
+                break;
+            case AttackType.Critical:
+                attackAnimName = NormalAttackState;
+                break;
+            case AttackType.Skill:
+                attackAnimName = SkillAttackState;
+                break;
+        }
+        return attackAnimName;
     }
 
     private void Findenemy() // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
