@@ -11,6 +11,7 @@ using Scriptable;
 /// </summary>
 public class NeutralUnit : Damageable
 {
+    private UnitAnimationController mUnitAnimationController;
     private NavMeshAgent mNavMeshAgent;
     private Damageable mTarget;
     private PhotonView mPhotonView;
@@ -32,6 +33,13 @@ public class NeutralUnit : Damageable
 
     #endregion
 
+    #region Animation sting
+    private const string IdleState = "IsIdle";
+    private const string MoveState = "IsMove";
+    private const string AttackState = "NormalAttack";
+    private const string SkillAttackState = "SkillAttack";
+    private const string DieState = "Die";
+    #endregion
     private void Awake()
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
@@ -86,15 +94,13 @@ public class NeutralUnit : Damageable
         mAttackDelay += Time.deltaTime;
 
         //attack
+        if (mTarget == null || !mTarget.IsAlive || !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // Å¸±ê »ç¸Á È®ÀÎ 
         {
-            if (mTarget == null || !mTarget.IsAlive || !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // Å¸±ê »ç¸Á È®ÀÎ 
-            {
-                Debug.Log("Å¸±ê »ç¸Á¹× Å¸±ê Àç Å½»ö");
-                Findenemy();
-                return;
-            }
-            TargetMove();
+            Debug.Log("Å¸±ê »ç¸Á¹× Å¸±ê Àç Å½»ö");
+            Findenemy();
+            return;
         }
+        TargetMove();
     }
 
     private IEnumerator LandingCoroutine(float duration)
@@ -107,10 +113,15 @@ public class NeutralUnit : Damageable
             transform.position = Vector3.Lerp(startPos, mDestPos, currentTime / duration);
             yield return null;
         }
+        mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, IdleState, true);
+
+        yield return new WaitForSeconds(0.3f);
 
         IsAlive = true; // ÀÌ ½ÃÁ¡ÀÌ ¶¥¿¡ µµÂøÇÑ ½ÃÁ¡
+        
         mNavMeshAgent.enabled = true;
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        
         mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
         mPriority = mNavMeshAgent.avoidancePriority;
         Findenemy();
@@ -158,10 +169,8 @@ public class NeutralUnit : Damageable
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
             {
-                if (NetworkUnitManager.enemyUnitList[attackUnit].IsAlive)
-                {
-                    mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
-                }
+                if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
+                mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
             }
         }
     }
@@ -185,12 +194,14 @@ public class NeutralUnit : Damageable
                 mAttack.Attack(this, mTarget);
                 mAttackDelay = 0;
             }
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
             //IdleAnimation();
         }
         else//Å¸±êÀÌ °ø°Ý ¹üÀ§º¸´Ù ¸Ö¶§
         {
             Debug.Log("Àû Å¸±êÀ¸·Î ÀÌµ¿ Áß");
             //WalkAnimation();
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
         }
