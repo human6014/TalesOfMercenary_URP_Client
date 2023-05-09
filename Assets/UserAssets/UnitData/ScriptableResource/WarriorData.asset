@@ -22,8 +22,9 @@ MonoBehaviour:
   element: 0
   criticalRate: 20
   criticalDamage: 2
-  attackRange: 1
+  attackRange: 1.2
   attackSpeed: 1.5
   movementRange: 0.2
   unitType: 1
-  UUID: 57b41b31-6b2a-4125-9b4a-daa69f4095ee
+  UUID: 63ec76d0-5de2-4807-9390-a2fb9af142b1
+  skillDamage: 0

@@ -347,16 +347,16 @@ RectTransform:
   m_GameObject: {fileID: 585162629720416307}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.05, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5702618119694707399}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -4, y: 0}
-  m_SizeDelta: {x: 10, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2015255014625440951
 CanvasRenderer:
@@ -20050,7 +20050,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6055694844961342070
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20145,6 +20145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c23ae3aacd7d24d9a05c700c982c1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mFillImage: {fileID: 6999956702771156574}
   mOnUpdate: 1
 --- !u!1 &6484822792184130632
 GameObject:
@@ -20404,6 +20405,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 393216
   unitId: 2
+  IsLIVE: 0
 --- !u!114 &-6756909976619491169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20548,8 +20550,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7335728223357471362
 GameObject:
