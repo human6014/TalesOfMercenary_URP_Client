@@ -135,7 +135,7 @@ public class Unit : Damageable
     private void TargetMove()
     {
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
-        dist = dis;
+        dis = dist;
         transform.LookAt(mTarget.transform.position);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
