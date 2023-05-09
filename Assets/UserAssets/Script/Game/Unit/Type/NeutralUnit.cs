@@ -180,6 +180,7 @@ public class NeutralUnit : Damageable
 
     private void TargetMove()
     {
+        transform.LookAt(mTarget.transform.position);
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
         //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
@@ -224,7 +225,7 @@ public class NeutralUnit : Damageable
 
     private void Findenemy() // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
     {
-        Debug.Log("드래곤 적 탐색중..");
+        //Debug.Log("드래곤 적 탐색중..");
         Debug.Log("적 유닛 갯수 : " + NetworkUnitManager.enemyUnitList.Count);
         float minDis = float.MaxValue;
         Damageable target = null;
@@ -256,7 +257,7 @@ public class NeutralUnit : Damageable
         }
         mTarget = target;
         mTargetUUID = temUUID;
-        Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
+        //Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
     }
 
     public override string getUUID()

@@ -16,7 +16,7 @@ public class Unit : Damageable
     [SerializeField] private UnitUIController mUnitUIController;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int unitId;        //식별번호
-
+    [SerializeField] private string targetUUID;
     [SerializeField] private bool IsLIVE;
 
     private UnitAnimationController mUnitAnimationController;
@@ -110,13 +110,14 @@ public class Unit : Damageable
             mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
             return;
         }
+
         mAttackDelay += Time.deltaTime;
 
         if (mTarget != null) // 타깃이 있을 때
         {
             if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID) || !mTarget.IsAlive) // 타깃 사망 확인 
             {
-                Debug.Log("타깃 사망및 타깃 재 탐색");
+                //Debug.Log("타깃 사망및 타깃 재 탐색");
                 Findenemy();
                 return;
             }
@@ -129,7 +130,7 @@ public class Unit : Damageable
     private void TargetMove()
     {
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
-
+        transform.LookAt(mTarget.transform.position);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
             mNavMeshAgent.avoidancePriority = mFightPriority;
@@ -171,12 +172,6 @@ public class Unit : Damageable
 
     private void NonTargetMove()
     {
-        if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // 타깃이 죽었을때
-        {
-            mTarget = null;
-            Findenemy();
-            return;
-        }
         float dist = Vector3.Distance(mVectorDestination, transform.position);
         //Debug.Log("남은 거리: " + dist);
         if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
@@ -189,7 +184,7 @@ public class Unit : Damageable
         {
             //WalkAnimation();
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
-            Debug.Log("백터로 이동 중");
+            //Debug.Log("백터로 이동 중");
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mVectorDestination);
         }
@@ -198,6 +193,7 @@ public class Unit : Damageable
     public void PointMove(Vector3 pos)
     {
         mTarget = null;
+        targetUUID = "Vector";
         mVectorDestination = pos;
         mNavMeshAgent.stoppingDistance = 0.15f;
         mNavMeshAgent.SetDestination(mVectorDestination);
@@ -238,7 +234,8 @@ public class Unit : Damageable
         }
         mTarget = target;
         mTargetUUID = temUUID;
-        Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
+        targetUUID = mTargetUUID;
+        //Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
     }
 
     #region Damage
