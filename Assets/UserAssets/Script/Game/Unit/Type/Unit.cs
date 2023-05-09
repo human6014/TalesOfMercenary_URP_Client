@@ -17,6 +17,8 @@ public class Unit : Damageable
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private int unitId;        //식별번호
     [SerializeField] private string targetUUID;
+    [SerializeField] private float dis;
+    [SerializeField] private float attackRANGE;
     [SerializeField] private bool IsLIVE;
 
     private UnitAnimationController mUnitAnimationController;
@@ -81,6 +83,9 @@ public class Unit : Damageable
 
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
+        {
+            attackRANGE = mUnitScriptable.attackRange;
+        }
     }
 
     [PunRPC]
@@ -130,6 +135,7 @@ public class Unit : Damageable
     private void TargetMove()
     {
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
+        dist = dis;
         transform.LookAt(mTarget.transform.position);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
@@ -173,6 +179,7 @@ public class Unit : Damageable
     private void NonTargetMove()
     {
         float dist = Vector3.Distance(mVectorDestination, transform.position);
+        dis = dist;
         //Debug.Log("남은 거리: " + dist);
         if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
         {
