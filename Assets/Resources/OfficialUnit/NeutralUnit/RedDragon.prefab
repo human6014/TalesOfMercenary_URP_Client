@@ -1302,6 +1302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mUnitScriptable: {fileID: 11400000, guid: 8e0e53b79fa6cb643a82170a9066f8da, type: 2}
+  mUnitUIController: {fileID: 1491540317180387601}
 --- !u!136 &7915121075783300575
 CapsuleCollider:
   m_ObjectHideFlags: 0

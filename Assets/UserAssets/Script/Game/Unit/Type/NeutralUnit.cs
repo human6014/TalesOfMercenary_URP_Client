@@ -12,6 +12,7 @@ using Scriptable;
 public class NeutralUnit : Damageable
 {
     private UnitAnimationController mUnitAnimationController;
+    [SerializeField] private UnitUIController mUnitUIController;
     private NavMeshAgent mNavMeshAgent;
     private Damageable mTarget;
     private PhotonView mPhotonView;
@@ -55,6 +56,7 @@ public class NeutralUnit : Damageable
         gameObject.layer = GameManager.mMyUnitLayer;
         mAttack = GetComponent<Attackable>();
         mDestPos = spawnPos;
+        mUnitUIController.Init(mCurrentHp);
     }
 
     private void Start()
@@ -68,6 +70,8 @@ public class NeutralUnit : Damageable
     [PunRPC]
     public void SyncInit(string UUID) //적이 소환한 유닛 초기화
     {
+        mCurrentHp = mUnitScriptable.maxHP;
+        mUnitUIController.Init(mCurrentHp);
         NetworkUnitManager.enemyUnitList.Add(UUID, this);
         gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = UUID;
@@ -110,7 +114,7 @@ public class NeutralUnit : Damageable
 
         mNavMeshAgent.enabled = true;
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-
+        mUnitUIController.Init(mUnitScriptable.maxHP);
         mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
         mPriority = mNavMeshAgent.avoidancePriority;
         Findenemy();
@@ -124,7 +128,7 @@ public class NeutralUnit : Damageable
         mIsBatch = false;
         Debug.Log("드래곤 사망");
         NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
-        Destroy(gameObject,3);
+        Destroy(gameObject, 3);
     }
 
     [PunRPC]
@@ -134,7 +138,7 @@ public class NeutralUnit : Damageable
         mIsBatch = false;
         IsAlive = false;
         NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
-        Destroy(gameObject,3);
+        Destroy(gameObject, 3);
     }
     #endregion
 
@@ -152,12 +156,13 @@ public class NeutralUnit : Damageable
             return;
         }
         else mCurrentHp -= damage;
-
+        mUnitUIController.GetDamage(mCurrentHp);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
             {
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
+                transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
             }
         }
@@ -165,6 +170,10 @@ public class NeutralUnit : Damageable
 
     public override void GetDamage(int damage, string attackUnitUUID)
     {
+        if (mCurrentHp <= damage) mCurrentHp = 0;
+        else mCurrentHp -= damage;
+
+        mUnitUIController.GetDamage(mCurrentHp);
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
     }
     #endregion
@@ -188,7 +197,7 @@ public class NeutralUnit : Damageable
         }
         else//타깃이 공격 범위보다 멀때
         {
-            Debug.Log("적 타깃으로 이동 중");
+            //Debug.Log("적 타깃으로 이동 중");
             //WalkAnimation();
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
             mNavMeshAgent.avoidancePriority = mPriority;

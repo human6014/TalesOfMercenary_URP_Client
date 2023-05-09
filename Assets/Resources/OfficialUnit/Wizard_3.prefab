@@ -165,6 +165,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 393216
   unitId: 1
+  IsLIVE: 0
 --- !u!114 &-4490598159639082235
 MonoBehaviour:
   m_ObjectHideFlags: 0
