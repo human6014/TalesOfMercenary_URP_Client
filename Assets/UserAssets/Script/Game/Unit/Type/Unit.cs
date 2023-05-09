@@ -73,7 +73,7 @@ public class Unit : Damageable
         gameObject.layer = GameManager.mMyUnitLayer;
 
         mIsBatch = true;
-        mUnitUIController.Init(mUnitScriptable.maxHP);
+        mUnitUIController.Init(mUnitScriptable.maxHP, true);
 
         Findenemy();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -88,7 +88,7 @@ public class Unit : Damageable
     {
         NetworkUnitManager.enemyUnitList.Add(uuid, this);
         mCurrentHp = mUnitScriptable.maxHP;
-        mUnitUIController.Init(mUnitScriptable.maxHP);
+        mUnitUIController.Init(mUnitScriptable.maxHP, mPhotonView.IsMine);
         gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
         IsAlive = true;

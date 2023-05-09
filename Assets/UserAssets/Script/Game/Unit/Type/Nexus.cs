@@ -40,7 +40,7 @@ public class Nexus : Damageable
     [PunRPC]
     private void Init()
     {
-        mUnitUIController.Init(mCurrentHp);
+        mUnitUIController.Init(mCurrentHp, IsMine);
     }
 
     private void GameEnd()

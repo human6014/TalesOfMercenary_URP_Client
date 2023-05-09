@@ -11,18 +11,19 @@ using Scriptable;
 /// </summary>
 public class NeutralUnit : Damageable
 {
-    private UnitAnimationController mUnitAnimationController;
     [SerializeField] private UnitUIController mUnitUIController;
+
+    private UnitAnimationController mUnitAnimationController;
     private NavMeshAgent mNavMeshAgent;
     private Damageable mTarget;
     private PhotonView mPhotonView;
     private Attackable mAttack;
-    private string mTargetUUID;
+    private List<string> mRemoveList = new List<string>();
 
-    #region logic Info
     private Vector3 mDestPos;
 
-    private const int mFightPriority = 5;
+    private string mTargetUUID;
+    
     private int mPriority;
 
     private float mInitTime = 3.0f;
@@ -30,10 +31,8 @@ public class NeutralUnit : Damageable
 
     private bool mIsBatch;
     private bool mDoAttackHost;
-    private List<string> mRemoveList = new List<string>();
 
-    #endregion
-
+    private const int mFightPriority = 5;
     #region Animation sting
     private const string IdleState = "IsIdle";
     private const string MoveState = "IsMove";
@@ -56,22 +55,19 @@ public class NeutralUnit : Damageable
         gameObject.layer = GameManager.mMyUnitLayer;
         mAttack = GetComponent<Attackable>();
         mDestPos = spawnPos;
-        mUnitUIController.Init(mCurrentHp);
+        mUnitUIController.Init(mCurrentHp, false);
     }
 
     private void Start()
     {
-        if (mPhotonView.IsMine)
-        {
-            StartCoroutine(LandingCoroutine(3));
-        }
+        if (mPhotonView.IsMine) StartCoroutine(LandingCoroutine(3));
     }
 
     [PunRPC]
     public void SyncInit(string UUID) //적이 소환한 유닛 초기화
     {
         mCurrentHp = mUnitScriptable.maxHP;
-        mUnitUIController.Init(mCurrentHp);
+        mUnitUIController.Init(mCurrentHp, mPhotonView.IsMine);
         NetworkUnitManager.enemyUnitList.Add(UUID, this);
         gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = UUID;
@@ -114,7 +110,7 @@ public class NeutralUnit : Damageable
 
         mNavMeshAgent.enabled = true;
         NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-        mUnitUIController.Init(mUnitScriptable.maxHP);
+        mUnitUIController.Init(mUnitScriptable.maxHP, false);
         mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
         mPriority = mNavMeshAgent.avoidancePriority;
         Findenemy();
