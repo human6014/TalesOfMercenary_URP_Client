@@ -14,16 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 1
   unitName: Wizard
-  maxHP: 10
+  maxHP: 80
   def: 0
   mp: 0
-  str: 1
+  str: 35
   speed: 0
   element: 0
-  criticalRate: 20
+  criticalRate: 10
   criticalDamage: 2
-  attackRange: 2
-  attackSpeed: 1.5
+  attackRange: 5
+  attackSpeed: 2
   movementRange: 0.2
   unitType: 1
   UUID: 77af8cf7-d9e5-477e-99b2-e6a8841a00c7
+  skillDamage: 0

@@ -15,10 +15,10 @@ MonoBehaviour:
   level: 1
   unitName: Archer
   maxHP: 100
-  def: 0
+  def: 1
   mp: 0
-  str: 0
-  speed: 0
+  str: 10
+  speed: 2
   element: 0
   criticalRate: 0
   criticalDamage: 0
@@ -26,3 +26,5 @@ MonoBehaviour:
   attackSpeed: 1.5
   movementRange: 0.2
   unitType: 1
+  UUID: 
+  skillDamage: 0
