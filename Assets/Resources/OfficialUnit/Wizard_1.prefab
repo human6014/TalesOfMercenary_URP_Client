@@ -166,6 +166,8 @@ MonoBehaviour:
     m_Bits: 393216
   unitId: 1
   targetUUID: 
+  dis: 0
+  attackRANGE: 0
   IsLIVE: 0
 --- !u!114 &-4490598159639082235
 MonoBehaviour:
@@ -544,7 +546,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1072325016852094219
 Transform:
   m_ObjectHideFlags: 0
@@ -18652,7 +18654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7317581370651190274
 Transform:
   m_ObjectHideFlags: 0
