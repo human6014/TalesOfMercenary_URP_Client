@@ -20226,7 +20226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitScriptable: {fileID: 11400000, guid: e2532403440a32742929e5d036755619, type: 2}
+  mUnitScriptable: {fileID: 11400000, guid: 9dc17ccb70113b640825dc5ef4a364b3, type: 2}
   mUnitUIController: {fileID: 4740794328286919010}
   enemyLayer:
     serializedVersion: 2

@@ -20399,7 +20399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
+  mUnitScriptable: {fileID: 11400000, guid: 1c6858c985f04764b866dee4213ad88a, type: 2}
   mUnitUIController: {fileID: 311452296354434180}
   enemyLayer:
     serializedVersion: 2
