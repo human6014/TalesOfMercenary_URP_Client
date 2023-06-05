@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitScriptable: {fileID: 11400000, guid: 5155f4f0af159024abc217b331a780ce, type: 2}
+  mUnitScriptable: {fileID: 11400000, guid: db67837843747d5448a35b5039fc0182, type: 2}
   mUnitUIController: {fileID: 8965632961429135590}
   enemyLayer:
     serializedVersion: 2

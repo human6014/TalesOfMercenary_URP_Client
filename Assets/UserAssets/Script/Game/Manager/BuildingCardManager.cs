@@ -44,7 +44,7 @@ public class BuildingCardManager : MonoBehaviour
     private GameManager gameManager;
     private BuildingCard nexusCard;
     private BuildingCard[] mBuildingCards;
-    //deckCards 0¹ø index = NexusCard
+    //BuildingCard 0¹ø index = NexusCard
 
     private int GetCardProbability(int rand, int level)
     {
@@ -92,7 +92,8 @@ public class BuildingCardManager : MonoBehaviour
 
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
 
-        deckCardTransform.SetParent(nexusCardPool, true);
+        deckCardTransform.SetParent(nexusCardPool,true);
+        deckCardTransform.anchoredPosition = new Vector2(0,0);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
         buildingCard.CardId = 0;
@@ -118,6 +119,7 @@ public class BuildingCardManager : MonoBehaviour
         deckCardTransform.SetParent(mMyBuildingCardPool, true);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
+        buildingCard.Init();
         buildingCard.CardId = cardId;
         buildingCard.CardCurrentLevel = 1;
         buildingCard.OnPointerDownAction += PromoteBuildingCard;

@@ -20436,7 +20436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitScriptable: {fileID: 11400000, guid: 4f5ad860062a3d8438fbb6a83c41ca6b, type: 2}
+  mUnitScriptable: {fileID: 11400000, guid: 3b6bed664f8d1bc4e87285a134752d9b, type: 2}
   mUnitUIController: {fileID: 5775830019479172680}
   enemyLayer:
     serializedVersion: 2

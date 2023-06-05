@@ -9,7 +9,7 @@ public class UnitCard : Card, IDragHandler, IPointerUpHandler, IPointerDownHandl
     public override void InitializeData()
     {
         //¹¹ÇÏÁö
-        cardType = CardType.Unit;
+        CardType = CardType.Unit;
         base.InitializeData();
     }
 

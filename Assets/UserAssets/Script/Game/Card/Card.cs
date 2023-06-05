@@ -12,7 +12,7 @@ public class Card : MonoBehaviour
     [SerializeField] private int cardCost;
     [SerializeField] private int m_CardUniqueID;
     [SerializeField] private int mCurrentCardLevel;
-    [SerializeField] public CardType cardType;
+    [SerializeField] private CardType cardType;
     
     public UnityAction<int, Vector2, CardType> OnDragAction { get; set; }
     public UnityAction<int, CardType> OnPointerUpAction { get; set; }

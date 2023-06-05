@@ -7,6 +7,9 @@ using Scriptable;
 public class BuildingCard : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Card[] cards;
+
+    [SerializeField] private bool isPickingMode;
+    [SerializeField] private bool isSyncUI = true;
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
     [SerializeField] private int cardMaxLevel;
@@ -28,6 +31,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     public int CardMaxLevel { get => cardMaxLevel; }
     public int CardUniqueNumber { get => cardUniqueNumber; } // °íÀ¯¹øÈ£
     public string CardName { get; set; }
+    public bool IsMine { get; private set; }
 
     private void Awake()
     {
@@ -55,7 +59,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     //ÀûÀýÇÑ À§Ä¡¿¡ ÇÔ¼ö È£­ƒ Ãß°¡¿äÇÔ
     public void Init()
     {
-        mPhotonView.RPC(nameof(InitRPC), RpcTarget.Others);
+        IsMine = true;
     }
 
     [PunRPC]
@@ -64,7 +68,6 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         Debug.Log(CardName + "°Ç¹° »ç¿ë");
         NetworkUnitManager.enemyBuildingList.Add(this);
     }
-
 
     /// <summary>
     /// °¡Áö°í ÀÖ´Â Ä«µå¸¦ ·¹º§º° ÀÏÁ¤ È®·ü·Î ¹ÝÈ¯ÇÔ
@@ -80,7 +83,8 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        if (!mPhotonView.IsMine) return;
+        Debug.Log("Clicked");
+        if (isSyncUI && !IsMine) return;
         OnPointerDownAction?.Invoke(CardId);
     }
 }

@@ -4858,7 +4858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b0836f17cca8814aa45f5640b6ca0e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mUnitScriptable: {fileID: 11400000, guid: 2033a4f0902358a40a55df14574cb4c8, type: 2}
+  mUnitScriptable: {fileID: 11400000, guid: 2abca6891bf25ee409dea2414306cfcb, type: 2}
   mUnitUIController: {fileID: 6012911639362070715}
   enemyLayer:
     serializedVersion: 2
