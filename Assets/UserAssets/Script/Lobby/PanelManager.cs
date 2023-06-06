@@ -12,11 +12,11 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private GameObject deckPanel;
     
     private GameObject currentCanvas;
-    private BanPickManager banPickManager;
+    //private BanPickManager banPickManager;
     private void Awake()
     {
         currentCanvas = lobbyCanvas;
-        banPickManager = FindObjectOfType<BanPickManager>();
+        //banPickManager = FindObjectOfType<BanPickManager>();
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class PanelManager : MonoBehaviour
         banPickCanvas.SetActive(true);
         currentCanvas = banPickCanvas;
 
-        banPickManager.SetCardList();
+        //banPickManager.SetCardList();
     }
 
     /// <summary>
