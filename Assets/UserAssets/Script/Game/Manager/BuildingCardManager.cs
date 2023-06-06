@@ -17,7 +17,10 @@ public class BuildingCardManager : MonoBehaviour
 {
     #region Serialize Member
     [Header("Prefab or CS")]
-    [Tooltip("게임에 가져갈 덱에 해당하는 카드")] // 일단 다 넣어~
+    [Tooltip("넥서스 카드")]
+    [SerializeField] private BuildingCard mNexusCard;
+
+    [Tooltip("게임에 가져갈 덱에 해당하는 카드")]
     [SerializeField] private BuildingCard[] deckCardPrefab;
 
     [Tooltip("게임에 가져갈 마법 카드")]
@@ -37,16 +40,18 @@ public class BuildingCardManager : MonoBehaviour
     [SerializeField] private CardProbability[] mCardProbability;
     #endregion
 
-    private const int mMaxBuildingCardNum = 2;
+    public int MaxBuildingCardNum { get; } = 2;
     private const float mTotal = 100;
+    private int[] mSelectingCard;
 
     private PhotonView mPhotonView;
     private GameManager gameManager;
     private BuildingCard nexusCard;
     private BuildingCard[] mBuildingCards;
-    //BuildingCard 0번 index = NexusCard
 
-    private int GetCardProbability(int rand, int level)
+    public System.Action CardBatchAction { get; set; }
+
+    private int GetCardProbability(int level)
     {
         float randomPoint = Random.value * mTotal;
         int length = mCardProbability[level].ProbabilityArray.Length;
@@ -64,31 +69,38 @@ public class BuildingCardManager : MonoBehaviour
     /// <returns>Card</returns>
     public Card GetRandomUnitCard()
     {
-        int rand = Random.Range(1, mBuildingCards.Length);
+        int rand = Random.Range(0, mBuildingCards.Length);
+        Debug.Log(rand);
         int level = mBuildingCards[rand].CardCurrentLevel - 1;
-        return mBuildingCards[rand].GetCard(GetCardProbability(rand, level));
+        return mBuildingCards[rand].GetCard(GetCardProbability(level));
     }
 
     private void Awake()
     {
         gameManager = GetComponent<GameManager>();
         mPhotonView = GetComponent<PhotonView>();
-        mBuildingCards = new BuildingCard[mMaxBuildingCardNum + 1];
+        mBuildingCards = new BuildingCard[MaxBuildingCardNum];
         //유닛 생산 카드 + 넥서스 카드
     }
 
-    private void Start()
+    public void RegisterSelectingCard(int [] index)
     {
-        LoadNexusCard();
-        for (int i = 1; i < mMaxBuildingCardNum + 1; i++) LoadBuildingCard(i);//mPhotonView.RPC(nameof(LoadBuildingCard),RpcTarget.All, i);
+        mSelectingCard = new int[index.Length];
 
-        nexusCard = mBuildingCards[0];
+        for (int i = 0;i < mSelectingCard.Length;i++)
+            mSelectingCard[i] = index[i];
+
+        LoadNexusCard();
+        for (int i = 0; i < MaxBuildingCardNum; i++) LoadBuildingCard(i);//mPhotonView.RPC(nameof(LoadBuildingCard),RpcTarget.All, i);
+
+        CardBatchAction?.Invoke();
     }
+
     #region 덱 관련
 
     private void LoadNexusCard()
     {
-        BuildingCard usingBuildingCard = deckCardPrefab[0];
+        BuildingCard usingBuildingCard = mNexusCard;
 
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
 
@@ -96,10 +108,10 @@ public class BuildingCardManager : MonoBehaviour
         deckCardTransform.anchoredPosition = new Vector2(0,0);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
-        buildingCard.CardId = 0;
+        buildingCard.CardID = 0;
         buildingCard.CardCurrentLevel = 1;
         buildingCard.OnPointerDownAction += PromoteBuildingCard;
-        mBuildingCards[0] = buildingCard;
+        nexusCard = buildingCard;
     }
 
     /// <summary>
@@ -108,10 +120,9 @@ public class BuildingCardManager : MonoBehaviour
     /// <param name="cardId">0 ~ maxDeckCardNum - 1를 가지는 식별번호</param>
     private void LoadBuildingCard(int cardId)
     {
-        //Debug.Log("LoadDeck");
         //DeckCard usingDeckCard = cardId == 0 ? deckCardPrefab[0] : deckCardPrefab[unitJsonDatas[cardId - 1].unitID + 1];
 
-        BuildingCard usingBuildingCard = deckCardPrefab[cardId];
+        BuildingCard usingBuildingCard = deckCardPrefab[mSelectingCard[cardId]];
 
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
         mPhotonView.RPC(nameof(LoadEnemyBuildingCard), RpcTarget.Others, cardId);
@@ -120,7 +131,7 @@ public class BuildingCardManager : MonoBehaviour
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
         buildingCard.Init();
-        buildingCard.CardId = cardId;
+        buildingCard.CardID = cardId;
         buildingCard.CardCurrentLevel = 1;
         buildingCard.OnPointerDownAction += PromoteBuildingCard;
         mBuildingCards[cardId] = buildingCard;

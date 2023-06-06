@@ -26,7 +26,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         private set => cardUpgradCost = value;
     }
 
-    public int CardId { get; set; } // 인덱스 번호(배열)
+    public int CardID { get; set; } // 인덱스 번호(배열)
     public int CardCurrentLevel { get => cardCurrentLevel; set => cardCurrentLevel = value; }
     public int CardMaxLevel { get => cardMaxLevel; }
     public int CardUniqueNumber { get => cardUniqueNumber; } // 고유번호
@@ -36,7 +36,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         CardName = gameObject.name;
-        mPhotonView = GetComponent<PhotonView>();
+        if(!isPickingMode) mPhotonView = GetComponent<PhotonView>();
     }
 
     /// <summary>
@@ -60,6 +60,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     public void Init()
     {
         IsMine = true;
+        isPickingMode = false;
     }
 
     [PunRPC]
@@ -83,8 +84,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("Clicked");
-        if (isSyncUI && !IsMine) return;
-        OnPointerDownAction?.Invoke(CardId);
+        if (isPickingMode) OnPointerDownAction?.Invoke(CardUniqueNumber);
+        else if (!isSyncUI || IsMine) OnPointerDownAction?.Invoke(CardID);
     }
 }

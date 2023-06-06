@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 554489411728631624}
   - component: {fileID: 554489411728631626}
   - component: {fileID: 7337935653167080612}
-  - component: {fileID: 5922248236666232411}
   - component: {fileID: -4599075115250816995}
   - component: {fileID: 791486855014323562}
   m_Layer: 5
@@ -80,24 +79,11 @@ MonoBehaviour:
   - {fileID: 2378170085148437549, guid: fc23556bf3939a9408989738b1783600, type: 3}
   - {fileID: 2378170085148437549, guid: aed440a2a381ec041bc023fb328d73ce, type: 3}
   - {fileID: 2378170085148437549, guid: c5eb631e9563b224f9a7acf71cd4fae7, type: 3}
+  isPickingMode: 0
+  isSyncUI: 1
   cardUpgradCost: 40
   cardUniqueNumber: 2
   cardMaxLevel: 4
---- !u!114 &5922248236666232411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 554489411728631621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfabb0440166ab443bba8876756fdfa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 1
 --- !u!114 &-4599075115250816995
 MonoBehaviour:
   m_ObjectHideFlags: 0

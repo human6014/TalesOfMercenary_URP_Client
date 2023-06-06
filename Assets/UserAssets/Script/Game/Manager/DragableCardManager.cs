@@ -44,7 +44,7 @@ public class DragableCardManager : MonoBehaviour
     #endregion
 
     private GameManager gameManager;
-    private BuildingCardManager deckManager;
+    private BuildingCardManager mBuildingCardManager;
     private RectTransform backupCardTransform;
     private Card[] unitCards;
     private Card[] magicCards;
@@ -57,7 +57,7 @@ public class DragableCardManager : MonoBehaviour
     private void Awake()
     {
         gameManager = GetComponent<GameManager>();
-        deckManager = GetComponent<BuildingCardManager>();
+        mBuildingCardManager = GetComponent<BuildingCardManager>();
         unitCards = new Card[maxUnitCardNum];
         magicCards = new Card[maxMagicCardNum];
     }
@@ -65,7 +65,7 @@ public class DragableCardManager : MonoBehaviour
 
     private void Start()
     {
-        LoadHandCard();
+        mBuildingCardManager.CardBatchAction += LoadHandCard;
     }
 
     private void LoadHandCard()
@@ -108,7 +108,7 @@ public class DragableCardManager : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        backupCardTransform = Instantiate(deckManager.GetRandomUnitCard()).GetComponent<RectTransform>();
+        backupCardTransform = Instantiate(mBuildingCardManager.GetRandomUnitCard()).GetComponent<RectTransform>();
         backupCardTransform.SetParent(readyCardPool, true);
         backupCardTransform.localScale = Vector3.one * 0.7f;
         backupCardTransform.anchoredPosition = new Vector2(0, 0);
