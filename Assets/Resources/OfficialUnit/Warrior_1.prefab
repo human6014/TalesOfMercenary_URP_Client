@@ -4778,6 +4778,7 @@ MonoBehaviour:
   dis: 0
   attackRANGE: 0
   IsLIVE: 0
+  hp: 0
 --- !u!114 &487778920245365041
 MonoBehaviour:
   m_ObjectHideFlags: 0
