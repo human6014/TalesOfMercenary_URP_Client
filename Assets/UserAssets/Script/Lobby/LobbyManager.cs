@@ -10,7 +10,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private DataSender dataSender;
     [SerializeField] private RectTransform allCard;
 
-    private BanPickManager banPickManager;
+    //private BanPickManager banPickManager;
     public BuildingCard[] deckCards { get; private set; } = new BuildingCard[4];
     private UnitJsonData[] allUnitData;
     private UnitJsonData[] usingUnitData;
@@ -20,7 +20,7 @@ public class LobbyManager : MonoBehaviour
     //-> static이나 bool변수로 데이터 로드 1번만 되도록 제어 필요
     private void Awake()
     {
-        banPickManager = GetComponent<BanPickManager>();
+        //banPickManager = GetComponent<BanPickManager>();
         //deckCards = allCard.GetComponentsInChildren<DeckCard>();
         allUnitData = new UnitJsonData[deckCards.Length];
         InitDataSetting();
@@ -43,9 +43,9 @@ public class LobbyManager : MonoBehaviour
     /// </summary>
     public void MoveGameScene()
     {
-        int[] dataNum = banPickManager.GetUsingCardNum();
-        usingUnitData = new UnitJsonData[dataNum.Length];
-        for (int i = 0; i < dataNum.Length; i++) usingUnitData[i] = allUnitData[dataNum[i]];
+        //int[] dataNum = banPickManager.GetUsingCardNum();
+        //usingUnitData = new UnitJsonData[dataNum.Length];
+        //for (int i = 0; i < dataNum.Length; i++) usingUnitData[i] = allUnitData[dataNum[i]];
         
         dataSender.SetUsingCardData(usingUnitData);
         SceneManager.LoadScene("GameScene");

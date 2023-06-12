@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
-  m_Name: ArcherData
+  m_Name: WizardData_2
   m_EditorClassIdentifier: 
-  level: 1
-  unitName: Archer
-  maxHP: 100
+  level: 2
+  unitName: Wizard
+  maxHP: 80
   def: 0
   mp: 0
-  str: 0
+  str: 35
   speed: 0
   element: 0
-  criticalRate: 0
-  criticalDamage: 0
-  attackRange: 0.8
-  attackSpeed: 1.5
+  criticalRate: 10
+  criticalDamage: 2
+  attackRange: 5
+  attackSpeed: 2
   movementRange: 0.2
   unitType: 1
+  UUID: 77af8cf7-d9e5-477e-99b2-e6a8841a00c7
+  skillDamage: 0

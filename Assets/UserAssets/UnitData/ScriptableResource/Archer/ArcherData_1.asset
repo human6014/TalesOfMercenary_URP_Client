@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
-  m_Name: RedDragonData
+  m_Name: ArcherData_1
   m_EditorClassIdentifier: 
   level: 1
-  unitName: RedDragon
-  maxHP: 1000
-  def: 5
+  unitName: Archer
+  maxHP: 100
+  def: 1
   mp: 0
-  str: 25
-  speed: 0
+  str: 10
+  speed: 2
   element: 0
-  criticalRate: 50
-  criticalDamage: 2
-  attackRange: 2
+  criticalRate: 0
+  criticalDamage: 0
+  attackRange: 0.8
   attackSpeed: 1.5
   movementRange: 0.2
-  unitType: 2
-  UUID: b75b50b5-aa40-4b0d-9fe4-7de4b9ef99ac
+  unitType: 1
+  UUID: 
   skillDamage: 0

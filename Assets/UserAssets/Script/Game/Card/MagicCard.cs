@@ -33,7 +33,7 @@ public class MagicCard : Card, IDragHandler, IPointerUpHandler, IPointerDownHand
     public override void InitializeData()
     {
         IsBatchMode = true;
-        cardType = CardType.Magic;
+        CardType = CardType.Magic;
         base.InitializeData();
     }
 

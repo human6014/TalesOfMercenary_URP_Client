@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
-  m_Name: RedDragonData
+  m_Name: WizardData_1
   m_EditorClassIdentifier: 
   level: 1
-  unitName: RedDragon
-  maxHP: 1000
-  def: 5
+  unitName: Wizard
+  maxHP: 80
+  def: 0
   mp: 0
-  str: 25
+  str: 35
   speed: 0
   element: 0
-  criticalRate: 50
+  criticalRate: 10
   criticalDamage: 2
-  attackRange: 2
-  attackSpeed: 1.5
+  attackRange: 5
+  attackSpeed: 2
   movementRange: 0.2
-  unitType: 2
-  UUID: b75b50b5-aa40-4b0d-9fe4-7de4b9ef99ac
+  unitType: 1
+  UUID: 77af8cf7-d9e5-477e-99b2-e6a8841a00c7
   skillDamage: 0

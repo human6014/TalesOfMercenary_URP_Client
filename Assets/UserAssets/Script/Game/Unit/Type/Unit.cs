@@ -299,12 +299,16 @@ public class Unit : Damageable
     #region DIE
     public void Die(string unit)//자신의 클라에서 호출
     {
+
         Debug.Log("Die() " + this.mUnitScriptable.UUID);
         {
             IsLIVE = false;
             NetworkUnitManager.RemoveMyUnit(unit);
         }
         //DieAnimation();
+
+        mNavMeshAgent.enabled = false;
+
         mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, DieState, true);
         //NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
         IsAlive = false;
@@ -324,7 +328,11 @@ public class Unit : Damageable
 
         mIsBatch = false;
         IsAlive = false;
+
         //NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
+
+        mNavMeshAgent.enabled = false;
+        NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
         //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
     }
     #endregion

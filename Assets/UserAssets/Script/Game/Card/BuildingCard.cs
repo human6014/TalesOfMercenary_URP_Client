@@ -7,6 +7,9 @@ using Scriptable;
 public class BuildingCard : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] private Card[] cards;
+
+    [SerializeField] private bool isPickingMode;
+    [SerializeField] private bool isSyncUI = true;
     [SerializeField] private int cardUpgradCost;
     [SerializeField] private int cardUniqueNumber;
     [SerializeField] private int cardMaxLevel;
@@ -23,16 +26,17 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         private set => cardUpgradCost = value;
     }
 
-    public int CardId { get; set; } // ÀÎµ¦½º ¹øÈ£(¹è¿­)
+    public int CardID { get; set; } // ÀÎµ¦½º ¹øÈ£(¹è¿­)
     public int CardCurrentLevel { get => cardCurrentLevel; set => cardCurrentLevel = value; }
     public int CardMaxLevel { get => cardMaxLevel; }
     public int CardUniqueNumber { get => cardUniqueNumber; } // °íÀ¯¹øÈ£
     public string CardName { get; set; }
+    public bool IsMine { get; private set; }
 
     private void Awake()
     {
         CardName = gameObject.name;
-        mPhotonView = GetComponent<PhotonView>();
+        if(!isPickingMode) mPhotonView = GetComponent<PhotonView>();
     }
 
     /// <summary>
@@ -55,7 +59,8 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
     //ÀûÀýÇÑ À§Ä¡¿¡ ÇÔ¼ö È£­ƒ Ãß°¡¿äÇÔ
     public void Init()
     {
-        mPhotonView.RPC(nameof(InitRPC), RpcTarget.Others);
+        IsMine = true;
+        isPickingMode = false;
     }
 
     [PunRPC]
@@ -64,7 +69,6 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
         Debug.Log(CardName + "°Ç¹° »ç¿ë");
         NetworkUnitManager.enemyBuildingList.Add(this);
     }
-
 
     /// <summary>
     /// °¡Áö°í ÀÖ´Â Ä«µå¸¦ ·¹º§º° ÀÏÁ¤ È®·ü·Î ¹ÝÈ¯ÇÔ
@@ -80,7 +84,7 @@ public class BuildingCard : MonoBehaviour, IPointerDownHandler
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        if (!mPhotonView.IsMine) return;
-        OnPointerDownAction?.Invoke(CardId);
+        if (isPickingMode) OnPointerDownAction?.Invoke(CardUniqueNumber);
+        else if (!isSyncUI || IsMine) OnPointerDownAction?.Invoke(CardID);
     }
 }
