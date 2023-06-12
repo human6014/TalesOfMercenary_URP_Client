@@ -20,6 +20,8 @@ public class Unit : Damageable
     [SerializeField] private float dis;
     [SerializeField] private float attackRANGE;
     [SerializeField] private bool IsLIVE;
+    [SerializeField] private int hp;
+    [SerializeField] private string __uuid;
 
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
@@ -77,21 +79,30 @@ public class Unit : Damageable
         mIsBatch = true;
         mUnitUIController.Init(mUnitScriptable.maxHP, true);
 
+
         Findenemy();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
         mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
-
-        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        __uuid = mUnitScriptable.UUID;
+        //NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
         mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
         {
             attackRANGE = mUnitScriptable.attackRange;
+            hp = mUnitScriptable.maxHP;
+            NetworkUnitManager.AddmyUnit(mUnitScriptable.UUID, this);
+            IsLIVE = true;
         }
     }
 
     [PunRPC]
     public void SyncInitBatch(string uuid) //적이 소환한 유닛 초기화
     {
-        NetworkUnitManager.enemyUnitList.Add(uuid, this);
+        //NetworkUnitManager.enemyUnitList.Add(uuid, this);
+        {
+            NetworkUnitManager.AddEnemyUnit(uuid, this);
+            hp = mCurrentHp;
+            IsLIVE = true;
+        }
         mCurrentHp = mUnitScriptable.maxHP;
         mUnitUIController.Init(mUnitScriptable.maxHP, mPhotonView.IsMine);
         gameObject.layer = GameManager.mEnemyUnitLayer;
@@ -106,16 +117,8 @@ public class Unit : Damageable
 
     private void FixedUpdate()
     {
-        IsLIVE = IsAlive;
         if (!mIsBatch) return;
         if (!mPhotonView.IsMine) return;
-        if (IsAlive == false)
-        {
-            Die();
-            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
-            return;
-        }
-
         mAttackDelay += Time.deltaTime;
 
         if (mTarget != null) // 타깃이 있을 때
@@ -246,29 +249,37 @@ public class Unit : Damageable
     }
 
     #region Damage
-    public override void GetDamage(int damage, string attackUnitUUID)
+    public override void GetDamage(int damage, string attackUnitUUID , string attackedUnitUUID) //적의 클라에서 호출
     {
+        Debug.Log(mPhotonView.IsMine + "     getDamage() " + attackedUnitUUID);
         //Debug.Log("<데미지 입음> 현재체력 : " + mCurrentHp + " 데미지 : " + damage);
         if (mCurrentHp <= damage) mCurrentHp = 0;
         else mCurrentHp -= damage;
-
+        {
+            hp = mCurrentHp;
+        }
         mUnitUIController.GetDamage(mCurrentHp);
-        mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID);
+        mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.Others, damage, attackUnitUUID, attackedUnitUUID);
     }
 
     [PunRPC]
-    public void GetDamageRPC(int damage, string attackUnit)
+    public void GetDamageRPC(int damage, string attackUnit, string attackedUnitUUID) // 자신의 클라에서 호출
     {
-
+        Debug.Log(mPhotonView.IsMine +"    getDamageRPC() :" + attackedUnitUUID);
         if (damage <= 0) return;
 
         if (mCurrentHp <= damage || mCurrentHp == 0)
         {
-            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
-            Die();
+            //Die(attackedUnitUUID);
+            //mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, attackedUnitUUID);
+            Die(mUnitScriptable.UUID);
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, mUnitScriptable.UUID);
             return;
         }
         else mCurrentHp -= damage;
+        {
+            hp = mCurrentHp;
+        }
         mUnitUIController.GetDamage(mCurrentHp);
 
         //Debug.Log("받은 피해 : " + damage + ",  현재 체력 : " + mCurrentHp);
@@ -279,31 +290,42 @@ public class Unit : Damageable
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
                 transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
+                targetUUID = mTarget.getUUID();
             }
         }
     }
     #endregion
 
     #region DIE
-    public void Die()
+    public void Die(string unit)//자신의 클라에서 호출
     {
+        Debug.Log("Die() " + this.mUnitScriptable.UUID);
+        {
+            IsLIVE = false;
+            NetworkUnitManager.RemoveMyUnit(unit);
+        }
         //DieAnimation();
         mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, DieState, true);
-        NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
+        //NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
         IsAlive = false;
         mIsBatch = false;
         Destroy(gameObject, 3f);
     }
 
     [PunRPC]
-    public void DieRPC()
+    public void DieRPC(string unit)//적의 클라에서 호출
     {
-        //int i = NetworkUnitManager.enemyUnitList.Count;
+        Debug.Log("DieRPC() " + this.mUnitScriptable.UUID);
+        Destroy(gameObject, 3f);
+        {
+            IsLIVE = false;
+            NetworkUnitManager.RemoveEnemyUnit(unit);
+        }
+
         mIsBatch = false;
         IsAlive = false;
-        NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
+        //NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
         //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
-        Destroy(gameObject, 3f);
     }
     #endregion
 }
