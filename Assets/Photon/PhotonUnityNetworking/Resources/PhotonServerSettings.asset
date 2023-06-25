@@ -64,6 +64,7 @@ MonoBehaviour:
   - LoadBuildingCard
   - LoadEnemyBuildingCard
   - Init
+  - PickingBuildingCardRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0
