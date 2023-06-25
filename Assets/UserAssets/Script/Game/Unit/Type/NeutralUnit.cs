@@ -117,7 +117,7 @@ public class NeutralUnit : Damageable
     }
 
     #region DIE
-    private void Die()
+    private void Die(string unit)
     {
         mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, DieState);
         IsAlive = false;
@@ -128,7 +128,7 @@ public class NeutralUnit : Damageable
     }
 
     [PunRPC]
-    public void DieRPC()
+    public void DieRPC(string unit)
     {
         Debug.Log("µå·¡°ï »ç¸Á");
         mIsBatch = false;
@@ -140,15 +140,15 @@ public class NeutralUnit : Damageable
 
     #region DAMAGE
     [PunRPC]
-    public void GetDamageRPC(int damage, string attackUnit)
+    public void GetDamageRPC(int damage, string attackUnit,  string attackedUnitUUID)
     {
         Debug.Log("µå·¡°ï °ø°Ý´çÇÔ °ø°Ý À¯´Ö id: " + attackUnit);
         if (damage <= 0) return;
 
         if (mCurrentHp <= damage)
         {
-            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others);
-            Die();
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, attackedUnitUUID);
+            Die(attackedUnitUUID);
             return;
         }
         else mCurrentHp -= damage;
@@ -164,7 +164,7 @@ public class NeutralUnit : Damageable
         }
     }
 
-    public override void GetDamage(int damage, string attackUnitUUID)
+    public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID)
     {
         if (mCurrentHp <= damage) mCurrentHp = 0;
         else mCurrentHp -= damage;

@@ -11,7 +11,7 @@ public abstract class Damageable : MonoBehaviour
 
     public bool IsAlive { get; protected set; }
 
-    public abstract void GetDamage(int damage, string attackUnitUUID);
+    public abstract void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID);
 
     public abstract string getUUID();
 }

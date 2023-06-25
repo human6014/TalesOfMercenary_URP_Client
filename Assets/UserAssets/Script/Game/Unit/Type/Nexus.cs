@@ -48,7 +48,7 @@ public class Nexus : Damageable
         isGameEnd = true;
     }
 
-    public override void GetDamage(int damage, string attackUnitUUID)
+    public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID)
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
     }
@@ -59,7 +59,7 @@ public class Nexus : Damageable
         //if (isGameEnd) return;
         if (damage <= 0)
         {
-            Debug.Log("넥서스 데미지 안입음 ");
+           //Debug.Log("넥서스 데미지 안입음 ");
         }
 
         if (mCurrentHp <= damage)
@@ -69,7 +69,7 @@ public class Nexus : Damageable
         }
         else mCurrentHp -= damage;
 
-        Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
+        //Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
         mUnitUIController.GetDamage(mCurrentHp);
     }
 

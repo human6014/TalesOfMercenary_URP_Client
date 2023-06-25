@@ -19,6 +19,7 @@ public class MeleeAttack : Attackable
 
     public override AttackType Attack(Damageable attackUnit, Damageable attackedUnit)
     {
+        Debug.Log(attackUnit.getUUID() + " : 공격 ,      " + attackedUnit.getUUID() + "   :피격");
         AttackType attackType = AttackType.Normal;
         if (attackedUnit.mUnitScriptable.level == 3)
         {
@@ -58,11 +59,11 @@ public class MeleeAttack : Attackable
     }
 
     public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID, attackedUnit.mUnitScriptable.UUID);
 
     public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID, attackedUnit.mUnitScriptable.UUID);
 
     public override void SpecialMove(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID, attackedUnit.mUnitScriptable.UUID);
 }
