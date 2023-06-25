@@ -40,7 +40,7 @@ public class BuildingCardManager : MonoBehaviour
     [SerializeField] private CardProbability[] mCardProbability;
     #endregion
 
-    public int MaxBuildingCardNum { get; } = 2;
+    public int MaxBuildingCardNum { get; } = 4;
     private const float mTotal = 100;
     private int[] mSelectingCard;
 
