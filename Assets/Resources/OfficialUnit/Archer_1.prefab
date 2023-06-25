@@ -20405,6 +20405,8 @@ MonoBehaviour:
   dis: 0
   attackRANGE: 0
   IsLIVE: 0
+  hp: 0
+  __uuid: 
 --- !u!114 &1107380634960877903
 MonoBehaviour:
   m_ObjectHideFlags: 0
