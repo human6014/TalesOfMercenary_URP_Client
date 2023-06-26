@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Scriptable;
-using System.ComponentModel;
 
 //todo
 
@@ -32,8 +31,8 @@ public class PickManager : MonoBehaviour
     {
         mPhotonView = GetComponent<PhotonView>();
         mBuildingCards = new BuildingCard[mAllBuildingCard.childCount];
-        mSelectingCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum / 2];
-        mSelectingEnemyCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum / 2];
+        mSelectingCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum];
+        mSelectingEnemyCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum];
         int i = 0;
         foreach (Transform child in mAllBuildingCard)
         {
@@ -56,23 +55,23 @@ public class PickManager : MonoBehaviour
         BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
         buildingCard.transform.SetParent(mMyPickingBuilding);
         Debug.Log("아군 카드 뽑기" + cardUniqueNumber + "    :    " + mSelectingCount);
-        mPhotonView.RPC(nameof(PickingBuildingCardRPC), RpcTarget.Others, cardUniqueNumber);
+        //mPhotonView.RPC(nameof(PickingBuildingCardRPC), RpcTarget.Others, cardUniqueNumber);
 
         if (mSelectingCount == mBuildingCardManager.MaxBuildingCardNum) PickingComplete();
     }
 
     
-    [PunRPC]
-    public void PickingBuildingCardRPC(int cardUniqueNumber) //적이 픽 한 카드 데이트 받기
-    {
-        mSelectingEnemyCardIndex[mEnemySelectingCount++] = cardUniqueNumber;
+    //[PunRPC]
+    //public void PickingBuildingCardRPC(int cardUniqueNumber) //적이 픽 한 카드 데이트 받기
+    //{
+    //    mSelectingEnemyCardIndex[mEnemySelectingCount++] = cardUniqueNumber;
 
-        //상대방 빌딩카드 인스턴시에이트 해주세요//
-        BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
-        buildingCard.transform.SetParent(mMyPickingBuilding);
-        Debug.Log("적 카드 뽑기" + cardUniqueNumber + "    :    " + mSelectingCount);
-        if (mEnemySelectingCount == (mBuildingCardManager.MaxBuildingCardNum / 2)) EnemyPickingComplete();
-    }
+    //    //상대방 빌딩카드 인스턴시에이트 해주세요//
+    //    BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
+    //    buildingCard.transform.SetParent(mEnemyPickingBuilding);
+    //    Debug.Log("적 카드 뽑기" + cardUniqueNumber + "    :    " + mSelectingCount);
+    //    if (mEnemySelectingCount == (mBuildingCardManager.MaxBuildingCardNum / 2)) EnemyPickingComplete();
+    //}
    
     /// <summary>
     /// 모든 카드 선택 완료시 발동
@@ -81,21 +80,21 @@ public class PickManager : MonoBehaviour
     {
         mPickingComp = true;
         mBuildingCardManager.RegisterSelectingCard(mSelectingCardIndex);
-        if(mPickingComp == true && mEnemyPickingComp == true)
+        if(mPickingComp == true)
         {
             EndPickEvent();
         }
     }
 
-    private void EnemyPickingComplete()
-    {
-        mEnemyPickingComp = true;
-        mBuildingCardManager.RegisterSelectingCard(mSelectingCardIndex);
-        if (mPickingComp == true && mEnemyPickingComp == true)
-        {
-            EndPickEvent();
-        }
-    }
+    //private void EnemyPickingComplete()
+    //{
+    //    mEnemyPickingComp = true;
+    //    //mBuildingCardManager.RegisterSelectingCard(mSelectingCardIndex);
+    //    if (mPickingComp == true && mEnemyPickingComp == true)
+    //    {
+    //        EndPickEvent();
+    //    }
+    //}
 
 
     //수정 필요
@@ -104,7 +103,7 @@ public class PickManager : MonoBehaviour
         for(int i = 0; i < mBuildingCards.Length; i++)
         {
             mBuildingCards[i].OnPointerDownAction -= PickingBuildingCard;
-            mEnemyBuildingCards[i].OnPointerDownAction -= PickingBuildingCard;
+            //mEnemyBuildingCards[i].OnPointerDownAction -= PickingBuildingCard;
         }
 
 

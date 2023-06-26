@@ -8,11 +8,12 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: PolyartMaskTint
-  m_Shader: {fileID: -6465566751694194690, guid: 122ce928207ad5f41a908f23d3a05130, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 122ce928207ad5f41a908f23d3a05130,
+    type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -107,7 +108,8 @@ Material:
     - Color_B672769A: {r: 0.2008695, g: 0.6603774, b: 0.028034877, a: 0}
     - Color_C5D962E7: {r: 0.36260474, g: 0.5849056, b: 0, a: 0}
     - Color_E64BA0E: {r: 0.24498639, g: 0.6509434, b: 0, a: 0}
-    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 23.968628, g: 23.968628, b: 23.968628, a: 0}
+    - Color_df356a6b29d64aee805a61f7bcdc2368: {r: 23.968628, g: 23.968628, b: 23.968628,
+        a: 0}
     - _Color01: {r: 0.06278926, g: 0.16952698, b: 0.7830189, a: 0}
     - _Color02: {r: 0.10457456, g: 0.20204146, b: 0.8867924, a: 0}
     - _Color03: {r: 0.16967781, g: 0.32275674, b: 0.8773585, a: 0}
