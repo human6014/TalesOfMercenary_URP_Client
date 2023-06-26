@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BuildingCard" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="1.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIEQgAAAAGAFAAAAkAAAAEwAAAGgAAQBQCAAgAKEQ=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Card\BuildingCard.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cards" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Card" Collapsed="true">
+    <Position X="4.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQAAAAAAAggAAAEAAAABCABCAIgAAICAAAgIAAgAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Card\Card.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MagicCard" Collapsed="true">
+    <Position X="3.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAgAIAAAAAAAAEAAAAAIAAAQCAAAAAAAQAgAAAAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Card\MagicCard.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnitCard" Collapsed="true">
+    <Position X="5.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAIAAAAAAAAAAAAQAgAAAAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Card\UnitCard.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MouseController" Collapsed="true">
+    <Position X="12.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAIAAAAAAAAAAAAAgAAAgAAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Controller\MouseController.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="clickedUnit" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="FireBall" Collapsed="true">
+    <Position X="1.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAiAAgAAAAAAACABEAAAAAQAAQQACAAAACEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Magic\FireBall.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Magic" Collapsed="true">
+    <Position X="1.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Magic\Magic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MagicEventDisplayer" Collapsed="true">
+    <Position X="7.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BIAAAAAAAAAAAAgAgAAAAAQAAAAAAAAAgAACAAAAAQA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Magic\MagicEventDisplayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardProbability" Collapsed="true">
+    <Position X="4.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAiAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\BuildingCardManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BuildingCardManager" Collapsed="true">
+    <Position X="4.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEgAQAAAAFAAAFAAAAAAhAACgACAACAAAEYBAABQAEI=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\BuildingCardManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="magicCard" />
+      <Field Name="mCardProbability" />
+      <Field Name="gameManager" />
+      <Field Name="nexusCard" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DragableCardManager" Collapsed="true">
+    <Position X="5.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EEAEAABAACEFBAAEAoAgwQAIBQIAAkAEQAAAAEQIAFY=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\DragableCardManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mBuildingCardManager" />
+      <Field Name="unitCards" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameEventManager" Collapsed="true">
+    <Position X="7.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQwAAwgAWAAAAEAAAAAAJAAAABAJAAABAAAAAAAEEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\GameEventManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mMagicEventDisplayer" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="7.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAQgBGAAIqIAgBAAAIAAQAAYAAAAyAgIRAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\GameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="damageable" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameTime" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAACAAAAAAAAAAAAAAgACAAAQAAAAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\GameTime.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PickManager" Collapsed="true">
+    <Position X="1.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAUAgQAAAAAAAEAAAAAAASAAAEEAAAEAAIEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\PickManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mBuildingCardManager" />
+      <Field Name="mBuildingCards" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UIManager" Collapsed="true">
+    <Position X="12.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAgAAEAAAAAAAAAAAAIAAAAAAAAAAAAAAAEE=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Manager\UIManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="gameManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Attackable" Collapsed="true">
+    <Position X="12.75" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAQAgAAAAAACAAAAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Preference\Attackable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Damageable" Collapsed="true">
+    <Position X="9.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAgAAAAAAAQAAAAAAAAAAAAAEAAAAAAAABA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Preference\Damageable.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mUnitScriptable" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="MeleeAttack" Collapsed="true">
+    <Position X="13.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAQAgIAAAAACAAAAQ=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Preference\MeleeAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RangeAttack" Collapsed="true">
+    <Position X="11.75" Y="13" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAQAgIAAAAACAAAAQ=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Preference\RangeAttack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NeutralUnit" Collapsed="true">
+    <Position X="9.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAQASAACkCxBCgBAIAAAABTAAAIAEAGAAiBBCAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Type\NeutralUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Nexus" Collapsed="true">
+    <Position X="11" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAoCABABEAACAAAAKAAAAAAAGAECAFAAAMA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Type\Nexus.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Unit" Collapsed="true">
+    <Position X="12.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAQACikEhBCgJAogAAABTBAAIAVAGAAgAHAEIEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\Type\Unit.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mUnitUIController" />
+      <Field Name="mUnitAnimationController" />
+      <Field Name="mTarget" />
+      <Field Name="mAttack" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="UnitAnimationController" Collapsed="true">
+    <Position X="14.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAgAAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\UnitAnimationController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnitUIController" Collapsed="true">
+    <Position X="14.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACgEAAAAAAAEABAgAAAAAAAAAAACAAAAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Game\Unit\UnitUIController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI.FPSDisplayer" Collapsed="true">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAAAAAgAAAAAAAAAAAQAAAAAAAAIAAAAAQAAAEA=</HashCode>
+      <FileName>Assets\UserAssets\Script\FPSDisplayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scriptable.UnitScriptable" Collapsed="true">
+    <Position X="7.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAQAAAAAAAAAAFAAAgAAIAREAASAAAASCAAAAhAA=</HashCode>
+      <FileName>Assets\UserAssets\Script\Scriptable\UnitScriptable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
