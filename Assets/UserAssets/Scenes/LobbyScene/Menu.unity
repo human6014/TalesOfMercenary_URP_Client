@@ -575,42 +575,6 @@ MonoBehaviour:
   - {fileID: 131488353}
   - {fileID: 293166462}
   - {fileID: 1576288772}
---- !u!21 &127407793
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/RoundedCorners/RoundedCorners
-  m_Shader: {fileID: 4800000, guid: 0bd2ec5d73751e34a814274a454bec41, type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _WidthHeightRadius: {r: 600, g: 70, b: 15, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &131488351
 GameObject:
   m_ObjectHideFlags: 0
@@ -3636,7 +3600,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -480}
+  m_AnchoredPosition: {x: 984.53284, y: -466.54413}
   m_SizeDelta: {x: 600, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &761277399
@@ -4398,7 +4362,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -600}
+  m_AnchoredPosition: {x: 984.53284, y: -586.5441}
   m_SizeDelta: {x: 600, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &893866915
@@ -5968,6 +5932,7 @@ GameObject:
   - component: {fileID: 1583046249}
   - component: {fileID: 1583046248}
   - component: {fileID: 1583046250}
+  - component: {fileID: 1583046251}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -5987,7 +5952,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d639871248d6c1c44814ef36f0dd7b90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PhotonView: {fileID: 0}
 --- !u!4 &1583046249
 Transform:
   m_ObjectHideFlags: 0
@@ -6025,6 +5989,18 @@ MonoBehaviour:
   sceneViewId: 999
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1583046251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583046247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8750142e5e8ebad43b6ae1b07314fb91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1608165731
 GameObject:
   m_ObjectHideFlags: 0
