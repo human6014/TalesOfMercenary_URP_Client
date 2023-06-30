@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public abstract class Damageable : MonoBehaviour
 {
 
-    [SerializeField] public Scriptable.UnitScriptable mUnitScriptable;
+    public Scriptable.UnitScriptable mUnitScriptable;
     public int mCurrentHp { get; protected set; } //현재 체력
 
     public bool IsAlive { get; protected set; }

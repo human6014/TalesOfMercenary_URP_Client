@@ -8,7 +8,7 @@ using System.IO;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     public static RoomManager Instance;
-    public PhotonView m_PhotonView;
+    private PhotonView m_PhotonView;
     private void Awake()
     {
         if (Instance)

@@ -43,6 +43,7 @@ public class BuildingCardManager : MonoBehaviour
     public int MaxBuildingCardNum { get; } = 2;
     private const float mTotal = 100;
     private int[] mSelectingCard;
+    private int[] mEnemySelectingCard;
 
     private PhotonView mPhotonView;
     private GameManager gameManager;
@@ -83,17 +84,24 @@ public class BuildingCardManager : MonoBehaviour
         //À¯´Ö »ý»ê Ä«µå + ³Ø¼­½º Ä«µå
     }
 
-    public void RegisterSelectingCard(int [] index)
+    public void RegisterSelectingCard(int[] index)
     {
         mSelectingCard = new int[index.Length];
 
-        for (int i = 0;i < mSelectingCard.Length;i++)
-            mSelectingCard[i] = index[i];
+        for (int i = 0; i < mSelectingCard.Length; i++) mSelectingCard[i] = index[i];
 
         LoadNexusCard();
-        for (int i = 0; i < MaxBuildingCardNum; i++) LoadBuildingCard(i);//mPhotonView.RPC(nameof(LoadBuildingCard),RpcTarget.All, i);
+        for (int i = 0; i < MaxBuildingCardNum; i++) LoadBuildingCard(i);
 
         CardBatchAction?.Invoke();
+    }
+
+    public void RegisterEnemySelectingCard(int[] index)
+    {
+        mEnemySelectingCard = new int[index.Length];
+
+        for (int i = 0; i < mEnemySelectingCard.Length; i++) mEnemySelectingCard[i] = index[i];
+        for (int i = 0; i < MaxBuildingCardNum; i++) LoadEnemyBuildingCard(i);
     }
 
     #region µ¦ °ü·Ã
@@ -104,8 +112,8 @@ public class BuildingCardManager : MonoBehaviour
 
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
 
-        deckCardTransform.SetParent(nexusCardPool,true);
-        deckCardTransform.anchoredPosition = new Vector2(0,0);
+        deckCardTransform.SetParent(nexusCardPool, true);
+        deckCardTransform.anchoredPosition = new Vector2(0, 0);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
 
         buildingCard.CardID = 0;
@@ -125,7 +133,6 @@ public class BuildingCardManager : MonoBehaviour
         BuildingCard usingBuildingCard = deckCardPrefab[mSelectingCard[cardId]];
 
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
-        mPhotonView.RPC(nameof(LoadEnemyBuildingCard), RpcTarget.Others, cardId);
 
         deckCardTransform.SetParent(mMyBuildingCardPool, true);
         deckCardTransform.TryGetComponent(out BuildingCard buildingCard);
@@ -137,10 +144,9 @@ public class BuildingCardManager : MonoBehaviour
         mBuildingCards[cardId] = buildingCard;
     }
 
-    [PunRPC]
     private void LoadEnemyBuildingCard(int cardId)
     {
-        BuildingCard usingBuildingCard = deckCardPrefab[cardId];
+        BuildingCard usingBuildingCard = deckCardPrefab[mEnemySelectingCard[cardId]];
         RectTransform deckCardTransform = Instantiate(usingBuildingCard).GetComponent<RectTransform>();
 
         deckCardTransform.SetParent(mEnemyBuildingCardPool, true);

@@ -70,6 +70,7 @@ public class Unit : Damageable
     {
         mNavMeshAgent = GetComponent<NavMeshAgent>();
         mPriority = mNavMeshAgent.avoidancePriority;
+        //mNavMeshAgent.speed = mUnitScriptable.speed;
         mCurrentHp = mUnitScriptable.maxHP;
 
         IsAlive = true;
