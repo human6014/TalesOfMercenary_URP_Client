@@ -185,7 +185,7 @@ public class NeutralUnit : Damageable
             mNavMeshAgent.SetDestination(transform.position);
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                AttackType attackType = mAttack.Attack(this, mTarget);
+                AttackType attackType = mAttack.Attack(getUUID(), mTarget.getUUID());
                 mAttackDelay = 0;
                 mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
             }
