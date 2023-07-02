@@ -73,7 +73,7 @@ public class NetworkUnitManager : MonoBehaviour
     {
         bool success;
         success = enemyUnitList.Remove(uuid);
-        Debug.Log(uuid + " : Àû À¯´Ö »èÁ¦ -> " + success + "³²Àº À¯´Ö °¹¼ö" + myUnitList.Count);
+        Debug.Log(uuid + " : Àû À¯´Ö »èÁ¦ -> " + success + "³²Àº À¯´Ö °¹¼ö" + enemyUnitList.Count);
         foreach (KeyValuePair<string, Damageable> kv in enemyUnitList)
         {
             Debug.Log(kv.Key + "³²Àº Àû±º");

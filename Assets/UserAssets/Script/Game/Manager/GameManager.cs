@@ -80,6 +80,10 @@ public class GameManager : MonoBehaviour
     private void InitNexus()
     {
         mMyNexus = PhotonNetwork.IsMasterClient ? damageable[0] : damageable[1];
+        for(int i = 0; i < 2; i++)
+        {
+            damageable[i].SetUUID(i.ToShortString());
+        }
     }
 
     private void InitCamera()

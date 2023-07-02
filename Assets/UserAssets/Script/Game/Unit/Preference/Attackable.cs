@@ -10,11 +10,11 @@ public enum AttackType
 }
 public abstract class Attackable : MonoBehaviour
 {
-    public abstract AttackType Attack(Damageable attackUnit, Damageable attackedUnit);
+    public abstract AttackType Attack(string attackUnit, string attackedUnit);
 
-    public abstract void NormalAttack(Damageable attackUnit, Damageable attackedUnit);
+    public abstract void NormalAttack(string attackUnit, string attackedUnit);
 
-    public abstract void CriticalAttack(Damageable attackUnit, Damageable attackedUnit);
+    public abstract void CriticalAttack(string attackUnit, string attackedUnit);
 
-    public abstract void SpecialMove(Damageable attackUnit, Damageable attackedUnit);
+    public abstract void SpecialMove(string attackUnit, string attackedUnit);
 }

@@ -43,6 +43,12 @@ public class Nexus : Damageable
         mUnitUIController.Init(mCurrentHp, IsMine);
     }
 
+    public void SetUUID(string uuid)
+    {
+        mUnitScriptable.UUID = uuid;
+        UUID = uuid;
+    }
+
     private void GameEnd()
     {
         isGameEnd = true;
