@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
 using static UnityEngine.GraphicsBuffer;
+using UnityEditor;
 
 /// <summary>
 /// target이 바뀔때마다 settarget()함수를 호출해서 모든 유저에게 타깃 변수를 동기화해줘야 한다.
@@ -108,6 +109,7 @@ public class Unit : Damageable
         mUnitUIController.Init(mUnitScriptable.maxHP, mPhotonView.IsMine);
         gameObject.layer = GameManager.mEnemyUnitLayer;
         mUnitScriptable.UUID = uuid;
+        _uuid = uuid;
         IsAlive = true;
     }
 
@@ -122,8 +124,11 @@ public class Unit : Damageable
         if (!mPhotonView.IsMine) return;
         mAttackDelay += Time.deltaTime;
 
+        Debug.Log("타깃 uiuid : " + mTarget.getUUID());
+
         if (mTarget != null) // 타깃이 있을 때
         {
+
             if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID) || !mTarget.IsAlive) // 타깃 사망 확인 
             {
                 Debug.Log("타깃 사망및 타깃 재 탐색   :   "+ mTarget != null);
@@ -143,12 +148,14 @@ public class Unit : Damageable
         transform.LookAt(mTarget.transform.position);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
+            //Debug.Log("여기1?, 거리 : " + dis + ",  타깃 uiuid : " + mTarget.getUUID());
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
 
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                AttackType attackType = mAttack.Attack(this.getUUID(), mTarget.getUUID());
+                Debug.Log("여기2?");
+                AttackType attackType = mAttack.Attack(getUUID(), mTarget.mUnitScriptable.UUID);
                 mAttackDelay = 0;
                 mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
             }
@@ -156,6 +163,7 @@ public class Unit : Damageable
         }
         else//타깃이 공격 범위보다 멀때
         {
+            Debug.Log("아님, 여기?");
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -216,7 +224,6 @@ public class Unit : Damageable
         Debug.Log("적 탐색...");
         //Debug.Log("적 유닛 갯수 : " + NetworkUnitManager.enemyUnitList.Count);
         float minDis = float.MaxValue;
-        Damageable target = null;
         float tem;
         string temUUID = null;
         mRemoveList.Clear();
@@ -229,7 +236,6 @@ public class Unit : Damageable
                 if (minDis > tem)
                 {
                     minDis = tem;
-                    target = key.Value;
                     temUUID = key.Key;
                 }
             }
@@ -243,10 +249,15 @@ public class Unit : Damageable
         {
             NetworkUnitManager.enemyUnitList.Remove(mRemoveList[i]);
         }
-        mTarget = target;
+        SetTarget(temUUID);
         mTargetUUID = temUUID;
         targetUUID = mTargetUUID;
-        Debug.Log("새로운 타깃 발견, 타입 : " + mTarget.mUnitScriptable.unitType);
+        Debug.Log("새로운 타깃 발견 : " + mTarget.mUnitScriptable.UUID + ",     타입 : " + mTarget.mUnitScriptable.unitType);
+    }
+
+    void SetTarget(string uuid)
+    {
+        mTarget = NetworkUnitManager.enemyUnitList[uuid];
     }
 
     #region Damage
@@ -320,9 +331,7 @@ public class Unit : Damageable
     [PunRPC]
     public void DieRPC(string unit)//적의 클라에서 호출
     {
-        Debug.Log("DieRPC() " + this.mUnitScriptable.UUID);
-        
-        
+        Debug.Log("DieRPC() " + this.mUnitScriptable.UUID);       
         {
             IsLIVE = false;
             NetworkUnitManager.RemoveEnemyUnit(unit);
@@ -331,8 +340,6 @@ public class Unit : Damageable
             mIsBatch = false;
 
         }
-        //NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
-
         Destroy(gameObject, 3f);
         // NetworkUnitManager.enemyUnitList.Remove(unit);
         //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
