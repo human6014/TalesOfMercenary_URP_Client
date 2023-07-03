@@ -49,6 +49,10 @@ public class NetworkUnitManager : MonoBehaviour
     public static void AddmyUnit(string uuid, Damageable unit)
     {
         myUnitList.Add(uuid, unit);
+        foreach (KeyValuePair<string, Damageable> kv in myUnitList)
+        {
+            Debug.Log(kv.Key + "현재 아군");
+        }
         Debug.Log(uuid + " : 아군 유닛 추가");
     }
 
@@ -67,6 +71,10 @@ public class NetworkUnitManager : MonoBehaviour
     {
         enemyUnitList.Add(uuid, unit);
         Debug.Log(uuid + " : 적 유닛 추가");
+        foreach (KeyValuePair<string, Damageable> kv in enemyUnitList)
+        {
+            Debug.Log(kv.Key + "현재 적군");
+        }
     }
 
     public static void RemoveEnemyUnit(string uuid)
