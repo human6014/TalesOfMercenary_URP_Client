@@ -2,22 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Scriptable;
+
+//todo
+
+//
+
 public class PickManager : MonoBehaviour
 {
     [SerializeField] private RectTransform mMyPickingBuilding;
     [SerializeField] private RectTransform mEnemyPickingBuilding;
     [SerializeField] private RectTransform mAllBuildingCard;
-    [SerializeField] private BuildingCardManager mBuildingCardManager;
+    [SerializeField] private BuildingCardManager mBuildingCardManager; //카드 갯수 우선 4로 바꿔놓음
 
+    private PhotonView mPhotonView;
     private BuildingCard [] mBuildingCards;
-    private int[] mSelectingCardIndex;
-    private int mSelectingCount;
-    private bool mPickingComp;
+
+    private int[] mMySelectingCardIndex;
+    private int[] mEnemySelectingCardIndex;
+
+    private int mEnemySelectingCount;
+    private int mMySelectingCount;
+
+    private bool mMyPickingComp = false;
+    private bool mEnemyPickingComp = false;
+
+
     private void Awake()
     {
+        mPhotonView = GetComponent<PhotonView>();
         mBuildingCards = new BuildingCard[mAllBuildingCard.childCount];
-        mSelectingCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum];
-
+        mMySelectingCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum];
+        mEnemySelectingCardIndex = new int[mBuildingCardManager.MaxBuildingCardNum];
         int i = 0;
         foreach (Transform child in mAllBuildingCard)
         {
@@ -33,14 +50,29 @@ public class PickManager : MonoBehaviour
     /// <param name="cardUniqueNumber">어떤 건물 카드인지 구분하는 인덱스</param>
     private void PickingBuildingCard(int cardUniqueNumber)
     {
-        if (mPickingComp) return;
+        if (mMyPickingComp) return;
 
-        mSelectingCardIndex[mSelectingCount++] = cardUniqueNumber;
+        mMySelectingCardIndex[mMySelectingCount++] = cardUniqueNumber;
 
         BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
         buildingCard.transform.SetParent(mMyPickingBuilding);
+        Debug.Log("아군 카드 뽑기" + cardUniqueNumber + "    :    " + mMySelectingCount);
+        mPhotonView.RPC(nameof(PickingEnemyBuildingCard), RpcTarget.OthersBuffered, cardUniqueNumber);
 
-        if (mSelectingCount == mBuildingCardManager.MaxBuildingCardNum) PickingComplete();
+        if (mMySelectingCount == mBuildingCardManager.MaxBuildingCardNum) mMyPickingComp = true;
+        if (mMyPickingComp && mEnemyPickingComp) PickingComplete();
+    }
+
+    [PunRPC]
+    private void PickingEnemyBuildingCard(int cardUniqueNumber)
+    {
+        mEnemySelectingCardIndex[mEnemySelectingCount++] = cardUniqueNumber;
+        BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
+        buildingCard.transform.SetParent(mEnemyPickingBuilding);
+        Debug.Log("적군 카드 뽑기" + cardUniqueNumber + "    :    " + mEnemySelectingCount);
+
+        if (mEnemySelectingCount == mBuildingCardManager.MaxBuildingCardNum) mEnemyPickingComp = true;
+        if (mMyPickingComp && mEnemyPickingComp) PickingComplete();
     }
 
     /// <summary>
@@ -48,17 +80,11 @@ public class PickManager : MonoBehaviour
     /// </summary>
     private void PickingComplete()
     {
-        mPickingComp = true;
-        mBuildingCardManager.RegisterSelectingCard(mSelectingCardIndex);
-        EndPickEvent();
-    }
+        mBuildingCardManager.RegisterSelectingCard(mMySelectingCardIndex);
+        mBuildingCardManager.RegisterEnemySelectingCard(mEnemySelectingCardIndex);
+
+        for (int i = 0; i < mBuildingCards.Length; i++) mBuildingCards[i].OnPointerDownAction -= PickingBuildingCard;
         
-
-    public void EndPickEvent()
-    {
-        for(int i = 0; i < mBuildingCards.Length; i++)
-            mBuildingCards[i].OnPointerDownAction -= PickingBuildingCard;
-
         gameObject.SetActive(false);
     }
        

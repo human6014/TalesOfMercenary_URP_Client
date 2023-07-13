@@ -17,17 +17,18 @@ public class RangeAttack : Attackable
 
     private float SkillProbability = 20;
 
-    public override AttackType Attack(Damageable attackUnit, Damageable attackedUnit)
+    public override AttackType Attack(string attackUnit, string attackedUnit)
     {
+        Debug.Log(attackUnit + ": 공격 ,      " + attackedUnit + ": 피격");
         AttackType attackType = AttackType.Normal;
-        if (attackedUnit.mUnitScriptable.level == 3)
+        if (NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.level == 3)
         {
             if (SkillProbability > UnityEngine.Random.Range(0, 100))
             {
                 //Debug.Log("스킬 발동");
                 attackType = AttackType.Skill;
                 //attackedUnit.SkillAttackAnimation();
-                attackUnit.transform.LookAt(attackedUnit.transform.position);
+                NetworkUnitManager.myUnitList[attackUnit].transform.LookAt(NetworkUnitManager.enemyUnitList[attackedUnit].transform.position);
                 SpecialMove(attackUnit, attackedUnit);
             }
             else Attack(attackUnit, attackedUnit, ref attackType);
@@ -37,14 +38,14 @@ public class RangeAttack : Attackable
         return attackType;
     }
 
-    private void Attack(Damageable attackUnit, Damageable attackedUnit, ref AttackType attackType)
+    private void Attack(string attackUnit, string attackedUnit, ref AttackType attackType)
     {
-        if (attackUnit.mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
+        if (NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
         {
             //Debug.Log("크리티컬공격");
             attackType = AttackType.Critical;
             //attackUnit.CriticalAttackAnimation();
-            attackUnit.transform.LookAt(attackedUnit.transform.position);
+            NetworkUnitManager.myUnitList[attackUnit].transform.LookAt(NetworkUnitManager.enemyUnitList[attackedUnit].transform.position);
             CriticalAttack(attackUnit, attackedUnit);
         }
         else
@@ -52,18 +53,17 @@ public class RangeAttack : Attackable
             //Debug.Log("일반공격");
             attackType = AttackType.Normal;
             //attackUnit.NormalAttackAnimation();
-            attackUnit.transform.LookAt(attackedUnit.transform.position);
+            NetworkUnitManager.myUnitList[attackUnit].transform.LookAt(NetworkUnitManager.enemyUnitList[attackedUnit].transform.position);
             NormalAttack(attackUnit, attackedUnit);
         }
     }
 
-    public override void NormalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    public override void NormalAttack(string attackUnit, string attackedUnit)
+        => NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.str - NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
 
+    public override void CriticalAttack(string attackUnit, string attackedUnit)
+        => NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.str * NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.criticalDamage - NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
 
-    public override void CriticalAttack(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.str * attackedUnit.mUnitScriptable.criticalDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
-
-    public override void SpecialMove(Damageable attackUnit, Damageable attackedUnit)
-        => attackedUnit.GetDamage(attackUnit.mUnitScriptable.skillDamage - attackedUnit.mUnitScriptable.def, attackUnit.mUnitScriptable.UUID);
+    public override void SpecialMove(string attackUnit, string attackedUnit)
+        => NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.skillDamage - NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
 }

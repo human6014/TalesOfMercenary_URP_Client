@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -16,6 +17,8 @@ public class Nexus : Damageable
 
     private Damageable mTarget;
     public string UUID;
+    public GameObject EndUI;
+    public TMP_Text Gameovert;
 
     public override string getUUID()
     {
@@ -43,9 +46,25 @@ public class Nexus : Damageable
         mUnitUIController.Init(mCurrentHp, IsMine);
     }
 
-    private void GameEnd()
+    public void SetUUID(string uuid)
     {
+        mUnitScriptable.UUID = uuid;
+        UUID = uuid;
+    }
+
+    private void GameEnd(string WorL)
+    {
+        if (!IsMine)
+        {
+            Gameovert.text = WorL;
+        }
         isGameEnd = true;
+        EndUI.SetActive(true);
+        Invoke("GameLeave", 10f);
+        //mPhotonView.RPC(nameof(GameEndRPC), RpcTarget.All);
+    }
+    private void GameLeave()
+    {
         mPhotonView.RPC(nameof(GameEndRPC), RpcTarget.All);
     }
     [PunRPC]
@@ -54,7 +73,7 @@ public class Nexus : Damageable
         PhotonNetwork.LoadLevel("Menu");
         PhotonNetwork.LeaveRoom();
     }
-    public override void GetDamage(int damage, string attackUnitUUID)
+    public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID)
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
     }
@@ -70,9 +89,10 @@ public class Nexus : Damageable
 
         if (mCurrentHp <= damage || mCurrentHp == 0)
         {
+            string WorL = "You Win";
             mCurrentHp = 0;
             Debug.Log("Ã¼·Â 0ÀÓ");
-            GameEnd();
+            GameEnd(WorL);
             return;
         }
         else mCurrentHp -= damage;
