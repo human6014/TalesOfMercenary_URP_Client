@@ -1,7 +1,9 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+
 using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -17,8 +19,10 @@ public class Nexus : Damageable
 
     private Damageable mTarget;
     public string UUID;
+
     public GameObject EndUI;
     public TMP_Text Gameovert;
+
 
     public override string getUUID()
     {
@@ -73,6 +77,7 @@ public class Nexus : Damageable
         PhotonNetwork.LoadLevel("Menu");
         PhotonNetwork.LeaveRoom();
     }
+
     public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID)
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
@@ -93,11 +98,13 @@ public class Nexus : Damageable
             mCurrentHp = 0;
             Debug.Log("체력 0임");
             GameEnd(WorL);
+
             return;
         }
         else mCurrentHp -= damage;
 
         Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
+
         mUnitUIController.GetDamage(mCurrentHp);
     }
 
