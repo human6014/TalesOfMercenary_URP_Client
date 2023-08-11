@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -16,6 +17,8 @@ public class Nexus : Damageable
 
     private Damageable mTarget;
     public string UUID;
+    public GameObject EndUI;
+    public TMP_Text Gameovert;
 
     public override string getUUID()
     {
@@ -49,11 +52,27 @@ public class Nexus : Damageable
         UUID = uuid;
     }
 
-    private void GameEnd()
+    private void GameEnd(string WorL)
     {
+        if (!IsMine)
+        {
+            Gameovert.text = WorL;
+        }
         isGameEnd = true;
+        EndUI.SetActive(true);
+        Invoke("GameLeave", 10f);
+        //mPhotonView.RPC(nameof(GameEndRPC), RpcTarget.All);
     }
-
+    private void GameLeave()
+    {
+        mPhotonView.RPC(nameof(GameEndRPC), RpcTarget.All);
+    }
+    [PunRPC]
+    public void GameEndRPC()
+    {
+        PhotonNetwork.LoadLevel("Menu");
+        PhotonNetwork.LeaveRoom();
+    }
     public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID)
     {
         mPhotonView.RPC(nameof(GetDamageRPC), RpcTarget.All, damage);
@@ -65,17 +84,20 @@ public class Nexus : Damageable
         //if (isGameEnd) return;
         if (damage <= 0)
         {
-           //Debug.Log("넥서스 데미지 안입음 ");
+            Debug.Log("넥서스 데미지 안입음 ");
         }
 
-        if (mCurrentHp <= damage)
+        if (mCurrentHp <= damage || mCurrentHp == 0)
         {
-            GameEnd();
+            string WorL = "You Win";
+            mCurrentHp = 0;
+            Debug.Log("체력 0임");
+            GameEnd(WorL);
             return;
         }
         else mCurrentHp -= damage;
 
-        //Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
+        Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
         mUnitUIController.GetDamage(mCurrentHp);
     }
 
