@@ -25,7 +25,6 @@ public class MeleeAttack : Attackable
 
     public override AttackType Attack(string attackUnit, EElement attackUnitElement, string attackedUnit, EElement attackedUnitElement)
     {
-        Debug.Log(attackUnit + ": 공격 ,      " + attackedUnit + ": 피격");
         AttackType attackType = AttackType.Normal;
 
         if (NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.level == 3)
@@ -47,7 +46,6 @@ public class MeleeAttack : Attackable
 
     private void Attack(string attackUnit, EElement attackUnitElement, string attackedUnit, EElement attackedUnitElement, ref AttackType attackType)
     {
-        Debug.Log("피격 유닛: " + attackedUnit + "  <--->   공격 유닛: " + attackUnit);
         if (NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.criticalRate > UnityEngine.Random.Range(0, 100))
         {
             attackType = AttackType.Critical;
@@ -134,20 +132,20 @@ public class MeleeAttack : Attackable
             case CompetitiveEdge.Superiority:
                 damage =
                     (int)Math.Ceiling(NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.skillDamage - (NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def * 0.8));
-                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
+                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, attackUnit, attackedUnit);
 
                 break;
 
             case CompetitiveEdge.Inferiority:
                 damage =
                    (int)Math.Ceiling(NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.skillDamage - (NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def * 1.2));
-                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
+                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, attackUnit, attackedUnit);
                 break;
 
             case CompetitiveEdge.Normal:
                 damage =
                    NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.skillDamage - NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.def;
-                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.UUID, NetworkUnitManager.enemyUnitList[attackedUnit].mUnitScriptable.UUID);
+                NetworkUnitManager.enemyUnitList[attackedUnit].GetDamage(damage, attackUnit, attackedUnit);
                 break;
 
             default:

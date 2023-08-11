@@ -151,7 +151,6 @@ public class NeutralUnit : Damageable
     [PunRPC]
     public void GetDamageRPC(int damage, string attackUnit, string attackedUnitUUID)
     {
-        Debug.Log("드래곤 공격당함 공격 유닛 id: " + attackUnit);
         if (damage <= 0) return;
 
         if (mCurrentHp <= damage)
@@ -171,7 +170,7 @@ public class NeutralUnit : Damageable
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
                 transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
-                mTargetUUID = mTarget.getUUID();
+                mTargetUUID = attackUnit;
             }
         }
     }
