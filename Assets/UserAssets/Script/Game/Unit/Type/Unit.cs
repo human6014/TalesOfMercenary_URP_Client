@@ -277,13 +277,10 @@ public class Unit : Damageable
         }
         mUnitUIController.GetDamage(mCurrentHp);
 
-        Debug.Log(mTarget.mUnitScriptable.unitType);
-
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
             {
-                Debug.Log("넥서스 공격 중 피격");
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
                 transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
