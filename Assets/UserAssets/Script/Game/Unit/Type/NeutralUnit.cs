@@ -19,11 +19,12 @@ public class NeutralUnit : Damageable
     private PhotonView mPhotonView;
     private Attackable mAttack;
     private List<string> mRemoveList = new List<string>();
-
+    private EElement mtargetElement;
     private Vector3 mDestPos;
 
     private string mTargetUUID;
-    
+    private string mUUID;
+
     private int mPriority;
 
     private float mInitTime = 3.0f;
@@ -49,7 +50,6 @@ public class NeutralUnit : Damageable
     #region 초기화
     public void Init(Vector3 spawnPos)
     {
-        mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
         mIsBatch = true;
         mCurrentHp = mUnitScriptable.maxHP;
         gameObject.layer = GameManager.mMyUnitLayer;
@@ -68,32 +68,14 @@ public class NeutralUnit : Damageable
     {
         mCurrentHp = mUnitScriptable.maxHP;
         mUnitUIController.Init(mCurrentHp, mPhotonView.IsMine);
-        NetworkUnitManager.enemyUnitList.Add(UUID, this);
+        NetworkUnitManager.AddEnemyUnit(UUID, this);
         gameObject.layer = GameManager.mEnemyUnitLayer;
-        mUnitScriptable.UUID = UUID;
+        mUUID = UUID;
         IsAlive = true;
     }
-    #endregion
-
-    public void Update()
-    {
-        if (!mPhotonView.IsMine) return;
-        if (!IsAlive) return;
-
-        mAttackDelay += Time.deltaTime;
-
-        //attack
-        if (mTarget == null || !mTarget.IsAlive || !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID)) // 타깃 사망 확인 
-        {
-            Debug.Log("타깃 사망및 타깃 재 탐색");
-            Findenemy();
-            return;
-        }
-        TargetMove();
-    }
-
     private IEnumerator LandingCoroutine(float duration)
     {
+
         Vector3 startPos = transform.position;
         float currentTime = 0;
         while (currentTime <= duration)
@@ -107,15 +89,42 @@ public class NeutralUnit : Damageable
         yield return new WaitForSeconds(0.3f);
 
         IsAlive = true; // 이 시점이 땅에 도착한 시점
-
+        mUUID = MyUUIDGeneration.GenrateUUID();
         mNavMeshAgent.enabled = true;
-        NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
+        NetworkUnitManager.AddmyUnit(mUUID, this);
         mUnitUIController.Init(mUnitScriptable.maxHP, false);
-        mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUnitScriptable.UUID);
+        mPhotonView.RPC(nameof(SyncInit), RpcTarget.Others, mUUID);
         mPriority = mNavMeshAgent.avoidancePriority;
         Findenemy();
     }
+    #endregion
 
+    public void Update()
+    {
+        if (!mPhotonView.IsMine) return;
+        if (!IsAlive) return;
+
+        mAttackDelay += Time.deltaTime;
+
+        if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID))
+        {
+            mTarget = null;
+            mTargetUUID = "";
+        }
+
+        //attack
+        if (mTarget != null) // 타깃이 있을 때
+        {
+
+            if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID) || !mTarget.IsAlive) // 타깃 사망 확인 
+            {
+                Findenemy();
+                return;
+            }
+            TargetMove();
+        }
+        Findenemy();
+    }
     #region DIE
     private void Die(string unit)
     {
@@ -123,7 +132,7 @@ public class NeutralUnit : Damageable
         IsAlive = false;
         mIsBatch = false;
         Debug.Log("드래곤 사망");
-        NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
+        NetworkUnitManager.myUnitList.Remove(unit);
         Destroy(gameObject, 3);
     }
 
@@ -133,26 +142,28 @@ public class NeutralUnit : Damageable
         Debug.Log("드래곤 사망");
         mIsBatch = false;
         IsAlive = false;
-        NetworkUnitManager.enemyUnitList.Remove(this.mUnitScriptable.UUID);
+        NetworkUnitManager.enemyUnitList.Remove(unit);
         Destroy(gameObject, 3);
     }
     #endregion
 
     #region DAMAGE
     [PunRPC]
-    public void GetDamageRPC(int damage, string attackUnit,  string attackedUnitUUID)
+    public void GetDamageRPC(int damage, string attackUnit, string attackedUnitUUID)
     {
         Debug.Log("드래곤 공격당함 공격 유닛 id: " + attackUnit);
         if (damage <= 0) return;
 
         if (mCurrentHp <= damage)
         {
-            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, attackedUnitUUID);
-            Die(attackedUnitUUID);
+            Die(mUUID);
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, mUUID);
             return;
         }
         else mCurrentHp -= damage;
+
         mUnitUIController.GetDamage(mCurrentHp);
+
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
@@ -160,6 +171,7 @@ public class NeutralUnit : Damageable
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
                 transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
+                mTargetUUID = mTarget.getUUID();
             }
         }
     }
@@ -178,14 +190,13 @@ public class NeutralUnit : Damageable
     {
         transform.LookAt(mTarget.transform.position);
         float dist = Vector3.Distance(mTarget.transform.position, transform.position);
-        //Debug.Log("타깃 타입 : " + mTarget.mUnitScriptable.unitName + "남은 거리: " + dist);
         if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
         {
             mNavMeshAgent.avoidancePriority = mFightPriority;
             mNavMeshAgent.SetDestination(transform.position);
             if (mAttackDelay >= mUnitScriptable.attackSpeed)
             {
-                AttackType attackType = mAttack.Attack(getUUID(), mTarget.getUUID());
+                AttackType attackType = mAttack.Attack(getUUID(), mUnitScriptable.element, mTargetUUID, mtargetElement);
                 mAttackDelay = 0;
                 mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
             }
@@ -194,8 +205,6 @@ public class NeutralUnit : Damageable
         }
         else//타깃이 공격 범위보다 멀때
         {
-            //Debug.Log("적 타깃으로 이동 중");
-            //WalkAnimation();
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
             mNavMeshAgent.avoidancePriority = mPriority;
             mNavMeshAgent.SetDestination(mTarget.transform.position);
@@ -221,8 +230,6 @@ public class NeutralUnit : Damageable
 
     private void Findenemy() // 벡터 기준으로 공격 사거리의 적 탐지 null반환 시 적이 없음
     {
-        //Debug.Log("드래곤 적 탐색중..");
-        Debug.Log("적 유닛 갯수 : " + NetworkUnitManager.enemyUnitList.Count);
         float minDis = float.MaxValue;
         Damageable target = null;
         float tem;
@@ -239,6 +246,7 @@ public class NeutralUnit : Damageable
                     minDis = tem;
                     target = key.Value;
                     temUUID = key.Key;
+                    mtargetElement = key.Value.mUnitScriptable.element;
                 }
             }
             else
@@ -253,11 +261,10 @@ public class NeutralUnit : Damageable
         }
         mTarget = target;
         mTargetUUID = temUUID;
-        //Debug.Log("새로운 타깃 타입" + mTarget.mUnitScriptable.unitType);
     }
 
     public override string getUUID()
     {
-        return mUnitScriptable.UUID;
+        return mUUID;
     }
 }
