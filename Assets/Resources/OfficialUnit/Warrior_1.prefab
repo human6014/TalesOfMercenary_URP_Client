@@ -4686,7 +4686,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &8457321720788141971
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4703,7 +4703,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!54 &2238929339258693184
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4773,13 +4773,11 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 393216
-  unitId: 0
-  targetUUID: 
+  mTargetUUID: 
   dis: 0
-  attackRANGE: 0
   IsLIVE: 0
   hp: 0
-  _uuid: 
+  mUUID: 
 --- !u!114 &487778920245365041
 MonoBehaviour:
   m_ObjectHideFlags: 0
