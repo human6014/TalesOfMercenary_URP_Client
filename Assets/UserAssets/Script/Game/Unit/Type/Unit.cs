@@ -19,6 +19,7 @@ public class Unit : Damageable
     [SerializeField] private string mUUID;
 
     private EElement mtargetElement;
+    private ParticleController mParticleController;
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
     private NavMeshAgent mNavMeshAgent;
@@ -59,6 +60,7 @@ public class Unit : Damageable
     #region Init & Awake
     protected virtual void Awake()
     {
+        mParticleController = GetComponentInChildren<ParticleController>();
         mUnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
@@ -204,6 +206,7 @@ public class Unit : Damageable
                 AttackType attackType = mAttack.Attack(getUUID(), mUnitScriptable.element, mTargetUUID, mtargetElement);
                 mAttackDelay = 0;
                 mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
+                if (attackType == AttackType.Skill) mPhotonView.RPC(nameof(mParticleController.ParticlePlay), RpcTarget.All, mTarget.transform.position);
             }
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
         }
