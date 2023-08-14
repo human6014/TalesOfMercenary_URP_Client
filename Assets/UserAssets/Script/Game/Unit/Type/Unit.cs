@@ -113,7 +113,7 @@ public class Unit : Damageable
         if (!mPhotonView.IsMine) return;
         mAttackDelay += Time.deltaTime;
 
-        if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID))
+        if (mTargetUUID != "Vector" && !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID))
         {
             mTarget = null;
             mTargetUUID = "";
