@@ -33,7 +33,7 @@ public class Nexus : Damageable
         if (PhotonNetwork.IsMasterClient && HasPlayerNumber == 0) IsMine = true;
         if (!PhotonNetwork.IsMasterClient && HasPlayerNumber == 1) IsMine = true;
         FindMaximumArea();
-        if (IsMine) Debug.Log(transform.name + " Mine ");
+
         IsAlive = true;
         mCurrentHp = mUnitScriptable.maxHP;
         //mUnitUIController.Init(mCurrentHp);
@@ -97,7 +97,6 @@ public class Nexus : Damageable
         }
         else mCurrentHp -= damage;
 
-        Debug.Log("넥서스 데미지 입음 : " + mCurrentHp);
         mUnitUIController.GetDamage(mCurrentHp);
     }
 

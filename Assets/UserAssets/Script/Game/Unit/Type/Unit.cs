@@ -206,7 +206,7 @@ public class Unit : Damageable
                 AttackType attackType = mAttack.Attack(getUUID(), mUnitScriptable.element, mTargetUUID, mtargetElement);
                 mAttackDelay = 0;
                 mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
-                if (attackType == AttackType.Skill) mPhotonView.RPC(nameof(mParticleController.ParticlePlay), RpcTarget.All, mTarget.transform.position);
+                if (attackType == AttackType.Skill) mPhotonView.RPC(nameof(PlayParticleEffect), RpcTarget.All, mTarget.transform.position);
             }
             mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
         }
@@ -218,6 +218,10 @@ public class Unit : Damageable
         }
     }
 
+    [PunRPC]
+    private void PlayParticleEffect(Vector3 pos)
+        => StartCoroutine(mParticleController.ParticlePlayCoroutine(pos));
+    
     private void NonTargetMove()
     {
         if (mTargetUUID == "")
@@ -251,7 +255,6 @@ public class Unit : Damageable
         mNavMeshAgent.SetDestination(mVectorDestination);
     }
     #endregion
-
 
     #region Damage
     public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID) //적의 클라에서 호출

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public class ParticleController : MonoBehaviour
 {
@@ -16,25 +15,15 @@ public class ParticleController : MonoBehaviour
         mWaitForTime = new WaitForSeconds(mParticleTime);
     }
 
-    [PunRPC]
-    public void ParticlePlay(Vector3 pos)
+    public IEnumerator ParticlePlayCoroutine(Vector3 pos)
     {
-        StartCoroutine(ParticlePlayCoroutine());
-    }
-
-    private IEnumerator ParticlePlayCoroutine()
-    {
+        transform.position = pos;
         foreach (ParticleSystem ps in mParticleSystems)
             ps.Play();
 
         yield return mWaitForTime;
 
-        ParticleStop();
-    }
-
-    private void ParticleStop()
-    {
-        foreach(ParticleSystem ps in mParticleSystems)
+        foreach (ParticleSystem ps in mParticleSystems)
             ps.Stop();
     }
 }

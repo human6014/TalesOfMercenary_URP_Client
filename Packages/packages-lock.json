@@ -93,7 +93,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.7.3",
+      "version": "1.6.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -195,7 +195,7 @@
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
-        "com.unity.burst": "1.7.3",
+        "com.unity.burst": "1.5.0",
         "com.unity.render-pipelines.core": "12.1.7",
         "com.unity.shadergraph": "12.1.7"
       }
@@ -310,6 +310,13 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.vanbassum.wakatime": {
+      "version": "https://github.com/vanBassum/Wakatime.Unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "66217422184ea3caa5e31320a58b83e6a1e08898"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
