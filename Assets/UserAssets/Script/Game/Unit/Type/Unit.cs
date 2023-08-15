@@ -1,11 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UI;
-using System;
 using System.Collections.Generic;
-using static UnityEngine.GraphicsBuffer;
-using UnityEditor;
 
 /// <summary>
 /// target이 바뀔때마다 settarget()함수를 호출해서 모든 유저에게 타깃 변수를 동기화해줘야 한다.
@@ -16,14 +12,14 @@ public class Unit : Damageable
     #region Object info
     [SerializeField] private UnitUIController mUnitUIController;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private int unitId;        //식별번호
-    [SerializeField] private string targetUUID;
+    [SerializeField] private string mTargetUUID;
     [SerializeField] private float dis;
-    [SerializeField] private float attackRANGE;
     [SerializeField] private bool IsLIVE;
     [SerializeField] private int hp;
-    [SerializeField] private string _uuid;
+    [SerializeField] private string mUUID;
 
+    private EElement mtargetElement;
+    private ParticleController mParticleController;
     private UnitAnimationController mUnitAnimationController;
     private Damageable mTarget;
     private NavMeshAgent mNavMeshAgent;
@@ -41,14 +37,16 @@ public class Unit : Damageable
     private const int mFightPriority = 5;
 
     private Vector3 mVectorDestination;
-
-    private string mTargetUUID;
-
     #endregion
 
     #region Property
     public bool IsClicked { get; set; }
     public bool IsEnemy { get; private set; }
+
+    public override string getUUID()
+    {
+        return mUUID;
+    }
     #endregion
 
     #region Animation string
@@ -59,9 +57,10 @@ public class Unit : Damageable
     private const string HitState = "Hit";
     #endregion
 
-
+    #region Init & Awake
     protected virtual void Awake()
     {
+        mParticleController = GetComponentInChildren<ParticleController>();
         mUnitAnimationController = GetComponent<UnitAnimationController>();
         mPhotonView = GetComponent<PhotonView>();
         mAttack = GetComponent<Attackable>();
@@ -81,17 +80,13 @@ public class Unit : Damageable
         mIsBatch = true;
         mUnitUIController.Init(mUnitScriptable.maxHP, true);
 
-
         Findenemy();
         mNavMeshAgent.SetDestination(mTarget.transform.position);
-        mUnitScriptable.UUID = MyUUIDGeneration.GenrateUUID();
-        _uuid = mUnitScriptable.UUID;
-        //NetworkUnitManager.myUnitList.Add(mUnitScriptable.UUID, this);
-        mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUnitScriptable.UUID);
+        mUUID = MyUUIDGeneration.GenrateUUID();
+        mPhotonView.RPC(nameof(SyncInitBatch), RpcTarget.Others, mUUID);
         {
-            attackRANGE = mUnitScriptable.attackRange;
             hp = mUnitScriptable.maxHP;
-            NetworkUnitManager.AddmyUnit(mUnitScriptable.UUID, this);
+            NetworkUnitManager.AddmyUnit(mUUID, this);
             IsLIVE = true;
         }
     }
@@ -99,7 +94,6 @@ public class Unit : Damageable
     [PunRPC]
     public void SyncInitBatch(string uuid) //적이 소환한 유닛 초기화
     {
-        //NetworkUnitManager.enemyUnitList.Add(uuid, this);
         {
             NetworkUnitManager.AddEnemyUnit(uuid, this);
             hp = mCurrentHp;
@@ -108,15 +102,10 @@ public class Unit : Damageable
         mCurrentHp = mUnitScriptable.maxHP;
         mUnitUIController.Init(mUnitScriptable.maxHP, mPhotonView.IsMine);
         gameObject.layer = GameManager.mEnemyUnitLayer;
-        mUnitScriptable.UUID = uuid;
-        _uuid = uuid;
+        mUUID = uuid;
         IsAlive = true;
     }
-
-    public override string getUUID()
-    {
-        return _uuid;
-    }
+    #endregion
 
     private void FixedUpdate()
     {
@@ -124,18 +113,10 @@ public class Unit : Damageable
         if (!mPhotonView.IsMine) return;
         mAttackDelay += Time.deltaTime;
 
-        if(mTarget != null)
+        if (mTargetUUID != "Vector" && !NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID))
         {
-            if(!NetworkUnitManager.enemyUnitList.ContainsKey(targetUUID))
-            {
-                mTarget = null;
-                targetUUID = "";
-            }
-            else
-            {
-                mTarget = NetworkUnitManager.enemyUnitList[targetUUID];
-                Debug.Log("타깃 uiuid : " + mTargetUUID);
-            }
+            mTarget = null;
+            mTargetUUID = "";
         }
 
         if (mTarget != null) // 타깃이 있을 때
@@ -143,7 +124,7 @@ public class Unit : Damageable
 
             if (!NetworkUnitManager.enemyUnitList.ContainsKey(mTargetUUID) || !mTarget.IsAlive) // 타깃 사망 확인 
             {
-                Debug.Log("타깃 사망및 타깃 재 탐색   :   "+ mTarget != null);
+                Debug.Log("타깃 사망및 타깃 재 탐색   :   " + mTarget != null);
                 Findenemy();
                 return;
             }
@@ -151,91 +132,6 @@ public class Unit : Damageable
         }
         else NonTargetMove();
     }
-
-    #region move
-    private void TargetMove()
-    {
-        float dist = Vector3.Distance(mTarget.transform.position, transform.position);
-        dis = dist;
-        transform.LookAt(mTarget.transform.position);
-        if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
-        {
-            //Debug.Log("여기1?, 거리 : " + dis + ",  타깃 uiuid : " + mTarget.getUUID());
-            mNavMeshAgent.avoidancePriority = mFightPriority;
-            mNavMeshAgent.SetDestination(transform.position);
-
-            if (mAttackDelay >= mUnitScriptable.attackSpeed)
-            {
-                Debug.Log("여기2?");
-                AttackType attackType = mAttack.Attack(getUUID(), targetUUID);
-                mAttackDelay = 0;
-                mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
-            }
-            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
-        }
-        else//타깃이 공격 범위보다 멀때
-        {
-            Debug.Log("아님, 여기?");
-            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
-            mNavMeshAgent.avoidancePriority = mPriority;
-            mNavMeshAgent.SetDestination(mTarget.transform.position);
-        }
-    }
-
-    private string TypeToString(AttackType attackType)
-    {
-        string attackAnimName = "";
-        switch (attackType)
-        {
-            case AttackType.Normal:
-                attackAnimName = NormalAttackState;
-                break;
-            case AttackType.Critical:
-                attackAnimName = NormalAttackState;
-                break;
-            case AttackType.Skill:
-                attackAnimName = SkillAttackState;
-                break;
-        }
-        return attackAnimName;
-    }
-
-    private void NonTargetMove()
-    {
-        if(targetUUID == "")
-        {
-            Findenemy();
-            return;
-        }
-        float dist = Vector3.Distance(mVectorDestination, transform.position);
-        dis = dist;
-        //Debug.Log("남은 거리: " + dist);
-        if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
-        {
-            Findenemy();
-            mNavMeshAgent.avoidancePriority = mPriority;
-            mNavMeshAgent.SetDestination(mTarget.transform.position);
-        }
-        else
-        {
-            //WalkAnimation();
-            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
-            //Debug.Log("백터로 이동 중");
-            mNavMeshAgent.avoidancePriority = mPriority;
-            mNavMeshAgent.SetDestination(mVectorDestination);
-        }
-    }
-
-    public void PointMove(Vector3 pos)
-    {
-        mTarget = null;
-        targetUUID = "Vector";
-        mVectorDestination = pos;
-        mNavMeshAgent.stoppingDistance = 0.15f;
-        mNavMeshAgent.SetDestination(mVectorDestination);
-    }
-    #endregion
-
     private void Findenemy()
     {
         Debug.Log("적 탐색...");
@@ -254,6 +150,7 @@ public class Unit : Damageable
                 {
                     minDis = tem;
                     temUUID = key.Key;
+                    mtargetElement = key.Value.mUnitScriptable.element;
                 }
             }
             else
@@ -268,8 +165,24 @@ public class Unit : Damageable
         }
         SetTarget(temUUID);
         mTargetUUID = temUUID;
-        targetUUID = mTargetUUID;
         Debug.Log("새로운 타깃 발견 : " + mTarget.mUnitScriptable.UUID + ",     타입 : " + mTarget.mUnitScriptable.unitType);
+    }
+    private string TypeToString(AttackType attackType)
+    {
+        string attackAnimName = "";
+        switch (attackType)
+        {
+            case AttackType.Normal:
+                attackAnimName = NormalAttackState;
+                break;
+            case AttackType.Critical:
+                attackAnimName = NormalAttackState;
+                break;
+            case AttackType.Skill:
+                attackAnimName = SkillAttackState;
+                break;
+        }
+        return attackAnimName;
     }
 
     void SetTarget(string uuid)
@@ -277,11 +190,75 @@ public class Unit : Damageable
         mTarget = NetworkUnitManager.enemyUnitList[uuid];
     }
 
-    #region Damage
-    public override void GetDamage(int damage, string attackUnitUUID , string attackedUnitUUID) //적의 클라에서 호출
+    #region move
+    private void TargetMove()
     {
-        Debug.Log("적유닛 ==" + !mPhotonView.IsMine + "     getDamage() -> 피격 유닛 :" + attackedUnitUUID);
-        //Debug.Log("<데미지 입음> 현재체력 : " + mCurrentHp + " 데미지 : " + damage);
+        float dist = Vector3.Distance(mTarget.transform.position, transform.position);
+        dis = dist;
+        transform.LookAt(mTarget.transform.position);
+        if (dist <= mUnitScriptable.attackRange) // 타깃이 공격 사정 범위로 들어왔을때 -> 정지하고 공격
+        {
+            mNavMeshAgent.avoidancePriority = mFightPriority;
+            mNavMeshAgent.SetDestination(transform.position);
+
+            if (mAttackDelay >= mUnitScriptable.attackSpeed)
+            {
+                AttackType attackType = mAttack.Attack(getUUID(), mUnitScriptable.element, mTargetUUID, mtargetElement);
+                mAttackDelay = 0;
+                mPhotonView.RPC(nameof(mUnitAnimationController.PlayTriggerAnimation), RpcTarget.All, TypeToString(attackType));
+                if (attackType == AttackType.Skill) mPhotonView.RPC(nameof(PlayParticleEffect), RpcTarget.All, mTarget.transform.position);
+            }
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, false);
+        }
+        else//타깃이 공격 범위보다 멀때
+        {
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
+            mNavMeshAgent.avoidancePriority = mPriority;
+            mNavMeshAgent.SetDestination(mTarget.transform.position);
+        }
+    }
+
+    [PunRPC]
+    private void PlayParticleEffect(Vector3 pos)
+        => StartCoroutine(mParticleController.ParticlePlayCoroutine(pos));
+    
+    private void NonTargetMove()
+    {
+        if (mTargetUUID == "")
+        {
+            Findenemy();
+            return;
+        }
+        float dist = Vector3.Distance(mVectorDestination, transform.position);
+        dis = dist;
+        if (dist <= mUnitScriptable.movementRange) // 목적지가 공격 사거리 안 일때
+        {
+            Findenemy();
+            mNavMeshAgent.avoidancePriority = mPriority;
+            mNavMeshAgent.SetDestination(mTarget.transform.position);
+        }
+        else
+        {
+            //WalkAnimation();
+            mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, MoveState, true);
+            mNavMeshAgent.avoidancePriority = mPriority;
+            mNavMeshAgent.SetDestination(mVectorDestination);
+        }
+    }
+
+    public void PointMove(Vector3 pos)
+    {
+        mTarget = null;
+        mTargetUUID = "Vector";
+        mVectorDestination = pos;
+        mNavMeshAgent.stoppingDistance = 0.15f;
+        mNavMeshAgent.SetDestination(mVectorDestination);
+    }
+    #endregion
+
+    #region Damage
+    public override void GetDamage(int damage, string attackUnitUUID, string attackedUnitUUID) //적의 클라에서 호출
+    {
         if (mCurrentHp <= damage) mCurrentHp = 0;
         else mCurrentHp -= damage;
         {
@@ -294,30 +271,18 @@ public class Unit : Damageable
     [PunRPC]
     public void GetDamageRPC(int damage, string attackUnit, string attackedUnitUUID) // 자신의 클라에서 호출
     {
-        Debug.Log(mPhotonView.IsMine +"    getDamageRPC() :" + attackedUnitUUID);
-        if (damage <= 0) return;
-
-        if (mCurrentHp <= damage || mCurrentHp == 0)
+        if (mCurrentHp <= damage)
         {
-            //Die(attackedUnitUUID);
-            //mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, attackedUnitUUID);
-            Die(_uuid);
-            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, _uuid);
-            {
-                mTarget = null;
-                targetUUID = "";
-            }
+            Die(mUUID);
+            mPhotonView.RPC(nameof(DieRPC), RpcTarget.Others, mUUID);
             return;
         }
-
         else mCurrentHp -= damage;
         {
             hp = mCurrentHp;
         }
         mUnitUIController.GetDamage(mCurrentHp);
 
-
-        //Debug.Log("받은 피해 : " + damage + ",  현재 체력 : " + mCurrentHp);
         if (mTarget.mUnitScriptable.unitType == Scriptable.UnitType.Nexus)
         {
             if (NetworkUnitManager.enemyUnitList.ContainsKey(attackUnit))
@@ -325,7 +290,7 @@ public class Unit : Damageable
                 if (!NetworkUnitManager.enemyUnitList[attackUnit].IsAlive) return;
                 transform.LookAt(NetworkUnitManager.enemyUnitList[attackUnit].transform.position);
                 mTarget = NetworkUnitManager.enemyUnitList[attackUnit];
-                targetUUID = mTarget.getUUID();
+                mTargetUUID = attackUnit;
             }
         }
     }
@@ -335,26 +300,24 @@ public class Unit : Damageable
     public void Die(string unit)//자신의 클라에서 호출
     {
 
-        Debug.Log("Die() " + this.mUnitScriptable.UUID);
+        Debug.Log("Die() " + this.mUUID);
         {
             IsLIVE = false;
             NetworkUnitManager.RemoveMyUnit(unit);
+            mNavMeshAgent.enabled = false;
+            IsAlive = false;
+            mIsBatch = false;
         }
         //DieAnimation();
-
-        mNavMeshAgent.enabled = false;
-
         mPhotonView.RPC(nameof(mUnitAnimationController.PlayBoolAnimation), RpcTarget.All, DieState, true);
-        //NetworkUnitManager.myUnitList.Remove(this.mUnitScriptable.UUID);
-        IsAlive = false;
-        mIsBatch = false;
+
         Destroy(gameObject, 3f);
     }
 
     [PunRPC]
     public void DieRPC(string unit)//적의 클라에서 호출
     {
-        Debug.Log("DieRPC() " + this.mUnitScriptable.UUID);       
+        Debug.Log("DieRPC() " + this.mUUID);
         {
             IsLIVE = false;
             NetworkUnitManager.RemoveEnemyUnit(unit);
@@ -362,9 +325,7 @@ public class Unit : Damageable
             IsAlive = false;
             mIsBatch = false;
             Destroy(gameObject, 3f);
-        }        
-        // NetworkUnitManager.enemyUnitList.Remove(unit);
-        //Debug.Log("유닛 삭제 -> (삭제 전 enemyUnitList 갯수 : " + i + "삭제 후 :" + NetworkUnitManager.enemyUnitList.Count + ")");
+        }
     }
     #endregion
 }

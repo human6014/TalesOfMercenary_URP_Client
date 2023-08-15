@@ -280,7 +280,8 @@ public class DragableCardManager : MonoBehaviour
         }
         else if (cardType == CardType.Magic)
         {
-            obj = Instantiate(usingCard.CardPrefab, magicStartPos.position, Quaternion.identity);
+            obj = PhotonNetwork.Instantiate("Magic/" + usingCard.CardPrefab.name, magicStartPos.position, Quaternion.identity);
+
             obj.GetComponent<Magic>().Init(hit.point);
             obj.transform.SetParent(magicPool);
         }

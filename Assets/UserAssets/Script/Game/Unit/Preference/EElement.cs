@@ -2,8 +2,8 @@ public enum EElement
 {
     WATER,
     FIRE,
-    WIND,
-    LIGHT,
-    DARK,
+    NATURER,
+    //LIGHT,
+    //DARK,
     NONE
 };
