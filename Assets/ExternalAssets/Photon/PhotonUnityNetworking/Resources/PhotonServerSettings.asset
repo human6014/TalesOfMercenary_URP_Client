@@ -70,6 +70,7 @@ MonoBehaviour:
   - GameEndRPC
   - PlayParticle
   - ParticlePlay
+  - PlayParticleEffect
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 0

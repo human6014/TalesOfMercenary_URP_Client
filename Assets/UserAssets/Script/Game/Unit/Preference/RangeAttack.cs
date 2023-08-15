@@ -21,14 +21,11 @@ public class RangeAttack : Attackable
 {
     private System.Random mRand = new System.Random();
 
-    private float SkillProbability = 20;
+    private float SkillProbability = 100;
 
     public override AttackType Attack(string attackUnit, EElement attackUnitElement, string attackedUnit, EElement attackedUnitElement)
     {
-        Debug.Log(attackUnit + ": 공격 ,      " + attackedUnit + ": 피격");
         AttackType attackType = AttackType.Normal;
-
-
 
         if (NetworkUnitManager.myUnitList[attackUnit].mUnitScriptable.level == 3)
         {

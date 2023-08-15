@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24d0b51b8ce3444e812363bcc0a3e96, type: 3}
   m_Name: WarriorData_3
   m_EditorClassIdentifier: 
-  level: 1
+  level: 3
   unitName: Warrior
   maxHP: 120
   def: 3

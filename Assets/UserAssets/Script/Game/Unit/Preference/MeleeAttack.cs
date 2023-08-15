@@ -21,7 +21,7 @@ using UnityEngine;
 public class MeleeAttack : Attackable
 {
     private System.Random mRand = new System.Random();
-    private float SkillProbability = 20;
+    private float SkillProbability = 100;
 
     public override AttackType Attack(string attackUnit, EElement attackUnitElement, string attackedUnit, EElement attackedUnitElement)
     {
