@@ -7,12 +7,16 @@ using Photon.Realtime;
 using System.Linq;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using System.Net;
+
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    //WebRequest webRequest = new WebRequest();
     public static Launcher Instance;
 
     [SerializeField] TMP_InputField playerNameInputField;
+    [SerializeField] TMP_InputField playerPasswordInputField;
     [SerializeField] TMP_Text titleWelcomeText;
     [SerializeField] TMP_InputField roomNameInputField;
     [SerializeField] Transform roomListContent;
@@ -22,6 +26,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject playerListItemPrefab;
     [SerializeField] GameObject startGameButton;
     [SerializeField] TMP_Text errorText;
+
+    int pwin;
+    int plose;
+    int prank;
+
 
     private void Awake()
     {
@@ -53,23 +62,37 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Joined lobby");
     }
 
+    public void ReceivePlayerData(int rank, int win, int lose)
+    {
+        prank = rank;
+        pwin = win;
+        plose = lose;
+    }
     public async void SetName()
     {
+        PlayerData pdata = new PlayerData();
         string name = playerNameInputField.text;
+        string ppass = playerPasswordInputField.text;
         if (!string.IsNullOrEmpty(name))
         {
-            //Web통신
-            //bool isSuccess = await WebRequest.RequestGetInfo(name);
-            //if(!isSuccess) await WebRequest.RequestPostSignUp(name);
-            //await WebRequest.RequestPostLogin(name);
+            if(!string.IsNullOrEmpty(ppass))
+            {
+                await WebRequest.RequestPostSignUp(name, ppass);
+                //await WebRequest.RequestPostLogin(name, ppass);
+                StartCoroutine(WebRequest.RequestGetInfo(name));                
+                PhotonNetwork.NickName = name;
 
-            PhotonNetwork.NickName = name;
-            titleWelcomeText.text = $"Welcome, {name}!";
+                titleWelcomeText.text = $"{name},{prank}, {pwin}, {plose}!";
 
-            MenuManager.Instance.OpenMenu("title");
-            playerNameInputField.text = "";
+                MenuManager.Instance.OpenMenu("title");
+                playerNameInputField.text = "";
+            }
+                //Web통신
+                //bool isSuccess = await WebRequest.RequestGetInfo(name);
+                //if(!isSuccess) await WebRequest.RequestPostSignUp(name);
+                //await WebRequest.RequestPostLogin(name);         
         }
-        else Debug.Log("No player name entered");
+        else Debug.Log("No player name, password entered");
     }
 
     public void CreateRoom()

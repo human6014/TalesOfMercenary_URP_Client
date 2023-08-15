@@ -1,14 +1,29 @@
 using Newtonsoft.Json;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using static RestAPI;
+
+[System.Serializable]
+public class PlayerData
+{
+    public string playerId;
+    public int ranking;
+    public int score;
+    public int win;
+    public int lose;
+    public string winningRate;
+}
+
 
 public class WebRequest : MonoBehaviour
 {
-    private static readonly string m_URL = "localhost:8090";
+
+    private static readonly string m_URL = "localhost:8080";
 
     #region Post
     private static readonly string m_PostLose = "/api/score/lose";
@@ -20,11 +35,12 @@ public class WebRequest : MonoBehaviour
     private static readonly string m_GetRank = "/api/score/rank";
     private static readonly string m_GetAll = "/api/player/all";
     private static readonly string m_GetInfo = "/api/player/info";
-    #endregion
+#endregion
 
-    private void Start()
+private void Start()
     {
-       //StartCoroutine(RequestPostWin("test"));
+        
+        //StartCoroutine(RequestGetInfo("aaa"));       
     }
 
     #region Get
@@ -48,16 +64,37 @@ public class WebRequest : MonoBehaviour
         else Debug.Log("Error: " + www.error);
     }
 
-    public static async Task<bool> RequestGetInfo(string playerID)
+
+    //로비부분에서 welcome! ooo 텍스트 부분에서 -> 이름,ranking,win,lose
+    //데이터값을 api에서 받아오기 위한 함수 requestgetinfo() 수정
+    public static IEnumerator RequestGetInfo(string playerID)
     {
-        UnityWebRequest www = UnityWebRequest.Get(m_URL + m_GetInfo + "?playerId=" + playerID);
+        UnityWebRequest www = UnityWebRequest.Get(m_URL + m_GetInfo + "/" + playerID);
 
-        www.SendWebRequest();
+        yield return www.SendWebRequest();
 
-        while (!www.isDone) await Task.Yield();
+        if (www.error == null)
+        {
+            string responseText = www.downloadHandler.text;
+            Debug.Log("API response: " + responseText);
 
-        if (www.result == UnityWebRequest.Result.Success) return true;
-        else return false;
+            PlayerData playerData = JsonUtility.FromJson<PlayerData>(responseText);
+
+            //Launcher la = new Launcher();
+            //la.ReceivePlayerData(playerData.ranking, playerData.win, playerData.lose);
+
+            Debug.Log("Player ID: " + playerData.playerId);
+            Debug.Log("ranking: " + playerData.ranking);
+            Debug.Log("Score: " + playerData.score);
+            Debug.Log("Win: " + playerData.win);
+            Debug.Log("Lose: " + playerData.lose);
+            Debug.Log("winningRate: " + playerData.winningRate);
+        }
+        else
+        {
+            Debug.Log("ERROR");
+        }
+        //return WaitSend(www);
     }
     #endregion
     #region Post
@@ -101,7 +138,7 @@ public class WebRequest : MonoBehaviour
         return tcs.Task;
     }
 
-    public static Task RequestPostLogin(string playerID, string password = "")
+    public static Task RequestPostLogin(string playerID, string password)
     {
         var requestData = new
         {
@@ -119,14 +156,11 @@ public class WebRequest : MonoBehaviour
         return WaitSend(www);
     }
 
-    public static Task RequestPostSignUp(string playerID, string name = "", string password = "")
+    public static Task RequestPostSignUp(string playerID, string password)
     {
-        if (name == "") name = playerID;
-
         var requestData = new
         {
             playerId = playerID,
-            name = name,
             password = password
         };
 
