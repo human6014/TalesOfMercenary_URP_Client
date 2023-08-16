@@ -71,6 +71,7 @@ public class BuildingCardManager : MonoBehaviour
     public Card GetRandomUnitCard()
     {
         int rand = Random.Range(0, mBuildingCards.Length);
+        Debug.Log(rand);
         int level = mBuildingCards[rand].CardCurrentLevel - 1;
         return mBuildingCards[rand].GetCard(GetCardProbability(level));
     }

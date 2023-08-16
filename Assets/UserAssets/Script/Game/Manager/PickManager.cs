@@ -56,10 +56,11 @@ public class PickManager : MonoBehaviour
 
         BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
         buildingCard.transform.SetParent(mMyPickingBuilding);
+        Debug.Log("아군 카드 뽑기" + cardUniqueNumber + "    :    " + mMySelectingCount);
         mPhotonView.RPC(nameof(PickingEnemyBuildingCard), RpcTarget.OthersBuffered, cardUniqueNumber);
 
         if (mMySelectingCount == mBuildingCardManager.MaxBuildingCardNum) mMyPickingComp = true;
-        if ((mMyPickingComp && PhotonNetwork.PlayerList.Length == 1) || (mMyPickingComp && mEnemyPickingComp)) PickingComplete();
+        if (mMyPickingComp && mEnemyPickingComp) PickingComplete();
     }
 
     [PunRPC]
@@ -68,6 +69,7 @@ public class PickManager : MonoBehaviour
         mEnemySelectingCardIndex[mEnemySelectingCount++] = cardUniqueNumber;
         BuildingCard buildingCard = Instantiate(mBuildingCards[cardUniqueNumber]);
         buildingCard.transform.SetParent(mEnemyPickingBuilding);
+        Debug.Log("적군 카드 뽑기" + cardUniqueNumber + "    :    " + mEnemySelectingCount);
 
         if (mEnemySelectingCount == mBuildingCardManager.MaxBuildingCardNum) mEnemyPickingComp = true;
         if (mMyPickingComp && mEnemyPickingComp) PickingComplete();

@@ -1,46 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
 public class FireBall : Magic
 {
-    [SerializeField] private LayerMask mAttackableLayer;
-    [SerializeField] private LayerMask mGroundLayer;
-    [SerializeField] private float explosionRange;
-
-    private PhotonView mPhotonView;
+    [SerializeField] private LayerMask explosionLayer;
     private MeshRenderer meshRenderer;
     private MeshCollider meshCollider;
-    
-    private float speed = 12;
+    private float explosionRange;
+    private float speed = 1;
     private int damage;
-
-    private int mTempDamage = 50;
 
     private Vector3 dir;
     private void Awake()
     {
-        mPhotonView = GetComponent<PhotonView>();
         meshRenderer = GetComponent<MeshRenderer>();
         meshCollider = GetComponent<MeshCollider>();
     }
-
     public override void Init(Vector3 destinationPos)
     {
         base.Init(destinationPos);
 
-        mPhotonView.RPC(nameof(InitRPC),RpcTarget.All);
-        dir = (destinationPos - transform.position).normalized;
-    }
-
-    [PunRPC]
-    private void InitRPC()
-    {
         isBatch = true;
+        dir = destinationPos - transform.position;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!isBatch) return;
         Throw();
@@ -54,30 +39,29 @@ public class FireBall : Magic
     private void OnTriggerEnter(Collider other)
     {
         if (!isBatch) return;
-        if (1 << other.gameObject.layer != mGroundLayer.value) return;
-        Debug.Log("Trigger Enter");
-        Explosion();
+        if (1 << other.gameObject.layer != explosionLayer.value) return;
         Explosion(other);
     }
 
     public void Explosion(Collider other)
     {
+        Debug.Log("Explosion");
         isBatch = false;
         meshRenderer.enabled = false;
-        PhotonNetwork.Destroy(mPhotonView);
+        Destroy(gameObject);
     }
-    
+    /*
     public void Explosion()
     {
-        Collider[] col = Physics.OverlapSphere(transform.position, explosionRange, mAttackableLayer);
+        Collider[] col = Physics.OverlapSphere(transform.position, explosionRange, explosionLayer);
         for(int i = 0; i < col.Length; i++)
         {
-            if (col[i].TryGetComponent(out Damageable damageable))
+            if (col[i].TryGetComponent(out Unit unit))
             {
-                //damageable.GetDamage(mTempDamage);
-
+                unit.Hit(damage);
                 Debug.Log("Explosion");
             }
         }
     }
+    */
 }

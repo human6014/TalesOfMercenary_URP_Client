@@ -39,13 +39,13 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        //Debug.Log("Connecting to master...");
+        Debug.Log("Connecting to master...");
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
     {
-        //Debug.Log("Connected to master!");
+        Debug.Log("Connected to master!");
         PhotonNetwork.JoinLobby();
         // Automatically load scene for all clients when the host loads a scene
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -59,7 +59,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             MenuManager.Instance.OpenMenu("name");
         }
         else MenuManager.Instance.OpenMenu("title");
-       // Debug.Log("Joined lobby");
+        Debug.Log("Joined lobby");
     }
 
     public void ReceivePlayerData(int rank, int win, int lose)
