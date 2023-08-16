@@ -15,6 +15,7 @@ public class MagicEventDisplayer : MonoBehaviour
 
     }
 
+    [ContextMenu("DisplayMagicEvent")]
     public void DisplayMagicEvent()
     {
         gameObject.SetActive(true);
