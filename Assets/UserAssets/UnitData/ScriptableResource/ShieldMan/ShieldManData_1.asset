@@ -22,7 +22,7 @@ MonoBehaviour:
   element: 0
   criticalRate: 10
   criticalDamage: 2
-  attackRange: 1.5
+  attackRange: 1
   attackSpeed: 1.5
   movementRange: 0.2
   unitType: 1
