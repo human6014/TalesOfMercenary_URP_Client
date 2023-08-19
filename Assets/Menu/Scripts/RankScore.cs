@@ -2,9 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using TMPro;
 
 public class RankScore : MonoBehaviour
 {
+    [SerializeField]
+    private TextMeshProUGUI textrank;
+    [SerializeField]
+    private TextMeshProUGUI textname;
+    [SerializeField]
+    private TextMeshProUGUI textscore;
+
+
+    private int rank;
+    private string playerId;
+    private int score=0;
+
     public GameObject RankingPage;
     public GameObject Canvas;
     public void Pagego()
@@ -15,5 +29,31 @@ public class RankScore : MonoBehaviour
     {
         SceneManager.LoadScene("1_Scenes/Stage1");
 
+    }
+    public int Rank
+    {
+        set{
+            rank = value;
+            textrank.text = rank.ToString();
+        }
+        get => rank;
+    }
+    public string Name
+    {
+        set
+        {
+            playerId = value;
+            textname.text = playerId;
+        }
+        get => playerId;
+    }
+    public int Score
+    {
+        set
+        {
+            score = value;
+            textscore.text = score.ToString();
+        }
+        get => score;
     }
 }
