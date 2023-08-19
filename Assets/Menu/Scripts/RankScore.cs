@@ -14,8 +14,9 @@ public class RankScore : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI textscore;
 
+
     private int rank;
-    private string name;
+    private string playerId;
     private int score=0;
 
     public GameObject RankingPage;
@@ -41,10 +42,10 @@ public class RankScore : MonoBehaviour
     {
         set
         {
-            name = value;
-            textname.text = name;
+            playerId = value;
+            textname.text = playerId;
         }
-        get => name;
+        get => playerId;
     }
     public int Score
     {
