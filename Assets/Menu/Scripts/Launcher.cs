@@ -8,11 +8,10 @@ using System.Linq;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
 using System.Net;
-
+using JetBrains.Annotations;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
-    //WebRequest webRequest = new WebRequest();
     public static Launcher Instance;
 
     [SerializeField] TMP_InputField playerNameInputField;
@@ -27,9 +26,15 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] GameObject startGameButton;
     [SerializeField] TMP_Text errorText;
 
-    int pwin;
-    int plose;
-    int prank;
+
+
+
+
+    private static int pwin =0;
+    private static int plose=0;
+    private static int prank = 0;
+
+
 
 
     private void Awake()
@@ -62,27 +67,41 @@ public class Launcher : MonoBehaviourPunCallbacks
         Debug.Log("Joined lobby");
     }
 
-    public void ReceivePlayerData(int rank, int win, int lose)
+    public static void ReceivePlayerData(PlayerData PData)
     {
-        prank = rank;
-        pwin = win;
-        plose = lose;
+        if(PData == null)
+        {
+            prank = 0;
+            return;
+        }
+        prank = PData.ranking;
+        pwin = PData.win;
+        plose = PData.lose;
+        Debug.Log(PData.ranking);
+        Debug.Log(PData.win);
     }
     public async void SetName()
-    {
-        PlayerData pdata = new PlayerData();
+    {        
         string name = playerNameInputField.text;
         string ppass = playerPasswordInputField.text;
+
         if (!string.IsNullOrEmpty(name))
         {
             if(!string.IsNullOrEmpty(ppass))
             {
-                await WebRequest.RequestPostSignUp(name, ppass);
-                //await WebRequest.RequestPostLogin(name, ppass);
-                StartCoroutine(WebRequest.RequestGetInfo(name));                
+                // getinfo bool 값 받아와서 sign할지 login할지 조건 걸고 
+                await WebRequest.CallAPIAsync(name);
+                if(prank ==0)
+                {
+                    await WebRequest.RequestPostSignUp(name, ppass);
+                    await WebRequest.CallAPIAsync(name);
+                }
+                else
+                {
+                    await WebRequest.RequestPostLogin(name, ppass);
+                }
                 PhotonNetwork.NickName = name;
-
-                titleWelcomeText.text = $"{name},{prank}, {pwin}, {plose}!";
+                titleWelcomeText.text = $"{name},Ranking : {prank.ToString()},Win : {pwin.ToString()},Lose : {plose.ToString()}!";
 
                 MenuManager.Instance.OpenMenu("title");
                 playerNameInputField.text = "";

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
+using static RankLoader;
 using static RestAPI;
 
 [System.Serializable]
@@ -37,10 +38,11 @@ public class WebRequest : MonoBehaviour
     private static readonly string m_GetInfo = "/api/player/info";
 #endregion
 
-private void Start()
+    private void Start()
     {
-        
-        //StartCoroutine(RequestGetInfo("aaa"));       
+
+        //StartCoroutine(RequestGetInfo("aaa"));
+        //CallAPIAsync();
     }
 
     #region Get
@@ -64,37 +66,51 @@ private void Start()
         else Debug.Log("Error: " + www.error);
     }
 
+    public static async Task CallAPIAsync(string playerid)
+    {
+        PlayerData responseData = await GetAPIAsync(playerid);
 
+
+        Launcher.ReceivePlayerData(responseData);
+
+        return;
+        //Debug.Log("Player ID: " + responseData.playerId);
+        //Debug.Log("ranking: " + responseData.ranking);
+        //Debug.Log("Score: " + responseData.score);
+        //Debug.Log("Win: " + responseData.win);
+        //Debug.Log("Lose: " + responseData.lose);
+        //Debug.Log("winningRate: " + responseData.winningRate);
+        // responseData를 사용하여 UI 업데이트 또는 처리
+    }
     //로비부분에서 welcome! ooo 텍스트 부분에서 -> 이름,ranking,win,lose
     //데이터값을 api에서 받아오기 위한 함수 requestgetinfo() 수정
-    public static IEnumerator RequestGetInfo(string playerID)
+    public static async Task<PlayerData> GetAPIAsync(string playerid)
     {
-        UnityWebRequest www = UnityWebRequest.Get(m_URL + m_GetInfo + "/" + playerID);
-
-        yield return www.SendWebRequest();
-
-        if (www.error == null)
+        string e_url = "/api/player/info/" + playerid;
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(m_URL + e_url))
         {
-            string responseText = www.downloadHandler.text;
-            Debug.Log("API response: " + responseText);
+            var asyncOperation = webRequest.SendWebRequest();
 
-            PlayerData playerData = JsonUtility.FromJson<PlayerData>(responseText);
+            while (!asyncOperation.isDone)
+            {
+                await Task.Yield(); // Unity 메인 스레드를 블로킹하지 않음
+            }
 
-            //Launcher la = new Launcher();
-            //la.ReceivePlayerData(playerData.ranking, playerData.win, playerData.lose);
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log("API request error: " + webRequest.error);
+                return null;
+            }
+            else
+            {
+                string responseText = webRequest.downloadHandler.text;
+                Debug.Log("API response: " + responseText);
 
-            Debug.Log("Player ID: " + playerData.playerId);
-            Debug.Log("ranking: " + playerData.ranking);
-            Debug.Log("Score: " + playerData.score);
-            Debug.Log("Win: " + playerData.win);
-            Debug.Log("Lose: " + playerData.lose);
-            Debug.Log("winningRate: " + playerData.winningRate);
+                // JSON 데이터 파싱 및 역직렬화
+                PlayerData responseData = JsonUtility.FromJson<PlayerData>(responseText);
+                return responseData;
+            }
         }
-        else
-        {
-            Debug.Log("ERROR");
-        }
-        //return WaitSend(www);
     }
     #endregion
     #region Post
