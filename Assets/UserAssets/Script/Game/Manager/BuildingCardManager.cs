@@ -169,7 +169,7 @@ public class BuildingCardManager : MonoBehaviour
         //else NetworkUnitManager.SendBuildingUpgrade(deckCards[cardId].CardUniqueNumber);
         mBuildingCards[cardId].CardCurrentLevel += 1;
         Text cardText = mBuildingCards[cardId].GetComponentInChildren<Text>();
-        cardText.text = mBuildingCards[cardId].CardName + "\n" + mBuildingCards[cardId].CardCurrentLevel.ToString();
+        cardText.text = mBuildingCards[cardId].CardCurrentLevel.ToString();
     }
     #endregion
 }

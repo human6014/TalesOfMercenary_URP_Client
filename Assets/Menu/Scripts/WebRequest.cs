@@ -70,7 +70,6 @@ public class WebRequest : MonoBehaviour
     {
         PlayerData responseData = await GetAPIAsync(playerid);
 
-
         Launcher.ReceivePlayerData(responseData);
 
         return;
@@ -82,6 +81,7 @@ public class WebRequest : MonoBehaviour
         //Debug.Log("winningRate: " + responseData.winningRate);
         // responseData를 사용하여 UI 업데이트 또는 처리
     }
+
     //로비부분에서 welcome! ooo 텍스트 부분에서 -> 이름,ranking,win,lose
     //데이터값을 api에서 받아오기 위한 함수 requestgetinfo() 수정
     public static async Task<PlayerData> GetAPIAsync(string playerid)
